@@ -7,7 +7,7 @@ traQ BOTのPOSTリクエストをパースするライブラリ(の予定)です
 `Cargo.toml`
 
 ```toml
-...
+# ...
 
 [dependencies]
 axum = "0.6"
@@ -28,10 +28,7 @@ use axum::{
     Router,
 };
 
-use traq_bot_http::{
-    RequestParser,
-    Event,
-};
+use traq_bot_http::{Event, RequestParser};
 
 #[tokio::main]
 async fn main() {
@@ -95,3 +92,7 @@ mod traq_bot_http {
     impl std::error::Error for Error { ... }
 }
 ```
+
+## Contributing
+
+Issue, Pull Requestは大歓迎です。
