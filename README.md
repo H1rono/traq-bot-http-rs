@@ -28,7 +28,7 @@ use axum::{
     Router,
 };
 
-traq_bot_http::{
+use traq_bot_http::{
     RequestParser,
     Event,
 };
