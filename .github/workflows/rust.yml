@@ -2,24 +2,31 @@ name: Rust
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
-      uses: actions/checkout@v3
-    - name: cache build
-      uses: Swatinem/rust-cache@v2
-    - name: Build
-      run: cargo build
-    - name: Run tests
-      run: cargo test
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cache build
+        uses: Swatinem/rust-cache@v2
+      - name: Add components
+        run: |
+          rustup component add rustfmt
+          rustup component add clippy
+      - name: Build
+        run: cargo build
+      - name: Run tests
+        run: cargo test
+      - name: Check format
+        run: cargo fmt --all -- --check
+      - name: Lint
+        run: cargo clippy --all-targets --all-features -- -D warnings
