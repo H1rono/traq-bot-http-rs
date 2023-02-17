@@ -2,7 +2,17 @@
 name = "traq-bot-http"
 version = "0.1.0"
 edition = "2021"
+description = "Library to parse POST requests of traQ BOT event"
+rust-version = "1.64"
+homepage = "https://github.com/H1rono/traq-bot-http-rs"
+keywords = ["http", "web", "framework"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/H1rono/traq-bot-http-rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+http = "0.2"
