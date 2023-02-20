@@ -56,3 +56,17 @@ pub struct DeletedMessage {
     #[serde(rename = "channelId")]
     pub channel_id: String,
 }
+
+/// [traQの定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/model/message_stamp.go#L9-L20)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct MessageStamp {
+    #[serde(rename = "stampId")]
+    stamp_id: String,
+    #[serde(rename = "userId")]
+    user_id: String,
+    count: i32,
+    #[serde(rename = "createdAt")]
+    created_at: String,
+    #[serde(rename = "updatedAt")]
+    updated_at: String,
+}

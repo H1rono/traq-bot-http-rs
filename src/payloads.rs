@@ -6,7 +6,11 @@ mod tag;
 pub mod types;
 
 pub use channel::{ChannelCreatedPayload, ChannelTopicChangedPayload};
-pub use message::{MessageCreatedPayload, MessageDeletedPayload, MessageUpdatedPayload};
+pub use message::{
+    BotMessageStampsUpdatedPayload, DirectMessageCreatedPayload, DirectMessageDeletedPayload,
+    DirectMessageUpdatedPayload, MessageCreatedPayload, MessageDeletedPayload,
+    MessageUpdatedPayload,
+};
 pub use stamp::StampCreatedPayload;
 pub use system::{JoinedPayload, LeftPayload, PingPayload};
 pub use tag::{TagAddedPayload, TagRemovedPayload};
