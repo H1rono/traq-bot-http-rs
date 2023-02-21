@@ -4,6 +4,7 @@ mod stamp;
 mod system;
 mod tag;
 pub mod types;
+mod user;
 
 pub use channel::{ChannelCreatedPayload, ChannelTopicChangedPayload};
 pub use message::{
@@ -14,3 +15,4 @@ pub use message::{
 pub use stamp::StampCreatedPayload;
 pub use system::{JoinedPayload, LeftPayload, PingPayload};
 pub use tag::{TagAddedPayload, TagRemovedPayload};
+pub use user::UserCreatedPayload;
