@@ -36,7 +36,7 @@ pub struct EmbeddedInfo {
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Message {
     pub id: String,
-    pub user: String,
+    pub user: User,
     #[serde(rename = "channelId")]
     pub channel_id: String,
     pub text: String,
