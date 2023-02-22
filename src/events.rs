@@ -6,7 +6,6 @@ use super::payloads::{
     UserCreatedPayload,
 };
 
-#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Event {
     Ping(PingPayload),
