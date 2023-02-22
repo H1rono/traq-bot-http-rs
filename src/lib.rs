@@ -50,7 +50,7 @@
 //!         Ok(_) => StatusCode::NO_CONTENT,
 //!         Err(err) => {
 //!             eprintln!("ERROR: {err}");
-//!             StatusCode::BAD_REQUEST
+//!             StatusCode::SERVER_INTERNAL_ERROR
 //!         }
 //!     }
 //! }
