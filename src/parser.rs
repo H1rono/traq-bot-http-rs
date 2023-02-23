@@ -4,6 +4,7 @@ use http::header::{HeaderMap, CONTENT_TYPE};
 
 use crate::Event;
 
+#[derive(Debug, Clone)]
 pub struct RequestParser {
     verification_token: String,
 }
