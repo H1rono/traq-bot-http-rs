@@ -1,25 +1,3 @@
-# traq-bot-http-rs
-
-[![Rust](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml) [![Release](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml) [![crate](https://img.shields.io/crates/v/traq-bot-http.svg)](https://crates.io/crates/traq-bot-http)
-
-traQ BOTのPOSTリクエストをパースするライブラリです。
-
-## example
-
-`Cargo.toml`
-
-```toml
-# ...
-
-[dependencies]
-axum = "0.6"
-tokio = { version = "1.0", features = ["full"] }
-traq-bot-http = "0.1"
-```
-
-`main.rs`
-
-```rust
 use std::{env, net::SocketAddr};
 
 use axum::{
@@ -64,8 +42,3 @@ async fn handler(
         }
     }
 }
-```
-
-## Contributing
-
-Issue, Pull Requestは大歓迎です。
