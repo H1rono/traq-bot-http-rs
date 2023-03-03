@@ -1,3 +1,5 @@
+//! メッセージ関連のイベントペイロード
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedMessage, Message, MessageStamp};

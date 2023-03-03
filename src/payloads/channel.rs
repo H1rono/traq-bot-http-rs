@@ -1,5 +1,4 @@
-// CHANNEL_CREATED
-// CHANNEL_TOPIC_CHANGED
+//! チャンネル関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
 

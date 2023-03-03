@@ -1,3 +1,5 @@
+//! システム関連のイベントペイロード
+
 use serde::{Deserialize, Serialize};
 
 use super::types::Channel;

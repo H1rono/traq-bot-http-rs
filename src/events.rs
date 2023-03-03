@@ -1,3 +1,5 @@
+//! `enum Event`
+
 use super::payloads::{
     BotMessageStampsUpdatedPayload, ChannelCreatedPayload, ChannelTopicChangedPayload,
     DirectMessageCreatedPayload, DirectMessageDeletedPayload, DirectMessageUpdatedPayload,
@@ -6,6 +8,25 @@ use super::payloads::{
     UserCreatedPayload,
 };
 
+/// イベント全てを網羅するenum
+///
+/// ## Variants
+/// * `Ping` - ボットの接続確認 [ref](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#ping)
+/// * `Joined` - チャンネルに参加した
+/// * `Left` - チャンネルから退出した
+/// * `MessageCreated` - メッセージが作成された
+/// * `MessageDeleted` - メッセージが削除された
+/// * `MessageUpdated` - メッセージが更新された
+/// * `DirectMessageCreated` - ダイレクトメッセージが作成された
+/// * `DirectMessageDeleted` - ダイレクトメッセージが削除された
+/// * `DirectMessageUpdated` - ダイレクトメッセージが更新された
+/// * `BotMessageStampsUpdated` - ボットのメッセージにスタンプが付けられた
+/// * `ChannelCreated` - チャンネルが作成された
+/// * `ChannelTopicChanged` - チャンネルのトピックが変更された
+/// * `UserCreated` - ユーザーが作成された
+/// * `StampCreated` - スタンプが作成された
+/// * `TagAdded` - BOTにタグが追加された
+/// * `TagRemoved` - BOTからタグが削除された
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Event {
     Ping(PingPayload),

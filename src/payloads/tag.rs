@@ -1,3 +1,5 @@
+//! タグ関連のイベントペイロード
+
 use serde::{Deserialize, Serialize};
 
 /// TAG_ADDEDペイロード

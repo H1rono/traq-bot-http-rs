@@ -1,3 +1,5 @@
+//! イベントペイロードの型定義
+
 mod channel;
 mod message;
 mod stamp;
