@@ -1,21 +1,47 @@
+//! `struct RequestParser`と`enum ParseError`
+
 use std::{error::Error, fmt, str};
 
 use http::header::{HeaderMap, CONTENT_TYPE};
 
 use crate::Event;
 
+/// HTTP POSTリクエストのパーサー
 #[derive(Debug, Clone)]
 pub struct RequestParser {
     verification_token: String,
 }
 
 impl RequestParser {
+    /// 新しい`RequestParser`を作成します。
+    ///
+    /// ## Arguments
+    /// * `verification_token` - ボットのVerificationToken
+    ///
+    /// ## Example
+    /// ```
+    /// use traq_bot_http::RequestParser;
+    /// let parser = RequestParser::new("verification_token");
+    /// ```
     pub fn new(verification_token: &str) -> Self {
         Self {
             verification_token: verification_token.to_string(),
         }
     }
 
+    /// POSTリクエストのヘッダーからイベント名を取得します。
+    ///
+    /// ## Arguments
+    /// * `headers` - リクエストのヘッダー
+    ///
+    /// ## Example
+    /// ```ignore
+    /// use http::HeaderMap;
+    /// use traq_bot_http::RequestParser;
+    /// let parser = RequestParser::new("verification_token");
+    /// let headers = HeaderMap::new();
+    /// let event = parser.parse_headers(headers);
+    /// ```
     fn parse_headers(&self, headers: HeaderMap) -> Result<String, ParseError> {
         // Content-Type: application/json
         let content_type = headers
@@ -44,6 +70,33 @@ impl RequestParser {
         Ok(event.to_string())
     }
 
+    /// HTTP POSTリクエストをパースします。
+    ///
+    /// ## Arguments
+    /// * `headers` - リクエストのヘッダー
+    /// * `body` - リクエストのボディ
+    ///
+    /// ## Example
+    /// ```
+    /// use http::HeaderMap;
+    /// use traq_bot_http::{RequestParser, Event};
+    /// let headers: HeaderMap = [
+    ///     ("Content-Type", "application/json"),
+    ///     ("X-TRAQ-BOT-TOKEN", "verification_token"),
+    ///     ("X-TRAQ-BOT-EVENT", "PING"),
+    /// ]
+    /// .into_iter()
+    /// .map(|(k, v)| (k.parse().unwrap(), v.parse().unwrap()))
+    /// .collect();
+    /// let body = br#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
+    /// let verification_token = "verification_token";
+    /// let parser = RequestParser::new(verification_token);
+    /// let event = parser.parse(headers, body);
+    /// match event {
+    ///     Ok(Event::Ping(_)) => (),
+    ///     _ => unreachable!(),
+    /// }
+    /// ```
     pub fn parse(&self, headers: HeaderMap, body: &[u8]) -> Result<Event, ParseError> {
         let event = self.parse_headers(headers)?;
         let body = str::from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
@@ -101,7 +154,34 @@ impl RequestParser {
     }
 }
 
-#[derive(Debug, Clone)]
+/// `RequestParser::parse`時のエラー型
+///
+/// ## Variants
+/// * `ContentTypeNotFound` - Content-Typeがヘッダーに含まれていない
+/// * `ReadContentTypeFailed` - Content-Typeの値を読み取れなかった
+/// * `ContentTypeMismatch` - Content-Typeの値がapplication/jsonで始まっていない
+/// * `BotTokenNotFound` - X-TRAQ-BOT-TOKENがヘッダーに含まれていない
+/// * `ReadBotTokenFailed` - X-TRAQ-BOT-TOKENの値を読み取れなかった3
+/// * `BotTokenMismatch` - X-TRAQ-BOT-TOKENの値がverification_tokenと等しくない
+/// * `BotEventNotFound` - X-TRAQ-BOT-EVENTがヘッダーに含まれていない
+/// * `ReadBotEventFailed` - X-TRAQ-BOT-EVENTの値を読み取れなかった
+/// * `BotEventMismatch` - X-TRAQ-BOT-EVENTの値がイベント名のいずれでもない
+/// * `ReadBodyFailed` - リクエストボディの値を読み取れなかった
+/// * `ParseBodyFailed` - リクエストボディの値をパースできなかった
+///
+/// ## Example
+/// ```
+/// use traq_bot_http::RequestParser;
+/// use traq_bot_http::ParseError;
+/// use http::HeaderMap;
+///
+/// let verification_token = "verification_token";
+/// let parser = RequestParser::new(verification_token);
+/// let headers = HeaderMap::new();
+/// let body = b"";
+/// assert_eq!(parser.parse(headers, body), Err(ParseError::ContentTypeNotFound));
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParseError {
     ContentTypeNotFound,
     ReadContentTypeFailed,
