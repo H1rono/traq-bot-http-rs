@@ -27,6 +27,17 @@ use super::payloads::{
 /// * `StampCreated` - スタンプが作成された
 /// * `TagAdded` - BOTにタグが追加された
 /// * `TagRemoved` - BOTからタグが削除された
+///
+/// ## Example
+/// ```
+/// use traq_bot_http::Event;
+/// use traq_bot_http::payloads::PingPayload;
+/// let payload = r#"{
+///     "eventTime": "2019-05-07T04:50:48.582586882Z"
+/// }"#;
+/// let payload = serde_json::from_str::<PingPayload>(payload).unwrap();
+/// let event = Event::Ping(payload);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Event {
     Ping(PingPayload),
