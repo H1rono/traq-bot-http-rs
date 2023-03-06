@@ -3,10 +3,63 @@ mod parser_tests {
     const VERIFICATION_TOKEN: &str = "traqbotverificationtoken";
 
     use http::header::{HeaderMap, CONTENT_TYPE};
-    use traq_bot_http::{Event, RequestParser};
+    use traq_bot_http::{Event, ParseError, RequestParser};
 
     fn make_parser() -> RequestParser {
         RequestParser::new(VERIFICATION_TOKEN)
+    }
+
+    #[test]
+    fn fail_tests() {
+        let parser = make_parser();
+        let mut headers = HeaderMap::new();
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::ContentTypeNotFound) => (),
+            _ => unreachable!(),
+        };
+        headers.insert(CONTENT_TYPE, "text/plain".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::ContentTypeMismatch) => (),
+            _ => unreachable!(),
+        };
+        headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::BotTokenNotFound) => (),
+            _ => unreachable!(),
+        };
+        headers.insert("X-TRAQ-BOT-TOKEN", "invalid　token".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::ReadBotTokenFailed) => (),
+            _ => unreachable!(),
+        };
+        headers.insert("X-TRAQ-BOT-TOKEN", "invalid_token".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::BotTokenMismatch) => (),
+            _ => unreachable!(),
+        };
+        headers.insert(
+            "X-TRAQ-BOT-TOKEN",
+            "traqbotverificationtoken".parse().unwrap(),
+        );
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::BotEventNotFound) => (),
+            _ => unreachable!(),
+        };
+        headers.insert("X-TRAQ-BOT-EVENT", "invalid　event".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::ReadBotEventFailed) => (),
+            _ => unreachable!(),
+        };
+        headers.insert("X-TRAQ-BOT-EVENT", "invalid_event".parse().unwrap());
+        match parser.parse(headers.clone(), b"") {
+            Err(ParseError::BotEventMismatch) => (),
+            _ => unreachable!(),
+        };
+        headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
+        match parser.parse(headers.clone(), b"invalid format") {
+            Err(ParseError::ParseBodyFailed) => (),
+            _ => unreachable!(),
+        };
     }
 
     fn make_headers(event: &str) -> HeaderMap {
