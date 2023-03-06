@@ -3,8 +3,20 @@
 use std::{error::Error, fmt, str};
 
 use http::header::{HeaderMap, CONTENT_TYPE};
+use serde::Deserialize;
 
 use crate::Event;
+
+/// ボディをDeserializeして`Event`に渡す
+fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event, ParseError>
+where
+    T: Deserialize<'a>,
+    F: Fn(T) -> Event,
+{
+    serde_json::from_str(body)
+        .map(f)
+        .map_err(|_| ParseError::ParseBodyFailed)
+}
 
 /// HTTP POSTリクエストのパーサー
 #[derive(Debug, Clone)]
@@ -101,54 +113,22 @@ impl RequestParser {
         let event = self.parse_headers(headers)?;
         let body = str::from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
         match event.as_str() {
-            "PING" => serde_json::from_str(body)
-                .map(Event::Ping)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "JOINED" => serde_json::from_str(body)
-                .map(Event::Joined)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "LEFT" => serde_json::from_str(body)
-                .map(Event::Left)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "MESSAGE_CREATED" => serde_json::from_str(body)
-                .map(Event::MessageCreated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "MESSAGE_DELETED" => serde_json::from_str(body)
-                .map(Event::MessageDeleted)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "MESSAGE_UPDATED" => serde_json::from_str(body)
-                .map(Event::MessageUpdated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "DIRECT_MESSAGE_CREATED" => serde_json::from_str(body)
-                .map(Event::DirectMessageCreated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "DIRECT_MESSAGE_DELETED" => serde_json::from_str(body)
-                .map(Event::DirectMessageDeleted)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "DIRECT_MESSAGE_UPDATED" => serde_json::from_str(body)
-                .map(Event::DirectMessageUpdated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "BOT_MESSAGE_STAMPS_UPDATED" => serde_json::from_str(body)
-                .map(Event::BotMessageStampsUpdated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "CHANNEL_CREATED" => serde_json::from_str(body)
-                .map(Event::ChannelCreated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "CHANNEL_TOPIC_CHANGED" => serde_json::from_str(body)
-                .map(Event::ChannelTopicChanged)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "USER_CREATED" => serde_json::from_str(body)
-                .map(Event::UserCreated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "STAMP_CREATED" => serde_json::from_str(body)
-                .map(Event::StampCreated)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "TAG_ADDED" => serde_json::from_str(body)
-                .map(Event::TagAdded)
-                .map_err(|_| ParseError::ParseBodyFailed),
-            "TAG_REMOVED" => serde_json::from_str(body)
-                .map(Event::TagRemoved)
-                .map_err(|_| ParseError::ParseBodyFailed),
+            "PING" => parse_body(Event::Ping, body),
+            "JOINED" => parse_body(Event::Joined, body),
+            "LEFT" => parse_body(Event::Left, body),
+            "MESSAGE_CREATED" => parse_body(Event::MessageCreated, body),
+            "MESSAGE_DELETED" => parse_body(Event::MessageDeleted, body),
+            "MESSAGE_UPDATED" => parse_body(Event::MessageUpdated, body),
+            "DIRECT_MESSAGE_CREATED" => parse_body(Event::DirectMessageCreated, body),
+            "DIRECT_MESSAGE_DELETED" => parse_body(Event::DirectMessageDeleted, body),
+            "DIRECT_MESSAGE_UPDATED" => parse_body(Event::DirectMessageUpdated, body),
+            "BOT_MESSAGE_STAMPS_UPDATED" => parse_body(Event::BotMessageStampsUpdated, body),
+            "CHANNEL_CREATED" => parse_body(Event::ChannelCreated, body),
+            "CHANNEL_TOPIC_CHANGED" => parse_body(Event::ChannelTopicChanged, body),
+            "USER_CREATED" => parse_body(Event::UserCreated, body),
+            "STAMP_CREATED" => parse_body(Event::StampCreated, body),
+            "TAG_ADDED" => parse_body(Event::TagAdded, body),
+            "TAG_REMOVED" => parse_body(Event::TagRemoved, body),
             _ => Err(ParseError::BotEventMismatch),
         }
     }
