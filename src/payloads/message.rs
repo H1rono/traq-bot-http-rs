@@ -262,6 +262,10 @@ pub struct DirectMessageUpdatedPayload {
 pub struct BotMessageStampsUpdatedPayload {
     #[serde(rename = "eventTime")]
     pub event_time: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "messageId")]
+    pub message_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
     #[serde(rename = "messageId")]
     pub message_id: String,
     pub stamps: Vec<MessageStamp>,

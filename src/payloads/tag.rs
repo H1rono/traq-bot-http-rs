@@ -21,6 +21,10 @@ use serde::{Deserialize, Serialize};
 pub struct TagAddedPayload {
     #[serde(rename = "eventTime")]
     pub event_time: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "tagId")]
+    pub tag_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
     #[serde(rename = "tagId")]
     pub tag_id: String,
     pub tag: String,
@@ -45,6 +49,10 @@ pub struct TagAddedPayload {
 pub struct TagRemovedPayload {
     #[serde(rename = "eventTime")]
     pub event_time: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "tagId")]
+    pub tag_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
     #[serde(rename = "tagId")]
     pub tag_id: String,
     pub tag: String,
