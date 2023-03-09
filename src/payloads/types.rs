@@ -63,12 +63,12 @@ pub struct DeletedMessage {
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageStamp {
     #[serde(rename = "stampId")]
-    stamp_id: String,
+    pub stamp_id: String,
     #[serde(rename = "userId")]
-    user_id: String,
-    count: i32,
+    pub user_id: String,
+    pub count: i32,
     #[serde(rename = "createdAt")]
-    created_at: String,
+    pub created_at: String,
     #[serde(rename = "updatedAt")]
-    updated_at: String,
+    pub updated_at: String,
 }

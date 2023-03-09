@@ -27,6 +27,6 @@ use super::types::User;
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserCreatedPayload {
     #[serde(rename = "eventTime")]
-    event_time: String,
-    user: User,
+    pub event_time: String,
+    pub user: User,
 }
