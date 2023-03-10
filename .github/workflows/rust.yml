@@ -24,8 +24,10 @@ jobs:
           rustup component add clippy
       - name: Build
         run: cargo build
-      - name: Run tests
-        run: cargo test
+      - name: Test
+        run: |
+          cargo test
+          cargo test --all-features
       - name: Check format
         run: cargo fmt --all -- --check
       - name: Lint

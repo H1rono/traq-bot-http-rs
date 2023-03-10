@@ -31,8 +31,15 @@ use super::types::User;
 pub struct StampCreatedPayload {
     #[serde(rename = "eventTime")]
     pub event_time: String,
+    #[cfg(feature = "uuid")]
+    pub id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
     pub id: String,
     pub name: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "fileId")]
+    pub file_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
     #[serde(rename = "fileId")]
     pub file_id: String,
     pub creator: User,
