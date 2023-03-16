@@ -1,6 +1,6 @@
 # traq-bot-http-rs
 
-[![Rust](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml) [![Release](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml) [![crate](https://img.shields.io/crates/v/traq-bot-http.svg)](https://crates.io/crates/traq-bot-http)
+[![Rust](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml) [![codecov](https://codecov.io/gh/H1rono/traq-bot-http-rs/branch/main/graph/badge.svg?token=UEA9118L9I)](https://codecov.io/gh/H1rono/traq-bot-http-rs) [![Release](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml) [![crate](https://img.shields.io/crates/v/traq-bot-http.svg)](https://crates.io/crates/traq-bot-http)
 
 traQ BOTのPOSTリクエストをパースするライブラリです。
 
