@@ -8,6 +8,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-C instrument-coverage"
+  GRCOV_VERSION: "^0.8"
 
 jobs:
   build:
@@ -22,13 +24,25 @@ jobs:
         run: |
           rustup component add rustfmt
           rustup component add clippy
+          rustup component add llvm-tools
+      - name: install grcov
+        run: cargo install grcov@$GRCOV_VERSION
       - name: Build
         run: cargo build
-      - name: Test
-        run: |
-          cargo test
-          cargo test --all-features
       - name: Check format
         run: cargo fmt --all -- --check
       - name: Lint
         run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Run tests
+        run: |
+          mkdir -p target/profile
+          cargo test
+          cargo test --all-features
+        env:
+          LLVM_PROFILE_FILE: "target/profile/traq-bot-http-rs-%p-%m.profraw"
+      - name: generate LCOV
+        run: grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing -o ./target/coverage.lcov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: target/coverage.lcov
