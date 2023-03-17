@@ -188,7 +188,7 @@ impl fmt::Display for ParseError {
             BotTokenMismatch => "X-TRAQ-BOT-TOKEN value is wrong",
             BotEventNotFound => "X-TRAQ-BOT-EVENT is not set",
             ReadBotEventFailed => "Failed to read X-TRAQ-BOT-EVENT value",
-            BotEventMismatch => "X-TRAQ-BOT-EVENT is wrong",
+            BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
             ReadBodyFailed => "Failed to read request body",
             ParseBodyFailed => "Failed to parse request body",
         };
