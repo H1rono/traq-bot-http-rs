@@ -12,138 +12,94 @@ mod payload_tests {
         buf
     }
 
-    // PING
     #[test]
     fn ping_test() {
         let ping = read_file("testdata/system/ping.json");
-        if let Err(err) = serde_json::from_str::<PingPayload>(&ping) {
-            panic!("Failed to parse {ping}: {err}")
-        }
+        let payload = serde_json::from_str::<PingPayload>(&ping).unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
     }
 
-    // JOINED
     #[test]
     fn joined_test() {
         let data = read_file("testdata/system/joined.json");
-        if let Err(err) = serde_json::from_str::<JoinedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<JoinedPayload>(&data).unwrap();
     }
 
-    // LEFT
     #[test]
     fn left_test() {
         let data = read_file("testdata/system/left.json");
-        if let Err(err) = serde_json::from_str::<LeftPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<LeftPayload>(&data).unwrap();
     }
 
-    // MESSAGE_CREATED
     #[test]
     fn message_created_test() {
         let data = read_file("testdata/message/message_created.json");
-        if let Err(err) = serde_json::from_str::<MessageCreatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<MessageCreatedPayload>(&data).unwrap();
     }
 
-    // MESSAGE_DELETED
     #[test]
     fn message_deleted_test() {
         let data = read_file("testdata/message/message_deleted.json");
-        if let Err(err) = serde_json::from_str::<MessageDeletedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<MessageDeletedPayload>(&data).unwrap();
     }
 
-    // MESSAGE_UPDATED
     #[test]
     fn message_updated_test() {
         let data = read_file("testdata/message/message_updated.json");
-        if let Err(err) = serde_json::from_str::<MessageUpdatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<MessageUpdatedPayload>(&data).unwrap();
     }
 
-    // DIRECT_MESSAGE_CREATED
     #[test]
     fn direct_message_created_test() {
         let data = read_file("testdata/message/direct_message_created.json");
-        if let Err(err) = serde_json::from_str::<DirectMessageCreatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<DirectMessageCreatedPayload>(&data).unwrap();
     }
 
-    // DIRECT_MESSAGE_DELETED
     #[test]
     fn direct_message_deleted_test() {
         let data = read_file("testdata/message/direct_message_deleted.json");
-        if let Err(err) = serde_json::from_str::<DirectMessageDeletedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<DirectMessageDeletedPayload>(&data).unwrap();
     }
 
-    // DIRECT_MESSAGE_UPDATED
     #[test]
     fn direct_message_updated_test() {
         let data = read_file("testdata/message/direct_message_updated.json");
-        if let Err(err) = serde_json::from_str::<DirectMessageUpdatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<DirectMessageUpdatedPayload>(&data).unwrap();
     }
 
-    // BOT_MESSAGE_STAMPS_UPDATED
     #[test]
     fn bot_message_stamps_updated_test() {
         let data = read_file("testdata/message/bot_message_stamps_updated.json");
-        if let Err(err) = serde_json::from_str::<BotMessageStampsUpdatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<BotMessageStampsUpdatedPayload>(&data).unwrap();
     }
 
-    // CHANNEL_CREATED
     #[test]
     fn channel_created_test() {
         let data = read_file("testdata/channel/channel_created.json");
-        if let Err(err) = serde_json::from_str::<ChannelCreatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<ChannelCreatedPayload>(&data).unwrap();
     }
 
-    // CHANNEL_TOPIC_CHANGED
     #[test]
     fn chennel_topic_changed_test() {
         let data = read_file("testdata/channel/channel_topic_changed.json");
-        if let Err(err) = serde_json::from_str::<ChannelTopicChangedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<ChannelTopicChangedPayload>(&data).unwrap();
     }
 
-    // USER_CREATED
     #[test]
     fn user_created_test() {
         let data = read_file("testdata/user/user_created.json");
-        if let Err(err) = serde_json::from_str::<UserCreatedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<UserCreatedPayload>(&data).unwrap();
     }
 
-    // TAG_ADDED
     #[test]
     fn tag_added_test() {
         let data = read_file("testdata/tag/tag_added.json");
-        if let Err(err) = serde_json::from_str::<TagAddedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<TagAddedPayload>(&data).unwrap();
     }
 
-    // TAG_REMOVED
     #[test]
     fn tag_removed_test() {
         let data = read_file("testdata/tag/tag_removed.json");
-        if let Err(err) = serde_json::from_str::<TagRemovedPayload>(&data) {
-            panic!("Failed to parse {data}: {err}")
-        }
+        serde_json::from_str::<TagRemovedPayload>(&data).unwrap();
     }
 }

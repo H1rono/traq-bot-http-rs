@@ -11,7 +11,7 @@ use super::payloads::{
 /// イベント全てを網羅するenum
 ///
 /// ## Variants
-/// * `Ping` - ボットの接続確認 [ref](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#ping)
+/// * `Ping` - ボットの接続確認
 /// * `Joined` - チャンネルに参加した
 /// * `Left` - チャンネルから退出した
 /// * `MessageCreated` - メッセージが作成された
