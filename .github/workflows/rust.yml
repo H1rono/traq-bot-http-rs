@@ -9,6 +9,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-C instrument-coverage"
+  LLVM_PROFILE_FILE: "target/profile/traq-bot-http-rs-%p-%m.profraw"
   GRCOV_VERSION: "^0.8"
 
 jobs:
@@ -38,8 +39,6 @@ jobs:
           mkdir -p target/profile
           cargo test
           cargo test --all-features
-        env:
-          LLVM_PROFILE_FILE: "target/profile/traq-bot-http-rs-%p-%m.profraw"
       - name: generate LCOV
         run: grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing -o ./target/coverage.lcov
       - name: Upload coverage to Codecov
