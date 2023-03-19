@@ -28,6 +28,8 @@ jobs:
           rustup component add llvm-tools
       - name: install grcov
         run: cargo install grcov@$GRCOV_VERSION
+      - name: Clean # not to use old coverage
+        run: cargo clean
       - name: Build
         run: cargo build
       - name: Check format
