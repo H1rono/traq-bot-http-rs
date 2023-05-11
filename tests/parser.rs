@@ -57,6 +57,10 @@ mod parser_tests {
         );
         headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
         assert_eq!(
+            parser.parse(headers.clone(), &[0, 159, 146, 150]),
+            Err(ParseError::ReadBodyFailed)
+        );
+        assert_eq!(
             parser.parse(headers.clone(), b""),
             Err(ParseError::ParseBodyFailed)
         );
@@ -78,6 +82,7 @@ mod parser_tests {
             (BotEventNotFound, "X-TRAQ-BOT-EVENT is not set"),
             (ReadBotEventFailed, "Failed to read X-TRAQ-BOT-EVENT value"),
             (BotEventMismatch, "X-TRAQ-BOT-EVENT value is wrong"),
+            (ReadBodyFailed, "Failed to read request body"),
             (ParseBodyFailed, "Failed to parse request body"),
         ];
         for (err, msg) in pairs.iter() {
