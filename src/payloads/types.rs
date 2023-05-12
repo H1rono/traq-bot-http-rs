@@ -90,6 +90,27 @@ pub struct DeletedMessage {
     pub channel_id: String,
 }
 
+/// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_deleted.go#L14-L18)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct DeletedDirectMessage {
+    #[cfg(feature = "uuid")]
+    pub id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
+    pub id: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "userId")]
+    pub user_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
+    #[serde(rename = "userId")]
+    pub user_id: String,
+    #[cfg(feature = "uuid")]
+    #[serde(rename = "channelId")]
+    pub channel_id: uuid::Uuid,
+    #[cfg(not(feature = "uuid"))]
+    #[serde(rename = "channelId")]
+    pub channel_id: String,
+}
+
 /// [traQの定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/model/message_stamp.go#L9-L20)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageStamp {

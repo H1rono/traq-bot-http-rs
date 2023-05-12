@@ -221,11 +221,15 @@ mod payload_tests {
             payload,
             DirectMessageDeletedPayload {
                 event_time: "2019-05-08T13:36:09.421492525Z".to_string(),
-                message: DeletedMessage {
+                message: DeletedDirectMessage {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
                     #[cfg(not(feature = "uuid"))]
                     id: "2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8".to_string(),
+                    #[cfg(feature = "uuid")]
+                    user_id: uuid::uuid!("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
+                    #[cfg(not(feature = "uuid"))]
+                    user_id: "dfdff0c9-5de0-46ee-9721-2525e8bb3d45".to_string(),
                     #[cfg(feature = "uuid")]
                     channel_id: uuid::uuid!("c5a5a697-3bad-4540-b2da-93dc88181d34"),
                     #[cfg(not(feature = "uuid"))]
