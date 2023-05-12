@@ -41,6 +41,8 @@ mod payload_tests {
             #[cfg(not(feature = "uuid"))]
             parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
             creator: takashi_trap(),
+            created_at: "2018-04-25T12:22:02Z".to_string(),
+            updated_at: "2018-04-25T12:22:02Z".to_string(),
         }
     }
 
@@ -349,6 +351,8 @@ mod payload_tests {
                     #[cfg(not(feature = "uuid"))]
                     parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
                     creator: takashi_trap(),
+                    created_at: "2019-05-08T13:45:51.487718Z".to_string(),
+                    updated_at: "2019-05-08T13:45:51.487718Z".to_string(),
                 },
             }
         );
@@ -375,6 +379,8 @@ mod payload_tests {
                     #[cfg(not(feature = "uuid"))]
                     parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
                     creator: takashi_trap(),
+                    created_at: "2019-04-02T06:31:16.229419Z".to_string(),
+                    updated_at: "2019-05-09T11:32:49.475127Z".to_string(),
                 },
                 topic: "トピック".to_string(),
                 updater: takashi_trap(),

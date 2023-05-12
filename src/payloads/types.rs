@@ -37,6 +37,10 @@ pub struct Channel {
     #[serde(rename = "parentId")]
     pub parent_id: String,
     pub creator: User,
+    #[serde(rename = "createdAt")]
+    pub created_at: String,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: String,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/utils/message/embedded.go#L9-L14)
