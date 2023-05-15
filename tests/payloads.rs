@@ -143,7 +143,13 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
+                    #[cfg(feature = "time")]
+                    created_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
+                    #[cfg(not(feature = "time"))]
                     created_at: "2019-05-08T13:33:51.632149265Z".to_string(),
+                    #[cfg(feature = "time")]
+                    updated_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
+                    #[cfg(not(feature = "time"))]
                     updated_at: "2019-05-08T13:33:51.632149265Z".to_string(),
                 },
             }
@@ -203,7 +209,13 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
+                    #[cfg(feature = "time")]
+                    created_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
+                    #[cfg(not(feature = "time"))]
                     created_at: "2019-05-08T13:33:51.632149265Z".to_string(),
+                    #[cfg(feature = "time")]
+                    updated_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
+                    #[cfg(not(feature = "time"))]
                     updated_at: "2019-05-08T13:33:51.632149265Z".to_string(),
                 }
             }
@@ -237,7 +249,13 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
+                    #[cfg(feature = "time")]
+                    created_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
+                    #[cfg(not(feature = "time"))]
                     created_at: "2019-05-08T13:36:09.365393261Z".to_string(),
+                    #[cfg(feature = "time")]
+                    updated_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
+                    #[cfg(not(feature = "time"))]
                     updated_at: "2019-05-08T13:36:09.365393261Z".to_string(),
                 },
             }
@@ -301,7 +319,13 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
+                    #[cfg(feature = "time")]
+                    created_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
+                    #[cfg(not(feature = "time"))]
                     created_at: "2019-05-08T13:36:09.365393261Z".to_string(),
+                    #[cfg(feature = "time")]
+                    updated_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
+                    #[cfg(not(feature = "time"))]
                     updated_at: "2019-05-08T13:36:09.365393261Z".to_string(),
                 },
             }
