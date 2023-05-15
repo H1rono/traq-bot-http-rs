@@ -1,6 +1,8 @@
 //! システム関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "time")]
+use time::OffsetDateTime;
 
 use super::types::Channel;
 
@@ -19,6 +21,10 @@ use super::types::Channel;
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct PingPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
 }
@@ -53,6 +59,10 @@ pub struct PingPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct JoinedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub channel: Channel,
@@ -88,6 +98,10 @@ pub struct JoinedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct LeftPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub channel: Channel,

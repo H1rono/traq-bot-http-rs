@@ -1,6 +1,8 @@
 //! ユーザー関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "time")]
+use time::OffsetDateTime;
 
 use super::types::User;
 
@@ -26,6 +28,10 @@ use super::types::User;
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserCreatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub user: User,

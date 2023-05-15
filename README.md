@@ -77,6 +77,7 @@ async fn handler(
 feature | 機能 | バージョン
 :-- | :-- | :--
 `uuid` | ペイロードのUUID値が[`uuid::Uuid`](https://docs.rs/uuid/latest/uuid/struct.Uuid.html)型に | [v0.4.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.4.0)から
+`time` | ペイロードのタイムスタンプ値([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))が[`time::OffsetDateTime`](https://docs.rs/time/latest/time/struct.OffsetDateTime.html)型に | TODO
 
 ## Contributing
 

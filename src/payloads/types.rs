@@ -1,6 +1,8 @@
 //! イベントペイロード内部で使われる型
 
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "time")]
+use time::OffsetDateTime;
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L69-L75)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
@@ -37,8 +39,16 @@ pub struct Channel {
     #[serde(rename = "parentId")]
     pub parent_id: String,
     pub creator: User,
+    #[cfg(feature = "time")]
+    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "createdAt")]
     pub created_at: String,
+    #[cfg(feature = "time")]
+    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
+    pub updated_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
 }
@@ -131,8 +141,16 @@ pub struct MessageStamp {
     #[serde(rename = "userId")]
     pub user_id: String,
     pub count: i32,
+    #[cfg(feature = "time")]
+    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "createdAt")]
     pub created_at: String,
+    #[cfg(feature = "time")]
+    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
+    pub updated_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
 }

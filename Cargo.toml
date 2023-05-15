@@ -22,5 +22,11 @@ version = "1.3"
 features = ["v4", "serde"]
 optional = true
 
+[dependencies.time]
+version = "0.3"
+features = ["serde", "parsing", "formatting", "macros"]
+optional = true
+
 [features]
 uuid = ["dep:uuid"]
+time = ["dep:time"]
