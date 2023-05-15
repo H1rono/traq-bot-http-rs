@@ -29,3 +29,4 @@ optional = true
 
 [features]
 uuid = ["dep:uuid"]
+time = ["dep:time"]
