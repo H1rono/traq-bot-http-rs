@@ -83,8 +83,16 @@ pub struct Message {
     #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
+    #[cfg(feature = "time")]
+    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "createdAt")]
     pub created_at: String,
+    #[cfg(feature = "time")]
+    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
+    pub updated_at: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
 }
