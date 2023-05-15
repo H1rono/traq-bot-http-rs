@@ -1,6 +1,8 @@
 //! メッセージ関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "time")]
+use time::OffsetDateTime;
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp};
 
@@ -41,6 +43,10 @@ use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageCreatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: Message,
@@ -65,6 +71,10 @@ pub struct MessageCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageDeletedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: DeletedMessage,
@@ -107,6 +117,10 @@ pub struct MessageDeletedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageUpdatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: Message,
@@ -149,6 +163,10 @@ pub struct MessageUpdatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageCreatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: Message,
@@ -174,6 +192,10 @@ pub struct DirectMessageCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageDeletedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: DeletedDirectMessage,
@@ -216,6 +238,10 @@ pub struct DirectMessageDeletedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageUpdatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     pub message: Message,
@@ -260,6 +286,10 @@ pub struct DirectMessageUpdatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct BotMessageStampsUpdatedPayload {
+    #[cfg(feature = "time")]
+    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
+    pub event_time: OffsetDateTime,
+    #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
     #[cfg(feature = "uuid")]
