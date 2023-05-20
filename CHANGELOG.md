@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [0.5.1] - 2023-05-20
+
+### Added
+
+- `StampCreatedPayload`のテストを追加
+
+### Fixed
+
+- `time`featureで`StampCreatedPayload::event_time`がプライベートになる問題を修正
+
 ## [v0.5.0] - 2023-05-15
 
 ### Added
