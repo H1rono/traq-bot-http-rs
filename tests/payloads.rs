@@ -517,6 +517,36 @@ mod payload_tests {
     }
 
     #[test]
+    fn stamp_created_test() {
+        let data = read_file("testdata/stamp/stamp_created.json");
+        let payload = serde_json::from_str::<StampCreatedPayload>(&data).unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            StampCreatedPayload {
+                #[cfg(feature = "time")]
+                event_time: datetime!(2019-05-08 08:31:06.566228282 UTC),
+                #[cfg(not(feature = "time"))]
+                event_time: "2019-05-08T08:31:06.566228282Z".to_string(),
+                #[cfg(feature = "uuid")]
+                id: uuid::uuid!("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                #[cfg(not(feature = "uuid"))]
+                id: "2bc06cda-bdb9-4a68-8000-62f907f36a92".to_string(),
+                name: "naruhodo".to_string(),
+                #[cfg(feature = "uuid")]
+                file_id: uuid::uuid!("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                #[cfg(not(feature = "uuid"))]
+                file_id: "2bc06cda-bdb9-4a68-8000-62f907f36a92".to_string(),
+                creator: {
+                    let mut creator = takashi_trap();
+                    creator.display_name.clear();
+                    creator
+                },
+            }
+        )
+    }
+
+    #[test]
     fn tag_added_test() {
         let data = read_file("testdata/tag/tag_added.json");
         let payload = serde_json::from_str::<TagAddedPayload>(&data).unwrap();
