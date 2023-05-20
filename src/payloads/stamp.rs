@@ -33,7 +33,7 @@ use super::types::User;
 pub struct StampCreatedPayload {
     #[cfg(feature = "time")]
     #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    event_time: OffsetDateTime,
+    pub event_time: OffsetDateTime,
     #[cfg(not(feature = "time"))]
     #[serde(rename = "eventTime")]
     pub event_time: String,
