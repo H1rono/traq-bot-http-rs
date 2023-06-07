@@ -27,6 +27,14 @@ version = "0.3"
 features = ["serde", "parsing", "formatting", "macros"]
 optional = true
 
+[dev-dependencies]
+axum = "0.6"
+tokio = { version = "1.0", features = ["full"] }
+
+[[example]]
+name = "basic-with-axum"
+path = "examples/basic-with-axum.rs"
+
 [features]
 uuid = ["dep:uuid"]
 time = ["dep:time"]
