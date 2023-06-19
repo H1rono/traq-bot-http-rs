@@ -1,9 +1,8 @@
 #[cfg(test)]
 mod payload_tests {
-    #[cfg(feature = "time")]
-    use time::macros::datetime;
-
     use traq_bot_http::payloads::{types::*, *};
+
+    use ::serde;
 
     fn read_file(filename: &str) -> String {
         use std::{fs::File, io::Read, path::Path};
@@ -13,6 +12,12 @@ mod payload_tests {
         let mut buf = String::new();
         file.read_to_string(&mut buf).expect("Failed to read file");
         buf
+    }
+
+    fn timestamp(v: &'static str) -> TimeStamp {
+        use serde::de::value::{Error, StrDeserializer};
+        let de = StrDeserializer::<'_, Error>::new(v);
+        traq_bot_http::payloads::serde::time::deserialize(de).unwrap()
     }
 
     fn takashi_trap() -> User {
@@ -44,14 +49,8 @@ mod payload_tests {
             #[cfg(not(feature = "uuid"))]
             parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
             creator: takashi_trap(),
-            #[cfg(feature = "time")]
-            created_at: datetime!(2018-04-25 12:22:02 UTC),
-            #[cfg(not(feature = "time"))]
-            created_at: "2018-04-25T12:22:02Z".to_string(),
-            #[cfg(feature = "time")]
-            updated_at: datetime!(2018-04-25 12:22:02 UTC),
-            #[cfg(not(feature = "time"))]
-            updated_at: "2018-04-25T12:22:02Z".to_string(),
+            created_at: timestamp("2018-04-25T12:22:02Z"),
+            updated_at: timestamp("2018-04-25T12:22:02Z"),
         }
     }
 
@@ -74,10 +73,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             PingPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-07 04:50:48.582586882 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-07T04:50:48.582586882Z".to_string(),
+                event_time: timestamp("2019-05-07T04:50:48.582586882Z"),
             }
         );
     }
@@ -90,10 +86,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             JoinedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:49:13.769110201 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:49:13.769110201Z".to_string(),
+                event_time: timestamp("2019-05-08T13:49:13.769110201Z"),
                 channel: channel_a_po(),
             }
         );
@@ -107,10 +100,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             LeftPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:49:16.497848449 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:49:16.497848449Z".to_string(),
+                event_time: timestamp("2019-05-08T13:49:16.497848449Z"),
                 channel: channel_a_po(),
             },
         );
@@ -124,10 +114,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             MessageCreatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:33:51.690308239 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:33:51.690308239Z".to_string(),
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
                 message: Message {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
@@ -143,14 +130,8 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-05-08T13:33:51.632149265Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-08T13:33:51.632149265Z".to_string(),
+                    created_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                    updated_at: timestamp("2019-05-08T13:33:51.632149265Z"),
                 },
             }
         );
@@ -164,10 +145,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             MessageDeletedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:33:51.690308239 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:33:51.690308239Z".to_string(),
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
                 message: DeletedMessage {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
@@ -190,10 +168,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             MessageUpdatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:33:51.690308239 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:33:51.690308239Z".to_string(),
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
                 message: Message {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
@@ -209,14 +184,8 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-05-08T13:33:51.632149265Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-08 13:33:51.632149265 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-08T13:33:51.632149265Z".to_string(),
+                    created_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                    updated_at: timestamp("2019-05-08T13:33:51.632149265Z"),
                 }
             }
         )
@@ -230,10 +199,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             DirectMessageCreatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:36:09.421492525 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:36:09.421492525Z".to_string(),
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
                 message: Message {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
@@ -249,14 +215,8 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-05-08T13:36:09.365393261Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-08T13:36:09.365393261Z".to_string(),
+                    created_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                    updated_at: timestamp("2019-05-08T13:36:09.365393261Z"),
                 },
             }
         );
@@ -270,10 +230,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             DirectMessageDeletedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:36:09.421492525 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:36:09.421492525Z".to_string(),
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
                 message: DeletedDirectMessage {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
@@ -300,10 +257,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             DirectMessageUpdatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:36:09.421492525 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:36:09.421492525Z".to_string(),
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
                 message: Message {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
@@ -319,14 +273,8 @@ mod payload_tests {
                     embedded: vec![
                         embedded_takashi_trap(),
                     ],
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-05-08T13:36:09.365393261Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-08 13:36:09.365393261 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-08T13:36:09.365393261Z".to_string(),
+                    created_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                    updated_at: timestamp("2019-05-08T13:36:09.365393261Z"),
                 },
             }
         );
@@ -340,10 +288,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             BotMessageStampsUpdatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2020-10-17 03:35:34.5326265 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2020-10-17T03:35:34.5326265Z".to_string(),
+                event_time: timestamp("2020-10-17T03:35:34.5326265Z"),
                 #[cfg(feature = "uuid")]
                 message_id: uuid::uuid!("200b6600-b2cd-4c1e-b366-9c40308cc087"),
                 #[cfg(not(feature = "uuid"))]
@@ -359,14 +304,8 @@ mod payload_tests {
                         #[cfg(not(feature = "uuid"))]
                         user_id: "b80551a5-2768-4d29-ad78-8e0e92330c8d".to_string(),
                         count: 22,
-                        #[cfg(feature = "time")]
-                        created_at: datetime!(2020-10-17 03:35:17.89545 UTC),
-                        #[cfg(not(feature = "time"))]
-                        created_at: "2020-10-17T03:35:17.89545Z".to_string(),
-                        #[cfg(feature = "time")]
-                        updated_at: datetime!(2020-10-17 03:35:34 UTC),
-                        #[cfg(not(feature = "time"))]
-                        updated_at: "2020-10-17T03:35:34Z".to_string(),
+                        created_at: timestamp("2020-10-17T03:35:17.89545Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
                     },
                     MessageStamp {
                         #[cfg(feature = "uuid")]
@@ -378,14 +317,8 @@ mod payload_tests {
                         #[cfg(not(feature = "uuid"))]
                         user_id: "b80551a5-2768-4d29-ad78-8e0e92330c8d".to_string(),
                         count: 23,
-                        #[cfg(feature = "time")]
-                        created_at: datetime!(2020-10-17 03:35:17.737127 UTC),
-                        #[cfg(not(feature = "time"))]
-                        created_at: "2020-10-17T03:35:17.737127Z".to_string(),
-                        #[cfg(feature = "time")]
-                        updated_at: datetime!(2020-10-17 03:35:34 UTC),
-                        #[cfg(not(feature = "time"))]
-                        updated_at: "2020-10-17T03:35:34Z".to_string(),
+                        created_at: timestamp("2020-10-17T03:35:17.737127Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
                     },
                     MessageStamp {
                         #[cfg(feature = "uuid")]
@@ -397,14 +330,8 @@ mod payload_tests {
                         #[cfg(not(feature = "uuid"))]
                         user_id: "b80551a5-2768-4d29-ad78-8e0e92330c8d".to_string(),
                         count: 24,
-                        #[cfg(feature = "time")]
-                        created_at: datetime!(2020-10-17 03:34:56.575099 UTC),
-                        #[cfg(not(feature = "time"))]
-                        created_at: "2020-10-17T03:34:56.575099Z".to_string(),
-                        #[cfg(feature = "time")]
-                        updated_at: datetime!(2020-10-17 03:35:34 UTC),
-                        #[cfg(not(feature = "time"))]
-                        updated_at: "2020-10-17T03:35:34Z".to_string(),
+                        created_at: timestamp("2020-10-17T03:34:56.575099Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
                     },
                 ],
             }
@@ -419,10 +346,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             ChannelCreatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 13:45:51.506206852 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T13:45:51.506206852Z".to_string(),
+                event_time: timestamp("2019-05-08T13:45:51.506206852Z"),
                 channel: Channel {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("711afb4c-23e7-46dc-b845-5160f7088ce9"),
@@ -435,14 +359,8 @@ mod payload_tests {
                     #[cfg(not(feature = "uuid"))]
                     parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
                     creator: takashi_trap(),
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-05-08 13:45:51.487718 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-05-08T13:45:51.487718Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-08 13:45:51.487718 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-08T13:45:51.487718Z".to_string(),
+                    created_at: timestamp("2019-05-08T13:45:51.487718Z"),
+                    updated_at: timestamp("2019-05-08T13:45:51.487718Z"),
                 },
             }
         );
@@ -456,10 +374,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             ChannelTopicChangedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-09 11:32:49.505357701 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-09T11:32:49.505357701Z".to_string(),
+                event_time: timestamp("2019-05-09T11:32:49.505357701Z"),
                 channel: Channel {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("9aba50da-f605-4cd0-a428-5e4558cb911e"),
@@ -472,14 +387,8 @@ mod payload_tests {
                     #[cfg(not(feature = "uuid"))]
                     parent_id: "ea452867-553b-4808-a14f-a47ee0009ee6".to_string(),
                     creator: takashi_trap(),
-                    #[cfg(feature = "time")]
-                    created_at: datetime!(2019-04-02 06:31:16.229419 UTC),
-                    #[cfg(not(feature = "time"))]
-                    created_at: "2019-04-02T06:31:16.229419Z".to_string(),
-                    #[cfg(feature = "time")]
-                    updated_at: datetime!(2019-05-09 11:32:49.475127 UTC),
-                    #[cfg(not(feature = "time"))]
-                    updated_at: "2019-05-09T11:32:49.475127Z".to_string(),
+                    created_at: timestamp("2019-04-02T06:31:16.229419Z"),
+                    updated_at: timestamp("2019-05-09T11:32:49.475127Z"),
                 },
                 topic: "トピック".to_string(),
                 updater: takashi_trap(),
@@ -495,10 +404,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             UserCreatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 08:31:06.566228282 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T08:31:06.566228282Z".to_string(),
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
                 user: User {
                     #[cfg(feature = "uuid")]
                     id: uuid::uuid!("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
@@ -524,10 +430,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             StampCreatedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 08:31:06.566228282 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T08:31:06.566228282Z".to_string(),
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
                 #[cfg(feature = "uuid")]
                 id: uuid::uuid!("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
                 #[cfg(not(feature = "uuid"))]
@@ -554,10 +457,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             TagAddedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 08:31:06.566228282 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T08:31:06.566228282Z".to_string(),
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
                 #[cfg(feature = "uuid")]
                 tag_id: uuid::uuid!("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
                 #[cfg(not(feature = "uuid"))]
@@ -575,10 +475,7 @@ mod payload_tests {
         assert_eq!(
             payload,
             TagRemovedPayload {
-                #[cfg(feature = "time")]
-                event_time: datetime!(2019-05-08 08:31:06.566228282 UTC),
-                #[cfg(not(feature = "time"))]
-                event_time: "2019-05-08T08:31:06.566228282Z".to_string(),
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
                 #[cfg(feature = "uuid")]
                 tag_id: uuid::uuid!("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
                 #[cfg(not(feature = "uuid"))]
