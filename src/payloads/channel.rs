@@ -1,10 +1,8 @@
 //! チャンネル関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
-#[cfg(feature = "time")]
-use time::OffsetDateTime;
 
-use super::types::{Channel, User};
+use super::types::{Channel, TimeStamp, User};
 
 /// CHANNEL_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_channel_created.go#L9-L13)
@@ -36,12 +34,8 @@ use super::types::{Channel, User};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelCreatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub channel: Channel,
 }
 
@@ -83,12 +77,8 @@ pub struct ChannelCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelTopicChangedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub channel: Channel,
     pub topic: String,
     pub updater: User,

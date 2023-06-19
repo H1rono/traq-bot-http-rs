@@ -44,18 +44,10 @@ pub struct Channel {
     #[serde(rename = "parentId")]
     pub parent_id: String,
     pub creator: User,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/utils/message/embedded.go#L9-L14)
@@ -88,18 +80,10 @@ pub struct Message {
     #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L14-L17)
@@ -154,16 +138,8 @@ pub struct MessageStamp {
     #[serde(rename = "userId")]
     pub user_id: String,
     pub count: i32,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }
