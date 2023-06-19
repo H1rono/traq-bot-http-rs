@@ -1,9 +1,13 @@
+//! `#[serde(with = "...")]`で使用するためのモジュール群
+
 #[cfg(feature = "time")]
+/// タイムスタンプ型[`crate::payloads::types::TimeStamp`]用のモジュール
 pub mod time {
     pub use time::serde::rfc3339::{deserialize, serialize};
 }
 
 #[cfg(not(feature = "time"))]
+/// タイムスタンプ型[`crate::payloads::types::TimeStamp`]用のモジュール
 pub mod time {
     use serde::{
         de::{Error, Visitor},
