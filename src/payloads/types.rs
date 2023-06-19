@@ -4,6 +4,11 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "time")]
 use time::OffsetDateTime;
 
+#[cfg(feature = "time")]
+pub type TimeStamp = OffsetDateTime;
+#[cfg(not(feature = "time"))]
+pub type TimeStamp = String;
+
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L69-L75)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct User {
