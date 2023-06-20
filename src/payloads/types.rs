@@ -4,53 +4,41 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "time")]
 use time::OffsetDateTime;
 
+#[cfg(feature = "time")]
+pub type TimeStamp = OffsetDateTime;
+#[cfg(not(feature = "time"))]
+pub type TimeStamp = String;
+
+#[cfg(feature = "uuid")]
+pub type Uuid = uuid::Uuid;
+#[cfg(not(feature = "uuid"))]
+pub type Uuid = String;
+
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L69-L75)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct User {
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
+    pub id: Uuid,
     pub name: String,
     #[serde(rename = "displayName")]
     pub display_name: String,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "iconId")]
-    pub icon_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "iconId")]
-    pub icon_id: String,
+    pub icon_id: Uuid,
     pub bot: bool,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L47-L55)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Channel {
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
+    pub id: Uuid,
     pub name: String,
     pub path: String,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "parentId")]
-    pub parent_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "parentId")]
-    pub parent_id: String,
+    pub parent_id: Uuid,
     pub creator: User,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/utils/message/embedded.go#L9-L14)
@@ -59,106 +47,54 @@ pub struct EmbeddedInfo {
     pub raw: String,
     #[serde(rename = "type")]
     pub type_: String,
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
+    pub id: Uuid,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L23-L32)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Message {
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
+    pub id: Uuid,
     pub user: User,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "channelId")]
-    pub channel_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "channelId")]
-    pub channel_id: String,
+    pub channel_id: Uuid,
     pub text: String,
     #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L14-L17)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DeletedMessage {
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
-    #[cfg(feature = "uuid")]
+    pub id: Uuid,
     #[serde(rename = "channelId")]
-    pub channel_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "channelId")]
-    pub channel_id: String,
+    pub channel_id: Uuid,
 }
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_deleted.go#L14-L18)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DeletedDirectMessage {
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
-    #[cfg(feature = "uuid")]
+    pub id: Uuid,
     #[serde(rename = "userId")]
-    pub user_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "userId")]
-    pub user_id: String,
-    #[cfg(feature = "uuid")]
+    pub user_id: Uuid,
     #[serde(rename = "channelId")]
-    pub channel_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "channelId")]
-    pub channel_id: String,
+    pub channel_id: Uuid,
 }
 
 /// [traQの定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/model/message_stamp.go#L9-L20)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageStamp {
-    #[cfg(feature = "uuid")]
     #[serde(rename = "stampId")]
-    pub stamp_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "stampId")]
-    pub stamp_id: String,
-    #[cfg(feature = "uuid")]
+    pub stamp_id: Uuid,
     #[serde(rename = "userId")]
-    pub user_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "userId")]
-    pub user_id: String,
+    pub user_id: Uuid,
     pub count: i32,
-    #[cfg(feature = "time")]
-    #[serde(rename = "createdAt", with = "time::serde::rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "createdAt")]
-    pub created_at: String,
-    #[cfg(feature = "time")]
-    #[serde(rename = "updatedAt", with = "time::serde::rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    pub updated_at: TimeStamp,
 }

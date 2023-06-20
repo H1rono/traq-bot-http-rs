@@ -1,10 +1,8 @@
 //! システム関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
-#[cfg(feature = "time")]
-use time::OffsetDateTime;
 
-use super::types::Channel;
+use super::types::{Channel, TimeStamp};
 
 /// PINGペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_ping.go#L5-L8)
@@ -21,12 +19,8 @@ use super::types::Channel;
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct PingPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
 }
 
 /// JOINEDペイロード
@@ -59,12 +53,8 @@ pub struct PingPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct JoinedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub channel: Channel,
 }
 
@@ -98,11 +88,7 @@ pub struct JoinedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct LeftPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub channel: Channel,
 }

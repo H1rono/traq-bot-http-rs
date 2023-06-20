@@ -1,10 +1,8 @@
 //! メッセージ関連のイベントペイロード
 
 use serde::{Deserialize, Serialize};
-#[cfg(feature = "time")]
-use time::OffsetDateTime;
 
-use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp};
+use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
 
 /// MESSAGE_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_created.go#L10-L14)
@@ -43,12 +41,8 @@ use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageCreatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: Message,
 }
 
@@ -71,12 +65,8 @@ pub struct MessageCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageDeletedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: DeletedMessage,
 }
 
@@ -117,12 +107,8 @@ pub struct MessageDeletedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageUpdatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: Message,
 }
 
@@ -163,12 +149,8 @@ pub struct MessageUpdatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageCreatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: Message,
 }
 
@@ -192,12 +174,8 @@ pub struct DirectMessageCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageDeletedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: DeletedDirectMessage,
 }
 
@@ -238,12 +216,8 @@ pub struct DirectMessageDeletedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageUpdatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     pub message: Message,
 }
 
@@ -286,17 +260,9 @@ pub struct DirectMessageUpdatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct BotMessageStampsUpdatedPayload {
-    #[cfg(feature = "time")]
-    #[serde(rename = "eventTime", with = "time::serde::rfc3339")]
-    pub event_time: OffsetDateTime,
-    #[cfg(not(feature = "time"))]
-    #[serde(rename = "eventTime")]
-    pub event_time: String,
-    #[cfg(feature = "uuid")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    pub event_time: TimeStamp,
     #[serde(rename = "messageId")]
-    pub message_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "messageId")]
-    pub message_id: String,
+    pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
 }
