@@ -40,21 +40,29 @@ pub mod time {
     }
 }
 
-    struct StringVisitor;
+#[cfg(feature = "uuid")]
+pub mod uuid {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use uuid::Uuid;
 
-    impl<'de> Visitor<'de> for StringVisitor {
-        type Value = String;
+    pub fn serialize<S: Serializer>(data: &Uuid, serializer: S) -> Result<S::Ok, S::Error> {
+        data.serialize(serializer)
+    }
 
-        fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(formatter, "a string")
-        }
+    pub fn deserialize<'a, D: Deserializer<'a>>(deserializer: D) -> Result<Uuid, D::Error> {
+        Uuid::deserialize(deserializer)
+    }
+}
 
-        fn visit_string<E: Error>(self, v: String) -> Result<Self::Value, E> {
-            Ok(v)
-        }
+#[cfg(not(feature = "uuid"))]
+pub mod uuid {
+    use serde::{Deserializer, Serialize, Serializer};
 
-        fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
-            Ok(String::from(v))
-        }
+    pub fn serialize<S: Serializer>(data: &String, serializer: S) -> Result<S::Ok, S::Error> {
+        data.serialize(serializer)
+    }
+
+    pub fn deserialize<'a, D: Deserializer<'a>>(deserializer: D) -> Result<String, D::Error> {
+        deserializer.deserialize_string(super::StringVisitor)
     }
 }
