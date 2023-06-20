@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [0.5.2] - 2023-06-20
+
+### Added
+
+- 型エイリアス`payloads::types::{TimeStamp, Uuid}`を追加
+- 型エイリアスに対応する`serialize`, `deserialize`関数群として`payloads::serde::{time, uuid}`を追加
+- パッケージの`dev-dependencies`にexamplesで使用しているものを追加
+
+### Changed
+
+- examplesの構造を修正
+- テストを追加した型エイリアスを用いたものに修正
+
 ## [0.5.1] - 2023-05-20
 
 ### Added
@@ -81,10 +94,12 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[v0.5.0]: https://github.com/H1rono/traq-bot-http/rs/compare/v0.4.1..v0.5.0
-[v0.4.1]: https://github.com/H1rono/traq-bot-http/rs/compare/v0.4.0..v0.4.1
-[v0.4.0]: https://github.com/H1rono/traq-bot-http/rs/compare/v0.3.1..v0.4.0
-[v0.3.1]: https://github.com/H1rono/traq-bot-http/rs/compare/v0.3.0..v0.3.1
-[v0.3.0]: https://github.com/H1rono/traq-bot-http/rs/compare/v0.2.0..v0.3.0
+[v0.5.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.1..v0.5.2
+[v0.5.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.0..v0.5.1
+[v0.5.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.4.1..v0.5.0
+[v0.4.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.4.0..v0.4.1
+[v0.4.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.3.1..v0.4.0
+[v0.3.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.3.0..v0.3.1
+[v0.3.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.2.0..v0.3.0
 [v0.2.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.1.0..v0.2.0
 [v0.1.0]: https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.0.1
