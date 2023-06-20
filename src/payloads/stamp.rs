@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::types::{TimeStamp, User};
+use super::types::{TimeStamp, User, Uuid};
 
 /// STAMP_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_stamp_created.go#L11-L18)
@@ -31,16 +31,9 @@ use super::types::{TimeStamp, User};
 pub struct StampCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
     pub event_time: TimeStamp,
-    #[cfg(feature = "uuid")]
-    pub id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    pub id: String,
+    pub id: Uuid,
     pub name: String,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "fileId")]
-    pub file_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "fileId")]
-    pub file_id: String,
+    pub file_id: Uuid,
     pub creator: User,
 }

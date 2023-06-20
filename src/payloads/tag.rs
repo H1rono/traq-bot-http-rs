@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::types::TimeStamp;
+use super::types::{TimeStamp, Uuid};
 
 /// TAG_ADDEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_tag_added.go#L11-L16)
@@ -23,12 +23,8 @@ use super::types::TimeStamp;
 pub struct TagAddedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
     pub event_time: TimeStamp,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "tagId")]
-    pub tag_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "tagId")]
-    pub tag_id: String,
+    pub tag_id: Uuid,
     pub tag: String,
 }
 
@@ -51,11 +47,7 @@ pub struct TagAddedPayload {
 pub struct TagRemovedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
     pub event_time: TimeStamp,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "tagId")]
-    pub tag_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "tagId")]
-    pub tag_id: String,
+    pub tag_id: Uuid,
     pub tag: String,
 }

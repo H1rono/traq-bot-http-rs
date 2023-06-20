@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp};
+use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
 
 /// MESSAGE_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_created.go#L10-L14)
@@ -262,11 +262,7 @@ pub struct DirectMessageUpdatedPayload {
 pub struct BotMessageStampsUpdatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
     pub event_time: TimeStamp,
-    #[cfg(feature = "uuid")]
     #[serde(rename = "messageId")]
-    pub message_id: uuid::Uuid,
-    #[cfg(not(feature = "uuid"))]
-    #[serde(rename = "messageId")]
-    pub message_id: String,
+    pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
 }
