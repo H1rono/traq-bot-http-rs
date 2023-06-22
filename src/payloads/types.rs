@@ -1,11 +1,20 @@
 //! イベントペイロード内部で使われる型
 
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "chrono")]
+use chrono::{DateTime, Utc};
+
+#[cfg(not(feature = "chrono"))]
 #[cfg(feature = "time")]
 use time::OffsetDateTime;
 
+#[cfg(feature = "chrono")]
+pub type TimeStamp = DateTime<Utc>;
+#[cfg(not(feature = "chrono"))]
 #[cfg(feature = "time")]
 pub type TimeStamp = OffsetDateTime;
+#[cfg(not(feature = "chrono"))]
 #[cfg(not(feature = "time"))]
 pub type TimeStamp = String;
 
