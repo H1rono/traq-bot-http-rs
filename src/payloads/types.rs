@@ -35,9 +35,9 @@ pub struct Channel {
     #[serde(rename = "parentId")]
     pub parent_id: Uuid,
     pub creator: User,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -61,9 +61,9 @@ pub struct Message {
     #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -93,8 +93,8 @@ pub struct MessageStamp {
     #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub count: i32,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }

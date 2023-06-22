@@ -17,7 +17,7 @@ mod payload_tests {
     fn timestamp(v: &'static str) -> TimeStamp {
         use serde::de::value::{Error, StrDeserializer};
         let de = StrDeserializer::<'_, Error>::new(v);
-        traq_bot_http::payloads::serde::time::deserialize(de).unwrap()
+        traq_bot_http::payloads::serde::timestamp::deserialize(de).unwrap()
     }
 
     fn uuid(v: &'static str) -> Uuid {

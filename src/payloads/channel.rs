@@ -34,7 +34,7 @@ use super::types::{Channel, TimeStamp, User};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
 }
@@ -77,7 +77,7 @@ pub struct ChannelCreatedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelTopicChangedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
     pub topic: String,

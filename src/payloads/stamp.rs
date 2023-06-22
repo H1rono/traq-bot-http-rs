@@ -29,7 +29,7 @@ use super::types::{TimeStamp, User, Uuid};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct StampCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub id: Uuid,
     pub name: String,

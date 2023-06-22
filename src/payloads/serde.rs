@@ -22,13 +22,13 @@ impl<'de> Visitor<'de> for StringVisitor {
 
 #[cfg(feature = "time")]
 /// タイムスタンプ型[`crate::payloads::types::TimeStamp`]用のモジュール
-pub mod time {
+pub mod timestamp {
     pub use time::serde::rfc3339::{deserialize, serialize};
 }
 
 #[cfg(not(feature = "time"))]
 /// タイムスタンプ型[`crate::payloads::types::TimeStamp`]用のモジュール
-pub mod time {
+pub mod timestamp {
     use serde::{Deserializer, Serialize, Serializer};
 
     pub fn serialize<S: Serializer>(data: &String, serializer: S) -> Result<S::Ok, S::Error> {
