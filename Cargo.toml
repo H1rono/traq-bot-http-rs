@@ -27,6 +27,11 @@ version = "0.3"
 features = ["serde", "parsing", "formatting", "macros"]
 optional = true
 
+[dependencies.chrono]
+version = "0.4"
+optional = true
+features = ["serde"]
+
 [dev-dependencies]
 axum = "0.6"
 tokio = { version = "1.0", features = ["full"] }
@@ -38,3 +43,4 @@ path = "examples/basic-with-axum.rs"
 [features]
 uuid = ["dep:uuid"]
 time = ["dep:time"]
+chrono = ["dep:chrono"]

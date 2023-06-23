@@ -21,7 +21,7 @@ use super::types::{TimeStamp, Uuid};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagAddedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     #[serde(rename = "tagId")]
     pub tag_id: Uuid,
@@ -45,7 +45,7 @@ pub struct TagAddedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagRemovedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     #[serde(rename = "tagId")]
     pub tag_id: Uuid,

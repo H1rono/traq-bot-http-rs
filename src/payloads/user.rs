@@ -26,7 +26,7 @@ use super::types::{TimeStamp, User};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub user: User,
 }

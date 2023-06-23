@@ -43,6 +43,7 @@ jobs:
         run: |
           mkdir -p target/profile
           cargo test
+          cargo test --features time
           cargo test --all-features
       - name: generate LCOV
         run: ./grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing -o ./target/coverage.lcov

@@ -19,7 +19,7 @@ use super::types::{Channel, TimeStamp};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct PingPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
 }
 
@@ -53,7 +53,7 @@ pub struct PingPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct JoinedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
 }
@@ -88,7 +88,7 @@ pub struct JoinedPayload {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct LeftPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::time")]
+    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
 }

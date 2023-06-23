@@ -1,11 +1,20 @@
 //! イベントペイロード内部で使われる型
 
 use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "chrono")]
+use chrono::{DateTime, Utc};
+
+#[cfg(not(feature = "chrono"))]
 #[cfg(feature = "time")]
 use time::OffsetDateTime;
 
+#[cfg(feature = "chrono")]
+pub type TimeStamp = DateTime<Utc>;
+#[cfg(not(feature = "chrono"))]
 #[cfg(feature = "time")]
 pub type TimeStamp = OffsetDateTime;
+#[cfg(not(feature = "chrono"))]
 #[cfg(not(feature = "time"))]
 pub type TimeStamp = String;
 
@@ -35,9 +44,9 @@ pub struct Channel {
     #[serde(rename = "parentId")]
     pub parent_id: Uuid,
     pub creator: User,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -61,9 +70,9 @@ pub struct Message {
     #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -93,8 +102,8 @@ pub struct MessageStamp {
     #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub count: i32,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::time")]
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
