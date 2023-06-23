@@ -9,13 +9,32 @@ permissions:
   contents: write
 
 jobs:
-  create-release:
+  check-main-branch:
     runs-on: ubuntu-latest
+    outputs:
+      contains: ${{ steps.check.outputs.contains }}
     steps:
       - uses: actions/checkout@v3
-      - uses: taiki-e/create-gh-release-action@v1
         with:
-          # (Optional) Path to changelog.
-          changelog: CHANGELOG.md
-          # (Required) GitHub token for creating GitHub Releases.
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+          fetch-depth: 0
+      - id: check
+        run: |
+          branches=$(git branch -r --contains "$GITHUB_REF_NAME")
+          for branch in $branches; do
+            if [[ "$branch" == "origin/main" ]]; then
+              echo "contains=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo "contains=false" >> "$GITHUB_OUTPUT"
+  create-release:
+    runs-on: ubuntu-latest
+    needs: check-main-branch
+    if: needs.check-main-branch.outputs.contains == 'true'
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          gh release create ${{ github.ref_name }} -d -F CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
