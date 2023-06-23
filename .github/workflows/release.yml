@@ -34,9 +34,7 @@ jobs:
     if: needs.check-main-branch.outputs.contains == 'true'
     steps:
       - uses: actions/checkout@v3
-      - uses: taiki-e/create-gh-release-action@v1
-        with:
-          # (Optional) Path to changelog.
-          changelog: CHANGELOG.md
-          # (Required) GitHub token for creating GitHub Releases.
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          gh release create ${{ github.ref_name }} -d -F CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
