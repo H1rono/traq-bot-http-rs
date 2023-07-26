@@ -1,6 +1,7 @@
 [package]
 name = "traq-bot-http"
 version = "0.6.1"
+authors = ["H1rono <hronok66@gmail.com>"]
 edition = "2021"
 description = "Library to parse POST requests of traQ BOT event"
 rust-version = "1.64"
@@ -9,6 +10,7 @@ keywords = ["http", "web", "framework"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/H1rono/traq-bot-http-rs"
+include = ["/src", "/examples", "/README.md", "/LICENSE"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
