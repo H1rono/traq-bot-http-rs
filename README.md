@@ -3,10 +3,12 @@
 [![Rust](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/rust.yml)
 [![codecov](https://codecov.io/gh/H1rono/traq-bot-http-rs/branch/main/graph/badge.svg?token=UEA9118L9I)](https://codecov.io/gh/H1rono/traq-bot-http-rs)
 [![Release](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml/badge.svg)](https://github.com/H1rono/traq-bot-http-rs/actions/workflows/release.yml)
+[![docs.rs](https://img.shields.io/docsrs/traq-bot-http?logo=docsdotrs)](https://docs.rs/traq-bot-http/latest/traq_bot_http/)
 
-[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/H1rono/traq-bot-http-rs/blob/main/LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/H1rono/traq-bot-http-rs?logo=github)](https://github.com/H1rono/traq-bot-http-rs/releases/latest)
-[![crate](https://img.shields.io/crates/v/traq-bot-http.svg?logo=rust)](https://crates.io/crates/traq-bot-http)
+[![GitHub](https://img.shields.io/github/license/H1rono/traq-bot-http-rs?logo=github)](https://github.com/H1rono/traq-bot-http-rs/blob/main/LICENSE)
+[![Crates.io](https://img.shields.io/crates/l/traq-bot-http?logo=docsdotrs)](https://crates.io/crates/traq-bot-http)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/h1rono/traq-bot-http-rs?logo=github)](https://github.com/H1rono/traq-bot-http-rs/releases/latest)
+[![Crates.io](https://img.shields.io/crates/v/traq-bot-http?logo=rust)](https://crates.io/crates/traq-bot-http)
 
 traQ BOTのPOSTリクエストをパースするライブラリです。
 
