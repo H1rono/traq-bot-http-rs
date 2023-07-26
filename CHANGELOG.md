@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.6.1] - 2023-07-26
+
+### Changed
+
+- Codecovの設定を更新
+- リリース手順を修正
+
 ## [v0.6.0] - 2023-06-23
 
 ### Added
@@ -104,6 +111,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.6.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.0..v0.6.1
 [v0.6.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.2..v0.6.0
 [v0.5.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.1..v0.5.2
 [v0.5.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.0..v0.5.1
