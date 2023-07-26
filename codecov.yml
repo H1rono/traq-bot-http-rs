@@ -1,2 +1,4 @@
 ignore:
   - examples
+  - src/lib.rs
+  - src/payloads.rs
