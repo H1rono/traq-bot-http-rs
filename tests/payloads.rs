@@ -1,18 +1,10 @@
 #[cfg(test)]
 mod payload_tests {
+    use std::fs::read_to_string;
+
     use traq_bot_http::payloads::{types::*, *};
 
     use ::serde;
-
-    fn read_file(filename: &str) -> String {
-        use std::{fs::File, io::Read, path::Path};
-        // https://doc.rust-lang.org/rust-by-example/std_misc/file/open.html
-        let path = Path::new(filename);
-        let mut file = File::open(path).expect("Failed to open file");
-        let mut buf = String::new();
-        file.read_to_string(&mut buf).expect("Failed to read file");
-        buf
-    }
 
     fn timestamp(v: &'static str) -> TimeStamp {
         use serde::de::value::{Error, StrDeserializer};
@@ -58,7 +50,7 @@ mod payload_tests {
 
     #[test]
     fn ping_test() {
-        let ping = read_file("testdata/system/ping.json");
+        let ping = read_to_string("testdata/system/ping.json").unwrap();
         let payload = serde_json::from_str::<PingPayload>(&ping).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -71,7 +63,7 @@ mod payload_tests {
 
     #[test]
     fn joined_test() {
-        let data = read_file("testdata/system/joined.json");
+        let data = read_to_string("testdata/system/joined.json").unwrap();
         let payload = serde_json::from_str::<JoinedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -85,7 +77,7 @@ mod payload_tests {
 
     #[test]
     fn left_test() {
-        let data = read_file("testdata/system/left.json");
+        let data = read_to_string("testdata/system/left.json").unwrap();
         let payload = serde_json::from_str::<LeftPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -99,7 +91,7 @@ mod payload_tests {
 
     #[test]
     fn message_created_test() {
-        let data = read_file("testdata/message/message_created.json");
+        let data = read_to_string("testdata/message/message_created.json").unwrap();
         let payload = serde_json::from_str::<MessageCreatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -124,7 +116,7 @@ mod payload_tests {
 
     #[test]
     fn message_deleted_test() {
-        let data = read_file("testdata/message/message_deleted.json");
+        let data = read_to_string("testdata/message/message_deleted.json").unwrap();
         let payload = serde_json::from_str::<MessageDeletedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -141,7 +133,7 @@ mod payload_tests {
 
     #[test]
     fn message_updated_test() {
-        let data = read_file("testdata/message/message_updated.json");
+        let data = read_to_string("testdata/message/message_updated.json").unwrap();
         let payload = serde_json::from_str::<MessageUpdatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -166,7 +158,7 @@ mod payload_tests {
 
     #[test]
     fn direct_message_created_test() {
-        let data = read_file("testdata/message/direct_message_created.json");
+        let data = read_to_string("testdata/message/direct_message_created.json").unwrap();
         let payload = serde_json::from_str::<DirectMessageCreatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -191,7 +183,7 @@ mod payload_tests {
 
     #[test]
     fn direct_message_deleted_test() {
-        let data = read_file("testdata/message/direct_message_deleted.json");
+        let data = read_to_string("testdata/message/direct_message_deleted.json").unwrap();
         let payload = serde_json::from_str::<DirectMessageDeletedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -209,7 +201,7 @@ mod payload_tests {
 
     #[test]
     fn direct_message_updated_test() {
-        let data = read_file("testdata/message/direct_message_updated.json");
+        let data = read_to_string("testdata/message/direct_message_updated.json").unwrap();
         let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -234,7 +226,7 @@ mod payload_tests {
 
     #[test]
     fn bot_message_stamps_updated_test() {
-        let data = read_file("testdata/message/bot_message_stamps_updated.json");
+        let data = read_to_string("testdata/message/bot_message_stamps_updated.json").unwrap();
         let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -271,7 +263,7 @@ mod payload_tests {
 
     #[test]
     fn channel_created_test() {
-        let data = read_file("testdata/channel/channel_created.json");
+        let data = read_to_string("testdata/channel/channel_created.json").unwrap();
         let payload = serde_json::from_str::<ChannelCreatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -293,7 +285,7 @@ mod payload_tests {
 
     #[test]
     fn chennel_topic_changed_test() {
-        let data = read_file("testdata/channel/channel_topic_changed.json");
+        let data = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
         let payload = serde_json::from_str::<ChannelTopicChangedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -317,7 +309,7 @@ mod payload_tests {
 
     #[test]
     fn user_created_test() {
-        let data = read_file("testdata/user/user_created.json");
+        let data = read_to_string("testdata/user/user_created.json").unwrap();
         let payload = serde_json::from_str::<UserCreatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -337,7 +329,7 @@ mod payload_tests {
 
     #[test]
     fn stamp_created_test() {
-        let data = read_file("testdata/stamp/stamp_created.json");
+        let data = read_to_string("testdata/stamp/stamp_created.json").unwrap();
         let payload = serde_json::from_str::<StampCreatedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -358,7 +350,7 @@ mod payload_tests {
 
     #[test]
     fn tag_added_test() {
-        let data = read_file("testdata/tag/tag_added.json");
+        let data = read_to_string("testdata/tag/tag_added.json").unwrap();
         let payload = serde_json::from_str::<TagAddedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
@@ -373,7 +365,7 @@ mod payload_tests {
 
     #[test]
     fn tag_removed_test() {
-        let data = read_file("testdata/tag/tag_removed.json");
+        let data = read_to_string("testdata/tag/tag_removed.json").unwrap();
         let payload = serde_json::from_str::<TagRemovedPayload>(&data).unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
         assert_eq!(
