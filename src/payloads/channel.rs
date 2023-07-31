@@ -1,5 +1,7 @@
 //! チャンネル関連のイベントペイロード
 
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp, User};
@@ -37,6 +39,14 @@ pub struct ChannelCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
+}
+
+impl FromStr for ChannelCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
 
 /// CHANNEL_TOPIC_CHANGEDペイロード
@@ -82,4 +92,12 @@ pub struct ChannelTopicChangedPayload {
     pub channel: Channel,
     pub topic: String,
     pub updater: User,
+}
+
+impl FromStr for ChannelTopicChangedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }

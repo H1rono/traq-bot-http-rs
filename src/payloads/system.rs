@@ -1,5 +1,7 @@
 //! システム関連のイベントペイロード
 
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp};
@@ -21,6 +23,14 @@ use super::types::{Channel, TimeStamp};
 pub struct PingPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
+}
+
+impl FromStr for PingPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
 
 /// JOINEDペイロード
@@ -58,6 +68,14 @@ pub struct JoinedPayload {
     pub channel: Channel,
 }
 
+impl FromStr for JoinedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
 /// LEFTペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_left.go#L9-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#left)
@@ -91,4 +109,12 @@ pub struct LeftPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
+}
+
+impl FromStr for LeftPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }

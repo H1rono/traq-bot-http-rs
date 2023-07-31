@@ -1,5 +1,7 @@
 //! メッセージ関連のイベントペイロード
 
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
@@ -46,6 +48,14 @@ pub struct MessageCreatedPayload {
     pub message: Message,
 }
 
+impl FromStr for MessageCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
 /// MESSAGE_DELETEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L11-L18)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#message_deleted)
@@ -68,6 +78,14 @@ pub struct MessageDeletedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedMessage,
+}
+
+impl FromStr for MessageDeletedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
 
 /// MESSAGE_UPDATEDペイロード
@@ -112,6 +130,14 @@ pub struct MessageUpdatedPayload {
     pub message: Message,
 }
 
+impl FromStr for MessageUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
 /// DIRECT_MESSAGE_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_created.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_created)
@@ -154,6 +180,14 @@ pub struct DirectMessageCreatedPayload {
     pub message: Message,
 }
 
+impl FromStr for DirectMessageCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
 /// DIRECT_MESSAGE_DELETEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_deleted.go#L11-L19)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_deleted)
@@ -177,6 +211,14 @@ pub struct DirectMessageDeletedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedDirectMessage,
+}
+
+impl FromStr for DirectMessageDeletedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
 
 /// DIRECT_MESSAGE_UPDATEDペイロード
@@ -219,6 +261,14 @@ pub struct DirectMessageUpdatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
+}
+
+impl FromStr for DirectMessageUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
 
 /// BOT_MESSAGE_STAMPS_UPDATEDペイロード
@@ -265,4 +315,12 @@ pub struct BotMessageStampsUpdatedPayload {
     #[serde(rename = "messageId")]
     pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
+}
+
+impl FromStr for BotMessageStampsUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }

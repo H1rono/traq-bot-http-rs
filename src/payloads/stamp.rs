@@ -1,5 +1,7 @@
 //! スタンプ関連のイベントペイロード
 
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, User, Uuid};
@@ -36,4 +38,12 @@ pub struct StampCreatedPayload {
     #[serde(rename = "fileId")]
     pub file_id: Uuid,
     pub creator: User,
+}
+
+impl FromStr for StampCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
 }
