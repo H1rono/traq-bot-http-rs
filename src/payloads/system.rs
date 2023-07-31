@@ -76,6 +76,19 @@ impl FromStr for JoinedPayload {
     }
 }
 
+impl From<LeftPayload> for JoinedPayload {
+    fn from(payload: LeftPayload) -> Self {
+        let LeftPayload {
+            event_time,
+            channel,
+        } = payload;
+        Self {
+            event_time,
+            channel,
+        }
+    }
+}
+
 /// LEFTペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_left.go#L9-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#left)
@@ -116,5 +129,18 @@ impl FromStr for LeftPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl From<JoinedPayload> for LeftPayload {
+    fn from(payload: JoinedPayload) -> Self {
+        let JoinedPayload {
+            event_time,
+            channel,
+        } = payload;
+        Self {
+            event_time,
+            channel,
+        }
     }
 }

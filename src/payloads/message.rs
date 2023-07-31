@@ -56,6 +56,19 @@ impl FromStr for MessageCreatedPayload {
     }
 }
 
+impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
+    fn from(payload: DirectMessageCreatedPayload) -> Self {
+        let DirectMessageCreatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
+}
+
 /// MESSAGE_DELETEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L11-L18)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#message_deleted)
@@ -138,6 +151,19 @@ impl FromStr for MessageUpdatedPayload {
     }
 }
 
+impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
+    fn from(payload: DirectMessageUpdatedPayload) -> Self {
+        let DirectMessageUpdatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
+}
+
 /// DIRECT_MESSAGE_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_created.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_created)
@@ -185,6 +211,19 @@ impl FromStr for DirectMessageCreatedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
+    fn from(payload: MessageCreatedPayload) -> Self {
+        let MessageCreatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
     }
 }
 
@@ -268,6 +307,19 @@ impl FromStr for DirectMessageUpdatedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
+    fn from(payload: MessageUpdatedPayload) -> Self {
+        let MessageUpdatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
     }
 }
 
