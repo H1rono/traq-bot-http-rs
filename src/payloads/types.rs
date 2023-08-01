@@ -1,5 +1,6 @@
 //! イベントペイロード内部で使われる型
 
+use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
@@ -45,6 +46,16 @@ impl FromStr for User {
     }
 }
 
+impl Display for User {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize User")
+        )
+    }
+}
+
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L47-L55)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Channel {
@@ -68,6 +79,16 @@ impl FromStr for Channel {
     }
 }
 
+impl Display for Channel {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize Channel")
+        )
+    }
+}
+
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/utils/message/embedded.go#L9-L14)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct EmbeddedInfo {
@@ -82,6 +103,16 @@ impl FromStr for EmbeddedInfo {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for EmbeddedInfo {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize EmbeddedInfo")
+        )
     }
 }
 
@@ -110,6 +141,16 @@ impl FromStr for Message {
     }
 }
 
+impl Display for Message {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize Message")
+        )
+    }
+}
+
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L14-L17)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DeletedMessage {
@@ -123,6 +164,16 @@ impl FromStr for DeletedMessage {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for DeletedMessage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DeletedMessage")
+        )
     }
 }
 
@@ -141,6 +192,16 @@ impl FromStr for DeletedDirectMessage {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for DeletedDirectMessage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DeletedDirectMessage")
+        )
     }
 }
 
@@ -163,5 +224,15 @@ impl FromStr for MessageStamp {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageStamp {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageStamp")
+        )
     }
 }

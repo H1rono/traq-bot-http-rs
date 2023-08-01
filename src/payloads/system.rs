@@ -1,5 +1,6 @@
 //! システム関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
@@ -30,6 +31,16 @@ impl FromStr for PingPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for PingPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize PingPayload")
+        )
     }
 }
 
@@ -73,6 +84,16 @@ impl FromStr for JoinedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for JoinedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize JoinedPayload")
+        )
     }
 }
 
@@ -129,6 +150,16 @@ impl FromStr for LeftPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for LeftPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize LeftPayload")
+        )
     }
 }
 

@@ -1,5 +1,6 @@
 //! メッセージ関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
@@ -56,6 +57,16 @@ impl FromStr for MessageCreatedPayload {
     }
 }
 
+impl Display for MessageCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageCreatedPayload")
+        )
+    }
+}
+
 impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
     fn from(payload: DirectMessageCreatedPayload) -> Self {
         let DirectMessageCreatedPayload {
@@ -98,6 +109,16 @@ impl FromStr for MessageDeletedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageDeletedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageDeletedPayload")
+        )
     }
 }
 
@@ -148,6 +169,16 @@ impl FromStr for MessageUpdatedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageUpdatedPayload")
+        )
     }
 }
 
@@ -214,6 +245,16 @@ impl FromStr for DirectMessageCreatedPayload {
     }
 }
 
+impl Display for DirectMessageCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageCreatedPayload")
+        )
+    }
+}
+
 impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
     fn from(payload: MessageCreatedPayload) -> Self {
         let MessageCreatedPayload {
@@ -257,6 +298,16 @@ impl FromStr for DirectMessageDeletedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for DirectMessageDeletedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageDeletedPayload")
+        )
     }
 }
 
@@ -307,6 +358,16 @@ impl FromStr for DirectMessageUpdatedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for DirectMessageUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageUpdatedPayload")
+        )
     }
 }
 
@@ -374,5 +435,16 @@ impl FromStr for BotMessageStampsUpdatedPayload {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(s)
+    }
+}
+
+impl Display for BotMessageStampsUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self)
+                .expect("failed to serialize BotMessageStampsUpdatedPayload")
+        )
     }
 }
