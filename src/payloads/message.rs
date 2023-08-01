@@ -1,5 +1,8 @@
 //! メッセージ関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
@@ -36,14 +39,45 @@ use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, 
 ///         "updatedAt": "2019-05-08T13:33:51.632149265Z"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<MessageCreatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: MessageCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
+}
+
+impl FromStr for MessageCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageCreatedPayload")
+        )
+    }
+}
+
+impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
+    fn from(payload: DirectMessageCreatedPayload) -> Self {
+        let DirectMessageCreatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
 }
 
 /// MESSAGE_DELETEDペイロード
@@ -61,13 +95,31 @@ pub struct MessageCreatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<MessageDeletedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageDeletedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedMessage,
+}
+
+impl FromStr for MessageDeletedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageDeletedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageDeletedPayload")
+        )
+    }
 }
 
 /// MESSAGE_UPDATEDペイロード
@@ -103,13 +155,44 @@ pub struct MessageDeletedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<MessageUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageUpdatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
+}
+
+impl FromStr for MessageUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for MessageUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize MessageUpdatedPayload")
+        )
+    }
+}
+
+impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
+    fn from(payload: DirectMessageUpdatedPayload) -> Self {
+        let DirectMessageUpdatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
 }
 
 /// DIRECT_MESSAGE_CREATEDペイロード
@@ -145,13 +228,44 @@ pub struct MessageUpdatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageCreatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
+}
+
+impl FromStr for DirectMessageCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for DirectMessageCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageCreatedPayload")
+        )
+    }
+}
+
+impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
+    fn from(payload: MessageCreatedPayload) -> Self {
+        let MessageCreatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
 }
 
 /// DIRECT_MESSAGE_DELETEDペイロード
@@ -170,13 +284,31 @@ pub struct DirectMessageCreatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageDeletedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageDeletedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedDirectMessage,
+}
+
+impl FromStr for DirectMessageDeletedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for DirectMessageDeletedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageDeletedPayload")
+        )
+    }
 }
 
 /// DIRECT_MESSAGE_UPDATEDペイロード
@@ -212,13 +344,44 @@ pub struct DirectMessageDeletedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageUpdatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
+}
+
+impl FromStr for DirectMessageUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for DirectMessageUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize DirectMessageUpdatedPayload")
+        )
+    }
+}
+
+impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
+    fn from(payload: MessageUpdatedPayload) -> Self {
+        let MessageUpdatedPayload {
+            event_time,
+            message,
+        } = payload;
+        Self {
+            event_time,
+            message,
+        }
+    }
 }
 
 /// BOT_MESSAGE_STAMPS_UPDATEDペイロード
@@ -256,7 +419,7 @@ pub struct DirectMessageUpdatedPayload {
 ///     ]
 /// }"##;
 /// let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct BotMessageStampsUpdatedPayload {
@@ -265,4 +428,23 @@ pub struct BotMessageStampsUpdatedPayload {
     #[serde(rename = "messageId")]
     pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
+}
+
+impl FromStr for BotMessageStampsUpdatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for BotMessageStampsUpdatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self)
+                .expect("failed to serialize BotMessageStampsUpdatedPayload")
+        )
+    }
 }

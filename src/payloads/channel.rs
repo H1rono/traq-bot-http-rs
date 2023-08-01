@@ -1,5 +1,8 @@
 //! チャンネル関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp, User};
@@ -29,14 +32,32 @@ use super::types::{Channel, TimeStamp, User};
 ///         "updatedAt": "2019-05-08T13:45:51.487718Z"
 ///     }
 /// }"##;
-/// let payload: ChannelCreatedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: ChannelCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
+}
+
+impl FromStr for ChannelCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for ChannelCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize ChannelCreatedPayload")
+        )
+    }
 }
 
 /// CHANNEL_TOPIC_CHANGEDペイロード
@@ -72,8 +93,8 @@ pub struct ChannelCreatedPayload {
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: ChannelTopicChangedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: ChannelTopicChangedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelTopicChangedPayload {
@@ -82,4 +103,22 @@ pub struct ChannelTopicChangedPayload {
     pub channel: Channel,
     pub topic: String,
     pub updater: User,
+}
+
+impl FromStr for ChannelTopicChangedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for ChannelTopicChangedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize ChannelTopicChangedPayload")
+        )
+    }
 }

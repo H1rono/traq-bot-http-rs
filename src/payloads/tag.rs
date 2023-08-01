@@ -1,5 +1,8 @@
 //! タグ関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, Uuid};
@@ -16,8 +19,8 @@ use super::types::{TimeStamp, Uuid};
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagAddedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: TagAddedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagAddedPayload {
@@ -26,6 +29,39 @@ pub struct TagAddedPayload {
     #[serde(rename = "tagId")]
     pub tag_id: Uuid,
     pub tag: String,
+}
+
+impl FromStr for TagAddedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for TagAddedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize TagAddedPayload")
+        )
+    }
+}
+
+impl From<TagRemovedPayload> for TagAddedPayload {
+    fn from(payload: TagRemovedPayload) -> Self {
+        let TagRemovedPayload {
+            event_time,
+            tag_id,
+            tag,
+        } = payload;
+        Self {
+            event_time,
+            tag_id,
+            tag,
+        }
+    }
 }
 
 /// TAG_REMOVEDペイロード
@@ -40,8 +76,8 @@ pub struct TagAddedPayload {
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagRemovedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: TagRemovedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagRemovedPayload {
@@ -50,4 +86,37 @@ pub struct TagRemovedPayload {
     #[serde(rename = "tagId")]
     pub tag_id: Uuid,
     pub tag: String,
+}
+
+impl FromStr for TagRemovedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for TagRemovedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize TagRemovedPayload")
+        )
+    }
+}
+
+impl From<TagAddedPayload> for TagRemovedPayload {
+    fn from(payload: TagAddedPayload) -> Self {
+        let TagAddedPayload {
+            event_time,
+            tag_id,
+            tag,
+        } = payload;
+        Self {
+            event_time,
+            tag_id,
+            tag,
+        }
+    }
 }

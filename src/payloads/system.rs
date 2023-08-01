@@ -1,5 +1,8 @@
 //! システム関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp};
@@ -14,13 +17,31 @@ use super::types::{Channel, TimeStamp};
 /// let payload = r##"{
 ///     "eventTime": "2019-05-07T04:50:48.582586882Z"
 /// }"##;
-/// let payload: PingPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: PingPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct PingPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
+}
+
+impl FromStr for PingPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for PingPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize PingPayload")
+        )
+    }
 }
 
 /// JOINEDペイロード
@@ -48,14 +69,45 @@ pub struct PingPayload {
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: JoinedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: JoinedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct JoinedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
+}
+
+impl FromStr for JoinedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for JoinedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize JoinedPayload")
+        )
+    }
+}
+
+impl From<LeftPayload> for JoinedPayload {
+    fn from(payload: LeftPayload) -> Self {
+        let LeftPayload {
+            event_time,
+            channel,
+        } = payload;
+        Self {
+            event_time,
+            channel,
+        }
+    }
 }
 
 /// LEFTペイロード
@@ -83,12 +135,43 @@ pub struct JoinedPayload {
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: LeftPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: LeftPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct LeftPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
+}
+
+impl FromStr for LeftPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for LeftPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize LeftPayload")
+        )
+    }
+}
+
+impl From<JoinedPayload> for LeftPayload {
+    fn from(payload: JoinedPayload) -> Self {
+        let JoinedPayload {
+            event_time,
+            channel,
+        } = payload;
+        Self {
+            event_time,
+            channel,
+        }
+    }
 }

@@ -1,5 +1,8 @@
 //! ユーザー関連のイベントペイロード
 
+use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, User};
@@ -21,12 +24,30 @@ use super::types::{TimeStamp, User};
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: UserCreatedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: UserCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserCreatedPayload {
     #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub user: User,
+}
+
+impl FromStr for UserCreatedPayload {
+    type Err = serde_json::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(s)
+    }
+}
+
+impl Display for UserCreatedPayload {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(self).expect("failed to serialize UserCreatedPayload")
+        )
+    }
 }
