@@ -39,8 +39,8 @@ use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, 
 ///         "updatedAt": "2019-05-08T13:33:51.632149265Z"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<MessageCreatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: MessageCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageCreatedPayload {
@@ -95,7 +95,7 @@ impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<MessageDeletedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageDeletedPayload {
@@ -155,7 +155,7 @@ impl Display for MessageDeletedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<MessageUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct MessageUpdatedPayload {
@@ -228,7 +228,7 @@ impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageCreatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageCreatedPayload {
@@ -284,7 +284,7 @@ impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageDeletedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageDeletedPayload {
@@ -344,7 +344,7 @@ impl Display for DirectMessageDeletedPayload {
 ///     }
 /// }"##;
 /// let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct DirectMessageUpdatedPayload {
@@ -419,7 +419,7 @@ impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
 ///     ]
 /// }"##;
 /// let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(payload).unwrap();
-/// println!("{payload:?}");
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct BotMessageStampsUpdatedPayload {

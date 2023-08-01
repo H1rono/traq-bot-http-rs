@@ -27,8 +27,8 @@ use super::types::{TimeStamp, User, Uuid};
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: StampCreatedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: StampCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct StampCreatedPayload {

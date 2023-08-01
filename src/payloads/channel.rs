@@ -32,8 +32,8 @@ use super::types::{Channel, TimeStamp, User};
 ///         "updatedAt": "2019-05-08T13:45:51.487718Z"
 ///     }
 /// }"##;
-/// let payload: ChannelCreatedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: ChannelCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelCreatedPayload {
@@ -93,8 +93,8 @@ impl Display for ChannelCreatedPayload {
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: ChannelTopicChangedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: ChannelTopicChangedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct ChannelTopicChangedPayload {

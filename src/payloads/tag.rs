@@ -19,8 +19,8 @@ use super::types::{TimeStamp, Uuid};
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagAddedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: TagAddedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagAddedPayload {
@@ -76,8 +76,8 @@ impl From<TagRemovedPayload> for TagAddedPayload {
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagRemovedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: TagRemovedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct TagRemovedPayload {

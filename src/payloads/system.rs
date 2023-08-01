@@ -17,8 +17,8 @@ use super::types::{Channel, TimeStamp};
 /// let payload = r##"{
 ///     "eventTime": "2019-05-07T04:50:48.582586882Z"
 /// }"##;
-/// let payload: PingPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: PingPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct PingPayload {
@@ -69,8 +69,8 @@ impl Display for PingPayload {
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: JoinedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: JoinedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct JoinedPayload {
@@ -135,8 +135,8 @@ impl From<LeftPayload> for JoinedPayload {
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: LeftPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: LeftPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct LeftPayload {

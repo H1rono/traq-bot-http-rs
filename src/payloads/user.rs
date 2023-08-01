@@ -24,8 +24,8 @@ use super::types::{TimeStamp, User};
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: UserCreatedPayload = serde_json::from_str(payload).unwrap();
-/// println!("{payload:?}");
+/// let payload: UserCreatedPayload = payload.parse().unwrap();
+/// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserCreatedPayload {
