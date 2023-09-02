@@ -188,6 +188,7 @@ mod tests {
         let data = read_to_string("testdata/system/ping.json").unwrap();
         let payload: PingPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             PingPayload {
@@ -201,6 +202,7 @@ mod tests {
         let data = read_to_string("testdata/system/joined.json").unwrap();
         let payload: JoinedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             JoinedPayload {
@@ -215,6 +217,7 @@ mod tests {
         let data = read_to_string("testdata/system/left.json").unwrap();
         let payload: LeftPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             LeftPayload {

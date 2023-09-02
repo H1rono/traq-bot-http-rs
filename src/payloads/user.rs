@@ -64,6 +64,7 @@ mod tests {
         let data = read_to_string("testdata/user/user_created.json").unwrap();
         let payload: UserCreatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             UserCreatedPayload {
