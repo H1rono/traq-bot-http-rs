@@ -51,3 +51,31 @@ impl Display for UserCreatedPayload {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn user_created_test() {
+        let data = read_to_string("testdata/user/user_created.json").unwrap();
+        let payload: UserCreatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            UserCreatedPayload {
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
+                user: User {
+                    id: uuid("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
+                    name: "takashi_trap".to_string(),
+                    display_name: "".to_string(),
+                    icon_id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                    bot: false,
+                }
+            }
+        )
+    }
+}

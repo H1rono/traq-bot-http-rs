@@ -122,3 +122,57 @@ impl Display for ChannelTopicChangedPayload {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn channel_created_test() {
+        let data = read_to_string("testdata/channel/channel_created.json").unwrap();
+        let payload: ChannelCreatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            ChannelCreatedPayload {
+                event_time: timestamp("2019-05-08T13:45:51.506206852Z"),
+                channel: Channel {
+                    id: uuid("711afb4c-23e7-46dc-b845-5160f7088ce9"),
+                    name: "yamada".to_string(),
+                    path: "#gps/yamada".to_string(),
+                    parent_id: uuid("ea452867-553b-4808-a14f-a47ee0009ee6"),
+                    creator: takashi_trap(),
+                    created_at: timestamp("2019-05-08T13:45:51.487718Z"),
+                    updated_at: timestamp("2019-05-08T13:45:51.487718Z"),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn chennel_topic_changed_test() {
+        let data = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
+        let payload: ChannelTopicChangedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            ChannelTopicChangedPayload {
+                event_time: timestamp("2019-05-09T11:32:49.505357701Z"),
+                channel: Channel {
+                    id: uuid("9aba50da-f605-4cd0-a428-5e4558cb911e"),
+                    name: "bot".to_string(),
+                    path: "#a/bot".to_string(),
+                    parent_id: uuid("ea452867-553b-4808-a14f-a47ee0009ee6"),
+                    creator: takashi_trap(),
+                    created_at: timestamp("2019-04-02T06:31:16.229419Z"),
+                    updated_at: timestamp("2019-05-09T11:32:49.475127Z"),
+                },
+                topic: "トピック".to_string(),
+                updater: takashi_trap(),
+            }
+        );
+    }
+}

@@ -120,3 +120,41 @@ impl From<TagAddedPayload> for TagRemovedPayload {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn tag_added_test() {
+        let data = read_to_string("testdata/tag/tag_added.json").unwrap();
+        let payload: TagAddedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            TagAddedPayload {
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
+                tag_id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                tag: "全強".to_string(),
+            }
+        );
+    }
+
+    #[test]
+    fn tag_removed_test() {
+        let data = read_to_string("testdata/tag/tag_removed.json").unwrap();
+        let payload: TagRemovedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            TagRemovedPayload {
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
+                tag_id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                tag: "全強".to_string(),
+            }
+        );
+    }
+}

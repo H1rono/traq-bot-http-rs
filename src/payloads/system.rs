@@ -175,3 +175,52 @@ impl From<JoinedPayload> for LeftPayload {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn ping_test() {
+        let data = read_to_string("testdata/system/ping.json").unwrap();
+        let payload: PingPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            PingPayload {
+                event_time: timestamp("2019-05-07T04:50:48.582586882Z"),
+            }
+        );
+    }
+
+    #[test]
+    fn joined_test() {
+        let data = read_to_string("testdata/system/joined.json").unwrap();
+        let payload: JoinedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            JoinedPayload {
+                event_time: timestamp("2019-05-08T13:49:13.769110201Z"),
+                channel: channel_a_po(),
+            }
+        );
+    }
+
+    #[test]
+    fn left_test() {
+        let data = read_to_string("testdata/system/left.json").unwrap();
+        let payload: LeftPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            LeftPayload {
+                event_time: timestamp("2019-05-08T13:49:16.497848449Z"),
+                channel: channel_a_po(),
+            },
+        );
+    }
+}

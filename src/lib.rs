@@ -13,3 +13,6 @@ pub mod payloads;
 
 pub use events::Event;
 pub use parser::{ParseError, RequestParser};
+
+#[cfg(test)]
+pub(crate) mod test_utils;

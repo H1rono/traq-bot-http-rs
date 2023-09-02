@@ -58,3 +58,32 @@ impl Display for StampCreatedPayload {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn stamp_created_test() {
+        let data = read_to_string("testdata/stamp/stamp_created.json").unwrap();
+        let payload: StampCreatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            StampCreatedPayload {
+                event_time: timestamp("2019-05-08T08:31:06.566228282Z"),
+                id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                name: "naruhodo".to_string(),
+                file_id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
+                creator: {
+                    let mut creator = takashi_trap();
+                    creator.display_name.clear();
+                    creator
+                },
+            }
+        )
+    }
+}
