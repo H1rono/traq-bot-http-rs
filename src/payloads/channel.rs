@@ -135,6 +135,7 @@ mod tests {
         let data = read_to_string("testdata/channel/channel_created.json").unwrap();
         let payload: ChannelCreatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             ChannelCreatedPayload {
@@ -157,6 +158,7 @@ mod tests {
         let data = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
         let payload: ChannelTopicChangedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             ChannelTopicChangedPayload {

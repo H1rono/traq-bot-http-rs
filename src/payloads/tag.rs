@@ -133,6 +133,7 @@ mod tests {
         let data = read_to_string("testdata/tag/tag_added.json").unwrap();
         let payload: TagAddedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             TagAddedPayload {
@@ -148,6 +149,7 @@ mod tests {
         let data = read_to_string("testdata/tag/tag_removed.json").unwrap();
         let payload: TagRemovedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             TagRemovedPayload {

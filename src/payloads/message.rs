@@ -461,6 +461,7 @@ mod tests {
         let data = read_to_string("testdata/message/message_created.json").unwrap();
         let payload: MessageCreatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             MessageCreatedPayload {
@@ -486,6 +487,7 @@ mod tests {
         let data = read_to_string("testdata/message/message_deleted.json").unwrap();
         let payload: MessageDeletedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             MessageDeletedPayload {
@@ -503,6 +505,7 @@ mod tests {
         let data = read_to_string("testdata/message/message_updated.json").unwrap();
         let payload: MessageUpdatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             MessageUpdatedPayload {
@@ -528,6 +531,7 @@ mod tests {
         let data = read_to_string("testdata/message/direct_message_created.json").unwrap();
         let payload: DirectMessageCreatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             DirectMessageCreatedPayload {
@@ -553,6 +557,7 @@ mod tests {
         let data = read_to_string("testdata/message/direct_message_deleted.json").unwrap();
         let payload: DirectMessageDeletedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             DirectMessageDeletedPayload {
@@ -571,6 +576,7 @@ mod tests {
         let data = read_to_string("testdata/message/direct_message_updated.json").unwrap();
         let payload: DirectMessageUpdatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             DirectMessageUpdatedPayload {
@@ -596,6 +602,7 @@ mod tests {
         let data = read_to_string("testdata/message/bot_message_stamps_updated.json").unwrap();
         let payload: BotMessageStampsUpdatedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        println!("{}", payload);
         assert_eq!(
             payload,
             BotMessageStampsUpdatedPayload {
