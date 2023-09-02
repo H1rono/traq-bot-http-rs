@@ -448,3 +448,183 @@ impl Display for BotMessageStampsUpdatedPayload {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test_utils::*;
+
+    use std::fs::read_to_string;
+
+    #[test]
+    fn message_created_test() {
+        let data = read_to_string("testdata/message/message_created.json").unwrap();
+        let payload: MessageCreatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            MessageCreatedPayload {
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
+                message: Message {
+                    id: uuid("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
+                    user: takashi_trap(),
+                    channel_id: uuid("9aba50da-f605-4cd0-a428-5e4558cb911e"),
+                    text: r#"!{"type": "user", "raw": "@takashi_trap", "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} こんにちは"#.to_string(),
+                    plain_text: "@takashi_trap こんにちは".to_string(),
+                    embedded: vec![
+                        embedded_takashi_trap(),
+                    ],
+                    created_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                    updated_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn message_deleted_test() {
+        let data = read_to_string("testdata/message/message_deleted.json").unwrap();
+        let payload: MessageDeletedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            MessageDeletedPayload {
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
+                message: DeletedMessage {
+                    id: uuid("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
+                    channel_id: uuid("9aba50da-f605-4cd0-a428-5e4558cb911e"),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn message_updated_test() {
+        let data = read_to_string("testdata/message/message_updated.json").unwrap();
+        let payload: MessageUpdatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            MessageUpdatedPayload {
+                event_time: timestamp("2019-05-08T13:33:51.690308239Z"),
+                message: Message {
+                    id: uuid("bc9106b3-f9b2-4eca-9ba1-72b39b40954e"),
+                    user: takashi_trap(),
+                    channel_id: uuid("9aba50da-f605-4cd0-a428-5e4558cb911e"),
+                    text: r#"!{"type": "user", "raw": "@takashi_trap", "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} こんにちは"#.to_string(),
+                    plain_text: "@takashi_trap こんにちは".to_string(),
+                    embedded: vec![
+                        embedded_takashi_trap(),
+                    ],
+                    created_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                    updated_at: timestamp("2019-05-08T13:33:51.632149265Z"),
+                }
+            }
+        )
+    }
+
+    #[test]
+    fn direct_message_created_test() {
+        let data = read_to_string("testdata/message/direct_message_created.json").unwrap();
+        let payload: DirectMessageCreatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            DirectMessageCreatedPayload {
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
+                message: Message {
+                    id: uuid("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
+                    user: takashi_trap(),
+                    channel_id: uuid("c5a5a697-3bad-4540-b2da-93dc88181d34"),
+                    text: r#"!{"type": "user", "raw": "@takashi_trap", "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} こんにちは"#.to_string(),
+                    plain_text: "@takashi_trap こんにちは".to_string(),
+                    embedded: vec![
+                        embedded_takashi_trap(),
+                    ],
+                    created_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                    updated_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn direct_message_deleted_test() {
+        let data = read_to_string("testdata/message/direct_message_deleted.json").unwrap();
+        let payload: DirectMessageDeletedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            DirectMessageDeletedPayload {
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
+                message: DeletedDirectMessage {
+                    id: uuid("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
+                    user_id: uuid("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
+                    channel_id: uuid("c5a5a697-3bad-4540-b2da-93dc88181d34"),
+                }
+            }
+        );
+    }
+
+    #[test]
+    fn direct_message_updated_test() {
+        let data = read_to_string("testdata/message/direct_message_updated.json").unwrap();
+        let payload: DirectMessageUpdatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            DirectMessageUpdatedPayload {
+                event_time: timestamp("2019-05-08T13:36:09.421492525Z"),
+                message: Message {
+                    id: uuid("2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8"),
+                    user: takashi_trap(),
+                    channel_id: uuid("c5a5a697-3bad-4540-b2da-93dc88181d34"),
+                    text: r#"!{"type": "user", "raw": "@takashi_trap", "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45"} こんにちは"#.to_string(),
+                    plain_text: "@takashi_trap こんにちは".to_string(),
+                    embedded: vec![
+                        embedded_takashi_trap(),
+                    ],
+                    created_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                    updated_at: timestamp("2019-05-08T13:36:09.365393261Z"),
+                },
+            }
+        );
+    }
+
+    #[test]
+    fn bot_message_stamps_updated_test() {
+        let data = read_to_string("testdata/message/bot_message_stamps_updated.json").unwrap();
+        let payload: BotMessageStampsUpdatedPayload = data.parse().unwrap();
+        println!("{}", serde_json::to_string_pretty(&payload).unwrap());
+        assert_eq!(
+            payload,
+            BotMessageStampsUpdatedPayload {
+                event_time: timestamp("2020-10-17T03:35:34.5326265Z"),
+                message_id: uuid("200b6600-b2cd-4c1e-b366-9c40308cc087"),
+                stamps: vec![
+                    MessageStamp {
+                        stamp_id: uuid("1cd58034-8998-4b1c-afe4-fcd591354a97"),
+                        user_id: uuid("b80551a5-2768-4d29-ad78-8e0e92330c8d"),
+                        count: 22,
+                        created_at: timestamp("2020-10-17T03:35:17.89545Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
+                    },
+                    MessageStamp {
+                        stamp_id: uuid("6fc62b49-dea0-45b8-8c0c-38035082b111"),
+                        user_id: uuid("b80551a5-2768-4d29-ad78-8e0e92330c8d"),
+                        count: 23,
+                        created_at: timestamp("2020-10-17T03:35:17.737127Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
+                    },
+                    MessageStamp {
+                        stamp_id: uuid("b77fad4e-b63f-42a2-916c-5cfe5af3d8b9"),
+                        user_id: uuid("b80551a5-2768-4d29-ad78-8e0e92330c8d"),
+                        count: 24,
+                        created_at: timestamp("2020-10-17T03:34:56.575099Z"),
+                        updated_at: timestamp("2020-10-17T03:35:34Z"),
+                    },
+                ],
+            }
+        )
+    }
+}
