@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.6.3] - 2023-09-02
+
+### Added
+
+- `From`によるペイロード間の型変換を追加
+- 全てのペイロード型に`Into<Event>`, `FromStr`, `Display`を実装
+
+### Changed
+
+- テストコードの場所を変更
+
 ## [v0.6.2] - 2023-07-29
 
 ### Added
@@ -122,6 +133,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.6.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.2..v0.6.3
 [v0.6.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.1..v0.6.2
 [v0.6.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.0..v0.6.1
 [v0.6.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.5.2..v0.6.0
