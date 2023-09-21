@@ -1,11 +1,11 @@
 //! ユーザー関連のイベントペイロード
 
-use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, User};
+use crate::payload_impl;
 
 /// USER_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_user_created.go#L9-L13)
@@ -34,23 +34,7 @@ pub struct UserCreatedPayload {
     pub user: User,
 }
 
-impl FromStr for UserCreatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for UserCreatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize UserCreatedPayload")
-        )
-    }
-}
+payload_impl! {UserCreatedPayload}
 
 #[cfg(test)]
 mod tests {

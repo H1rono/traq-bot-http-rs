@@ -1,11 +1,11 @@
 //! システム関連のイベントペイロード
 
-use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp};
+use crate::payload_impl;
 
 /// PINGペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_ping.go#L5-L8)
@@ -26,23 +26,7 @@ pub struct PingPayload {
     pub event_time: TimeStamp,
 }
 
-impl FromStr for PingPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for PingPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize PingPayload")
-        )
-    }
-}
+payload_impl! {PingPayload}
 
 /// JOINEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_joined.go#L9-L13)
@@ -79,23 +63,7 @@ pub struct JoinedPayload {
     pub channel: Channel,
 }
 
-impl FromStr for JoinedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for JoinedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize JoinedPayload")
-        )
-    }
-}
+payload_impl! {JoinedPayload}
 
 impl From<LeftPayload> for JoinedPayload {
     fn from(payload: LeftPayload) -> Self {
@@ -145,23 +113,7 @@ pub struct LeftPayload {
     pub channel: Channel,
 }
 
-impl FromStr for LeftPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for LeftPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize LeftPayload")
-        )
-    }
-}
+payload_impl! {LeftPayload}
 
 impl From<JoinedPayload> for LeftPayload {
     fn from(payload: JoinedPayload) -> Self {
