@@ -1,11 +1,11 @@
 //! スタンプ関連のイベントペイロード
 
-use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, User, Uuid};
+use crate::payload_impl;
 
 /// STAMP_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_stamp_created.go#L11-L18)
@@ -41,23 +41,7 @@ pub struct StampCreatedPayload {
     pub creator: User,
 }
 
-impl FromStr for StampCreatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for StampCreatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize StampCreatedPayload")
-        )
-    }
-}
+payload_impl! {StampCreatedPayload}
 
 #[cfg(test)]
 mod tests {

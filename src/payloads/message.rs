@@ -1,11 +1,11 @@
 //! メッセージ関連のイベントペイロード
 
-use std::fmt::{self, Display, Formatter};
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
+use crate::payload_impl;
 
 /// MESSAGE_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_created.go#L10-L14)
@@ -49,23 +49,7 @@ pub struct MessageCreatedPayload {
     pub message: Message,
 }
 
-impl FromStr for MessageCreatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for MessageCreatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize MessageCreatedPayload")
-        )
-    }
-}
+payload_impl! {MessageCreatedPayload}
 
 impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
     fn from(payload: DirectMessageCreatedPayload) -> Self {
@@ -104,23 +88,7 @@ pub struct MessageDeletedPayload {
     pub message: DeletedMessage,
 }
 
-impl FromStr for MessageDeletedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for MessageDeletedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize MessageDeletedPayload")
-        )
-    }
-}
+payload_impl! {MessageDeletedPayload}
 
 /// MESSAGE_UPDATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
@@ -164,23 +132,7 @@ pub struct MessageUpdatedPayload {
     pub message: Message,
 }
 
-impl FromStr for MessageUpdatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for MessageUpdatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize MessageUpdatedPayload")
-        )
-    }
-}
+payload_impl! {MessageUpdatedPayload}
 
 impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
     fn from(payload: DirectMessageUpdatedPayload) -> Self {
@@ -237,23 +189,7 @@ pub struct DirectMessageCreatedPayload {
     pub message: Message,
 }
 
-impl FromStr for DirectMessageCreatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for DirectMessageCreatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize DirectMessageCreatedPayload")
-        )
-    }
-}
+payload_impl! {DirectMessageCreatedPayload}
 
 impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
     fn from(payload: MessageCreatedPayload) -> Self {
@@ -293,23 +229,7 @@ pub struct DirectMessageDeletedPayload {
     pub message: DeletedDirectMessage,
 }
 
-impl FromStr for DirectMessageDeletedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for DirectMessageDeletedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize DirectMessageDeletedPayload")
-        )
-    }
-}
+payload_impl! {DirectMessageDeletedPayload}
 
 /// DIRECT_MESSAGE_UPDATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
@@ -353,23 +273,7 @@ pub struct DirectMessageUpdatedPayload {
     pub message: Message,
 }
 
-impl FromStr for DirectMessageUpdatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for DirectMessageUpdatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self).expect("failed to serialize DirectMessageUpdatedPayload")
-        )
-    }
-}
+payload_impl! {DirectMessageUpdatedPayload}
 
 impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
     fn from(payload: MessageUpdatedPayload) -> Self {
@@ -430,24 +334,7 @@ pub struct BotMessageStampsUpdatedPayload {
     pub stamps: Vec<MessageStamp>,
 }
 
-impl FromStr for BotMessageStampsUpdatedPayload {
-    type Err = serde_json::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        serde_json::from_str(s)
-    }
-}
-
-impl Display for BotMessageStampsUpdatedPayload {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            serde_json::to_string(self)
-                .expect("failed to serialize BotMessageStampsUpdatedPayload")
-        )
-    }
-}
+payload_impl! {BotMessageStampsUpdatedPayload}
 
 #[cfg(test)]
 mod tests {
