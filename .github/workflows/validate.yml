@@ -1,0 +1,34 @@
+name: Manifest validation
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  validate-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install taplo
+        run: |
+          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-linux-x86_64.gz \
+            | gzip -d - | install -m 755 /dev/stdin /usr/local/bin/taplo
+      - name: Validate Cargo.toml
+        run: taplo lint --schema https://json.schemastore.org/cargo.json Cargo.toml
+      - name: Install action-validator
+        run: |
+          curl -fsSL https://github.com/mpalmer/action-validator/releases/latest/download/action-validator_linux_amd64 \
+            | install -m 755 /dev/stdin /usr/local/bin/action-validator
+      - name: Validate workflow files
+        run: |
+          action-validator .github/workflows/rust.yml
+          action-validator .github/workflows/release.yml
+          action-validator .github/workflows/validate.yml
+      - name: Validate codecov.yml
+        run: |
+          curl -f --data-binary @codecov.yml https://codecov.io/validate

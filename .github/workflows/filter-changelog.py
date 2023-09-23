@@ -5,7 +5,7 @@ lines = []
 match_version = f"## [{version}]"
 begun = False
 
-for line in map(str.strip, stdin):
+for line in map(str.rstrip, stdin):
     if line.startswith(match_version):
         begun = True
         continue
@@ -14,4 +14,4 @@ for line in map(str.strip, stdin):
     if begun:
         lines.append(line)
 
-print("\n".join(lines).strip())
+print("\n".join(lines).rstrip())
