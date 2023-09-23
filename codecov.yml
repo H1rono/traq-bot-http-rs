@@ -1,4 +1,14 @@
 ignore:
   - examples
   - src/lib.rs
-  - src/payloads.rs
+  - src/macros.rs
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 2%
+    patch:
+      default:
+        target: 80%
+        threshold: 2%
