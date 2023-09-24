@@ -8,6 +8,7 @@ mod system;
 mod tag;
 pub mod types;
 mod user;
+mod user_group;
 
 pub use channel::{ChannelCreatedPayload, ChannelTopicChangedPayload};
 pub use message::{
@@ -19,6 +20,11 @@ pub use stamp::StampCreatedPayload;
 pub use system::{JoinedPayload, LeftPayload, PingPayload};
 pub use tag::{TagAddedPayload, TagRemovedPayload};
 pub use user::UserCreatedPayload;
+pub use user_group::{
+    UserGroupAdminAddedPayload, UserGroupAdminRemovedPayload, UserGroupCreatedPayload,
+    UserGroupDeletedPayload, UserGroupMemberAddedPayload, UserGroupMemberRemovedPayload,
+    UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
+};
 
 #[cfg(test)]
 mod tests {
