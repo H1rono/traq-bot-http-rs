@@ -49,6 +49,7 @@ use super::payloads::{
 /// let event = Event::Ping(payload);
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Event {
     Ping(PingPayload),
     Joined(JoinedPayload),
