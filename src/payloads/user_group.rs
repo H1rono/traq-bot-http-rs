@@ -75,6 +75,15 @@ pub struct UserGroupUpdatedPayload {
 
 payload_impl! {UserGroupUpdatedPayload}
 
+impl From<UserGroupDeletedPayload> for UserGroupUpdatedPayload {
+    fn from(payload: UserGroupDeletedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_id: payload.group_id,
+        }
+    }
+}
+
 /// USER_GROUP_DELETEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_deleted.go#L11-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_deleted)
@@ -98,6 +107,15 @@ pub struct UserGroupDeletedPayload {
 }
 
 payload_impl! {UserGroupDeletedPayload}
+
+impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
+    fn from(payload: UserGroupUpdatedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_id: payload.group_id,
+        }
+    }
+}
 
 /// USER_GROUP_MEMBER_ADDEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_added.go#L9-L12)
@@ -126,6 +144,33 @@ pub struct UserGroupMemberAddedPayload {
 
 payload_impl! {UserGroupMemberAddedPayload}
 
+impl From<UserGroupMemberUpdatedPayload> for UserGroupMemberAddedPayload {
+    fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupMemberRemovedPayload> for UserGroupMemberAddedPayload {
+    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupAdminAddedPayload> for UserGroupMemberAddedPayload {
+    fn from(payload: UserGroupAdminAddedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
 /// USER_GROUP_MEMBER_UPDATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_updated.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_member_updated)
@@ -152,6 +197,24 @@ pub struct UserGroupMemberUpdatedPayload {
 }
 
 payload_impl! {UserGroupMemberUpdatedPayload}
+
+impl From<UserGroupMemberAddedPayload> for UserGroupMemberUpdatedPayload {
+    fn from(payload: UserGroupMemberAddedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupMemberRemovedPayload> for UserGroupMemberUpdatedPayload {
+    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
 
 /// USER_GROUP_MEMBER_REMOVEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_removed.go#L9-L12)
@@ -180,6 +243,33 @@ pub struct UserGroupMemberRemovedPayload {
 
 payload_impl! {UserGroupMemberRemovedPayload}
 
+impl From<UserGroupMemberAddedPayload> for UserGroupMemberRemovedPayload {
+    fn from(payload: UserGroupMemberAddedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupMemberUpdatedPayload> for UserGroupMemberRemovedPayload {
+    fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupAdminRemovedPayload> for UserGroupMemberRemovedPayload {
+    fn from(payload: UserGroupAdminRemovedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
 /// USER_GROUP_ADMIN_ADDEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_admin_added.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_admin_added)
@@ -207,6 +297,24 @@ pub struct UserGroupAdminAddedPayload {
 
 payload_impl! {UserGroupAdminAddedPayload}
 
+impl From<UserGroupAdminRemovedPayload> for UserGroupAdminAddedPayload {
+    fn from(payload: UserGroupAdminRemovedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupMemberAddedPayload> for UserGroupAdminAddedPayload {
+    fn from(payload: UserGroupMemberAddedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
 /// USER_GROUP_ADMIN_REMOVEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_admin_removed.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_admin_removed)
@@ -233,6 +341,24 @@ pub struct UserGroupAdminRemovedPayload {
 }
 
 payload_impl! {UserGroupAdminRemovedPayload}
+
+impl From<UserGroupAdminAddedPayload> for UserGroupAdminRemovedPayload {
+    fn from(payload: UserGroupAdminAddedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
+
+impl From<UserGroupMemberRemovedPayload> for UserGroupAdminRemovedPayload {
+    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
+        Self {
+            event_time: payload.event_time,
+            group_member: payload.group_member,
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {

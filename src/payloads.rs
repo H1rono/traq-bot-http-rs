@@ -95,4 +95,74 @@ mod tests {
         let payload: TagRemovedPayload = payload.into();
         assert_eq!(payload, data.parse().unwrap());
     }
+
+    #[test]
+    fn user_group_updated_convert() {
+        let data = read_to_string("testdata/user-group/user_group_updated.json").unwrap();
+        let payload: UserGroupUpdatedPayload = data.parse().unwrap();
+        let payload: UserGroupDeletedPayload = payload.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_deleted_convert() {
+        let data = read_to_string("testdata/user-group/user_group_deleted.json").unwrap();
+        let payload: UserGroupDeletedPayload = data.parse().unwrap();
+        let payload: UserGroupUpdatedPayload = payload.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_member_added_convert() {
+        let data = read_to_string("testdata/user-group/user_group_member_added.json").unwrap();
+        let payload_base: UserGroupMemberAddedPayload = data.parse().unwrap();
+        let payload: UserGroupMemberUpdatedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupMemberRemovedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupAdminAddedPayload = payload_base.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_member_updated_convert() {
+        let data = read_to_string("testdata/user-group/user_group_member_updated.json").unwrap();
+        let payload_base: UserGroupMemberUpdatedPayload = data.parse().unwrap();
+        let payload: UserGroupMemberAddedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupMemberRemovedPayload = payload_base.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_member_removed_convert() {
+        let data = read_to_string("testdata/user-group/user_group_member_removed.json").unwrap();
+        let payload_base: UserGroupMemberRemovedPayload = data.parse().unwrap();
+        let payload: UserGroupMemberAddedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupMemberUpdatedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupAdminRemovedPayload = payload_base.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_admin_added_convert() {
+        let data = read_to_string("testdata/user-group/user_group_admin_added.json").unwrap();
+        let payload_base: UserGroupAdminAddedPayload = data.parse().unwrap();
+        let payload: UserGroupAdminRemovedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupMemberAddedPayload = payload_base.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
+
+    #[test]
+    fn user_group_admin_removed_convert() {
+        let data = read_to_string("testdata/user-group/user_group_admin_removed.json").unwrap();
+        let payload_base: UserGroupAdminRemovedPayload = data.parse().unwrap();
+        let payload: UserGroupAdminAddedPayload = payload_base.clone().into();
+        assert_eq!(payload, data.parse().unwrap());
+        let payload: UserGroupMemberRemovedPayload = payload_base.into();
+        assert_eq!(payload, data.parse().unwrap());
+    }
 }
