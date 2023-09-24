@@ -5,7 +5,9 @@ use super::payloads::{
     DirectMessageCreatedPayload, DirectMessageDeletedPayload, DirectMessageUpdatedPayload,
     JoinedPayload, LeftPayload, MessageCreatedPayload, MessageDeletedPayload,
     MessageUpdatedPayload, PingPayload, StampCreatedPayload, TagAddedPayload, TagRemovedPayload,
-    UserCreatedPayload,
+    UserCreatedPayload, UserGroupAdminAddedPayload, UserGroupAdminRemovedPayload,
+    UserGroupCreatedPayload, UserGroupDeletedPayload, UserGroupMemberAddedPayload,
+    UserGroupMemberRemovedPayload, UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
 };
 
 /// イベント全てを網羅するenum
@@ -27,6 +29,14 @@ use super::payloads::{
 /// * `StampCreated` - スタンプが作成された
 /// * `TagAdded` - BOTにタグが追加された
 /// * `TagRemoved` - BOTからタグが削除された
+/// * `UserGroupCreated` - ユーザーグループが作成された
+/// * `UserGroupUpdated` - ユーザーグループが更新された
+/// * `UserGroupDeleted` - ユーザーグループが削除された
+/// * `UserGroupMemberAdded` - ユーザーグループにメンバーが追加された
+/// * `UserGroupMemberUpdated` - ユーザーグループのメンバーが更新された
+/// * `UserGroupMemberRemoved` - ユーザーグループからメンバーが削除された
+/// * `UserGroupAdminAdded` - ユーザーグループに管理者が追加された
+/// * `UserGroupAdminRemoved` - ユーザーグループから管理者が削除された
 ///
 /// ## Example
 /// ```
@@ -39,6 +49,7 @@ use super::payloads::{
 /// let event = Event::Ping(payload);
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Event {
     Ping(PingPayload),
     Joined(JoinedPayload),
@@ -56,6 +67,14 @@ pub enum Event {
     StampCreated(StampCreatedPayload),
     TagAdded(TagAddedPayload),
     TagRemoved(TagRemovedPayload),
+    UserGroupCreated(UserGroupCreatedPayload),
+    UserGroupUpdated(UserGroupUpdatedPayload),
+    UserGroupDeleted(UserGroupDeletedPayload),
+    UserGroupMemberAdded(UserGroupMemberAddedPayload),
+    UserGroupMemberUpdated(UserGroupMemberUpdatedPayload),
+    UserGroupMemberRemoved(UserGroupMemberRemovedPayload),
+    UserGroupAdminAdded(UserGroupAdminAddedPayload),
+    UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
 impl From<PingPayload> for Event {
@@ -151,6 +170,54 @@ impl From<TagAddedPayload> for Event {
 impl From<TagRemovedPayload> for Event {
     fn from(payload: TagRemovedPayload) -> Self {
         Self::TagRemoved(payload)
+    }
+}
+
+impl From<UserGroupCreatedPayload> for Event {
+    fn from(payload: UserGroupCreatedPayload) -> Self {
+        Self::UserGroupCreated(payload)
+    }
+}
+
+impl From<UserGroupUpdatedPayload> for Event {
+    fn from(payload: UserGroupUpdatedPayload) -> Self {
+        Self::UserGroupUpdated(payload)
+    }
+}
+
+impl From<UserGroupDeletedPayload> for Event {
+    fn from(payload: UserGroupDeletedPayload) -> Self {
+        Self::UserGroupDeleted(payload)
+    }
+}
+
+impl From<UserGroupMemberAddedPayload> for Event {
+    fn from(payload: UserGroupMemberAddedPayload) -> Self {
+        Self::UserGroupMemberAdded(payload)
+    }
+}
+
+impl From<UserGroupMemberUpdatedPayload> for Event {
+    fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
+        Self::UserGroupMemberUpdated(payload)
+    }
+}
+
+impl From<UserGroupMemberRemovedPayload> for Event {
+    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
+        Self::UserGroupMemberRemoved(payload)
+    }
+}
+
+impl From<UserGroupAdminAddedPayload> for Event {
+    fn from(payload: UserGroupAdminAddedPayload) -> Self {
+        Self::UserGroupAdminAdded(payload)
+    }
+}
+
+impl From<UserGroupAdminRemovedPayload> for Event {
+    fn from(payload: UserGroupAdminRemovedPayload) -> Self {
+        Self::UserGroupAdminRemoved(payload)
     }
 }
 

@@ -125,3 +125,74 @@ pub struct MessageStamp {
 }
 
 payload_impl! {MessageStamp}
+
+/// [traQの定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/common.go#L92-L95)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct GroupMember {
+    #[serde(rename = "groupId")]
+    pub group_id: Uuid,
+    #[serde(rename = "userId")]
+    pub user_id: Uuid,
+}
+
+payload_impl! {GroupMember}
+
+/// [traQの定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/common.go#L104)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct UserGroupAdmin {
+    #[serde(rename = "groupId")]
+    pub group_id: Uuid,
+    #[serde(rename = "userId")]
+    pub user_id: Uuid,
+}
+
+payload_impl! {UserGroupAdmin}
+
+impl From<UserGroupAdmin> for GroupMember {
+    fn from(admin: UserGroupAdmin) -> Self {
+        Self {
+            group_id: admin.group_id,
+            user_id: admin.user_id,
+        }
+    }
+}
+
+impl From<GroupMember> for UserGroupAdmin {
+    fn from(member: GroupMember) -> Self {
+        Self {
+            group_id: member.group_id,
+            user_id: member.user_id,
+        }
+    }
+}
+
+/// [traQの定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/common.go#L113-L116)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct UserGroupMember {
+    #[serde(rename = "groupId")]
+    pub group_id: Uuid,
+    #[serde(rename = "userId")]
+    pub user_id: Uuid,
+    pub role: String,
+}
+
+payload_impl! {UserGroupMember}
+
+/// [traQの定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/common.go#L128-L138)
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+pub struct UserGroup {
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
+    #[serde(rename = "type")]
+    pub type_: String,
+    pub icon: Uuid,
+    pub admins: Vec<UserGroupAdmin>,
+    pub members: Vec<UserGroupMember>,
+    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
+    pub created_at: TimeStamp,
+    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
+    pub updated_at: TimeStamp,
+}
+
+payload_impl! {UserGroup}
