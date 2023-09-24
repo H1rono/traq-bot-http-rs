@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.7.0] - 2023-09-24
+
+### Added
+
+- 以下のBOTイベントを追加
+    - `USER_GROUP_CREATED`
+    - `USER_GROUP_UPDATED`
+    - `USER_GROUP_DELETED`
+    - `USER_GROUP_MEMBER_ADDED`
+    - `USER_GROUP_MEMBER_UPDATED`
+    - `USER_GROUP_MEMBER_REMOVED`
+    - `USER_GROUP_ADMIN_ADDED`
+    - `USER_GROUP_ADMIN_REMOVED`
+
+### Changed
+
+- enum `Event`を[`non-exhaustive`](https://doc.rust-lang.org/reference/attributes/type_system.html#the-non_exhaustive-attribute)に
+- 型変換の実装にマクロを使用
+
+### Fixed
+
+- CI修正
+- Codecovの設定を修正
+
 ## [v0.6.3] - 2023-09-02
 
 ### Added
@@ -133,6 +157,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.7.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.3..v0.7.0
 [v0.6.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.2..v0.6.3
 [v0.6.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.1..v0.6.2
 [v0.6.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.0..v0.6.1
