@@ -1,6 +1,6 @@
 [package]
 name = "traq-bot-http"
-version = "0.6.3"
+version = "0.7.0"
 authors = ["H1rono <hronok66@gmail.com>"]
 edition = "2021"
 description = "Library to parse POST requests of traQ BOT event"
