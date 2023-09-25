@@ -1,11 +1,9 @@
 //! システム関連のイベントペイロード
 
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 
 use super::types::{Channel, TimeStamp};
-use crate::payload_impl;
+use crate::macros::payload_impl;
 
 /// PINGペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_ping.go#L5-L8)

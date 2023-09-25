@@ -8,7 +8,6 @@
 //! [examples](https://github.com/H1rono/traq-bot-http-rs/blob/main/examples)
 
 mod events;
-#[macro_use]
 pub(crate) mod macros;
 mod parser;
 pub mod payloads;
