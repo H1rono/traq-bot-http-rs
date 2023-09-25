@@ -5,7 +5,7 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 
 use super::types::{GroupMember, TimeStamp, UserGroup, Uuid};
-use crate::payload_impl;
+use crate::macros::payload_impl;
 
 /// USER_GROUP_CREATEDペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_created.go#L9-L13)

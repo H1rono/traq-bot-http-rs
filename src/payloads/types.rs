@@ -11,7 +11,7 @@ use chrono::{DateTime, Utc};
 #[cfg(feature = "time")]
 use time::OffsetDateTime;
 
-use crate::payload_impl;
+use crate::macros::payload_impl;
 
 #[cfg(feature = "chrono")]
 pub type TimeStamp = DateTime<Utc>;
