@@ -1,7 +1,5 @@
 //! メッセージ関連のイベントペイロード
 
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};

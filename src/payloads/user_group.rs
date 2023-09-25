@@ -1,7 +1,5 @@
 //! ユーザーグループ関連のイベントペイロード
 
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 
 use super::types::{GroupMember, TimeStamp, UserGroup, Uuid};

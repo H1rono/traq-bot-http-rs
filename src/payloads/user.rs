@@ -1,7 +1,5 @@
 //! ユーザー関連のイベントペイロード
 
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, User};

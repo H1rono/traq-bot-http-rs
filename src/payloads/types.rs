@@ -1,7 +1,5 @@
 //! イベントペイロード内部で使われる型
 
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "chrono")]
