@@ -24,7 +24,7 @@ jobs:
         run: |
           rustup component add rustfmt
           rustup component add clippy
-          rustup component add llvm-tools
+          rustup component add llvm-tools-preview
       - name: install grcov
         run: |
           curl -sSL -o grcov.tar.bz2 https://github.com/mozilla/grcov/releases/download/v${GRCOV_VERSION}/grcov-x86_64-unknown-linux-gnu.tar.bz2
