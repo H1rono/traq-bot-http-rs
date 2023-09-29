@@ -32,6 +32,26 @@ macro_rules! payload_impl {
     };
 }
 
+macro_rules! event_convert {
+    ($i:ident) => {
+        ::paste::paste! {
+            impl ::std::convert::From< [<$i Payload>] > for Event {
+                fn from(event: [<$i Payload>]) -> Self {
+                    Event::$i(event)
+                }
+            }
+        }
+    };
+}
+
+macro_rules! event_converts {
+    ($($i:ident),*) => {
+        $($crate::macros::event_convert! {$i})*
+    };
+}
+
+pub(crate) use event_convert;
+pub(crate) use event_converts;
 pub(crate) use impl_display;
 pub(crate) use impl_from_str;
 pub(crate) use payload_impl;

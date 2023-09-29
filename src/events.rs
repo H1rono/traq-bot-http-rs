@@ -9,6 +9,7 @@ use super::payloads::{
     UserGroupCreatedPayload, UserGroupDeletedPayload, UserGroupMemberAddedPayload,
     UserGroupMemberRemovedPayload, UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
 };
+use crate::macros::event_converts;
 
 /// イベント全てを網羅するenum
 ///
@@ -77,148 +78,43 @@ pub enum Event {
     UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
-impl From<PingPayload> for Event {
-    fn from(payload: PingPayload) -> Self {
-        Self::Ping(payload)
-    }
+// system
+event_converts! {
+    Ping, Joined, Left
 }
 
-impl From<JoinedPayload> for Event {
-    fn from(payload: JoinedPayload) -> Self {
-        Self::Joined(payload)
-    }
+// message
+event_converts! {
+    MessageCreated, MessageDeleted, MessageUpdated,
+    DirectMessageCreated, DirectMessageDeleted, DirectMessageUpdated,
+    BotMessageStampsUpdated
 }
 
-impl From<LeftPayload> for Event {
-    fn from(payload: LeftPayload) -> Self {
-        Self::Left(payload)
-    }
+// channel
+event_converts! {
+    ChannelCreated, ChannelTopicChanged
 }
 
-impl From<MessageCreatedPayload> for Event {
-    fn from(payload: MessageCreatedPayload) -> Self {
-        Self::MessageCreated(payload)
-    }
+// user
+event_converts! {
+    UserCreated
 }
 
-impl From<MessageDeletedPayload> for Event {
-    fn from(payload: MessageDeletedPayload) -> Self {
-        Self::MessageDeleted(payload)
-    }
+// stamp
+event_converts! {
+    StampCreated
 }
 
-impl From<MessageUpdatedPayload> for Event {
-    fn from(payload: MessageUpdatedPayload) -> Self {
-        Self::MessageUpdated(payload)
-    }
+// tag
+event_converts! {
+    TagAdded, TagRemoved
 }
 
-impl From<DirectMessageCreatedPayload> for Event {
-    fn from(payload: DirectMessageCreatedPayload) -> Self {
-        Self::DirectMessageCreated(payload)
-    }
-}
-
-impl From<DirectMessageDeletedPayload> for Event {
-    fn from(payload: DirectMessageDeletedPayload) -> Self {
-        Self::DirectMessageDeleted(payload)
-    }
-}
-
-impl From<DirectMessageUpdatedPayload> for Event {
-    fn from(payload: DirectMessageUpdatedPayload) -> Self {
-        Self::DirectMessageUpdated(payload)
-    }
-}
-
-impl From<BotMessageStampsUpdatedPayload> for Event {
-    fn from(payload: BotMessageStampsUpdatedPayload) -> Self {
-        Self::BotMessageStampsUpdated(payload)
-    }
-}
-
-impl From<ChannelCreatedPayload> for Event {
-    fn from(payload: ChannelCreatedPayload) -> Self {
-        Self::ChannelCreated(payload)
-    }
-}
-
-impl From<ChannelTopicChangedPayload> for Event {
-    fn from(payload: ChannelTopicChangedPayload) -> Self {
-        Self::ChannelTopicChanged(payload)
-    }
-}
-
-impl From<UserCreatedPayload> for Event {
-    fn from(payload: UserCreatedPayload) -> Self {
-        Self::UserCreated(payload)
-    }
-}
-
-impl From<StampCreatedPayload> for Event {
-    fn from(payload: StampCreatedPayload) -> Self {
-        Self::StampCreated(payload)
-    }
-}
-
-impl From<TagAddedPayload> for Event {
-    fn from(payload: TagAddedPayload) -> Self {
-        Self::TagAdded(payload)
-    }
-}
-
-impl From<TagRemovedPayload> for Event {
-    fn from(payload: TagRemovedPayload) -> Self {
-        Self::TagRemoved(payload)
-    }
-}
-
-impl From<UserGroupCreatedPayload> for Event {
-    fn from(payload: UserGroupCreatedPayload) -> Self {
-        Self::UserGroupCreated(payload)
-    }
-}
-
-impl From<UserGroupUpdatedPayload> for Event {
-    fn from(payload: UserGroupUpdatedPayload) -> Self {
-        Self::UserGroupUpdated(payload)
-    }
-}
-
-impl From<UserGroupDeletedPayload> for Event {
-    fn from(payload: UserGroupDeletedPayload) -> Self {
-        Self::UserGroupDeleted(payload)
-    }
-}
-
-impl From<UserGroupMemberAddedPayload> for Event {
-    fn from(payload: UserGroupMemberAddedPayload) -> Self {
-        Self::UserGroupMemberAdded(payload)
-    }
-}
-
-impl From<UserGroupMemberUpdatedPayload> for Event {
-    fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
-        Self::UserGroupMemberUpdated(payload)
-    }
-}
-
-impl From<UserGroupMemberRemovedPayload> for Event {
-    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
-        Self::UserGroupMemberRemoved(payload)
-    }
-}
-
-impl From<UserGroupAdminAddedPayload> for Event {
-    fn from(payload: UserGroupAdminAddedPayload) -> Self {
-        Self::UserGroupAdminAdded(payload)
-    }
-}
-
-impl From<UserGroupAdminRemovedPayload> for Event {
-    fn from(payload: UserGroupAdminRemovedPayload) -> Self {
-        Self::UserGroupAdminRemoved(payload)
-    }
+// user group
+event_converts! {
+    UserGroupCreated, UserGroupUpdated, UserGroupDeleted,
+    UserGroupMemberAdded, UserGroupMemberUpdated, UserGroupMemberRemoved,
+    UserGroupAdminAdded, UserGroupAdminRemoved
 }
 
 #[cfg(test)]
