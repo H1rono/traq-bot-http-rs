@@ -55,3 +55,28 @@ pub(crate) use event_converts;
 pub(crate) use impl_display;
 pub(crate) use impl_from_str;
 pub(crate) use payload_impl;
+
+#[cfg(test)]
+macro_rules! test_event_convert {
+    ($group:expr, $i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _convert >]() {
+                let data = ::std::fs::read_to_string(concat!(
+                    "testdata/",
+                    $group,
+                    "/",
+                    stringify!([< $i:snake:lower >]),
+                    ".json"
+                ))
+                .unwrap();
+                let payload: [<$i Payload>] = data.parse().unwrap();
+                let event: Event = payload.into();
+                assert_eq!(event, Event::$i(data.parse().unwrap()));
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+pub(crate) use test_event_convert;
