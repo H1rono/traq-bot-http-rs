@@ -11,7 +11,7 @@ use super::payloads::{
 };
 use crate::macros::event_converts;
 
-/// イベント全てを網羅するenum
+/// イベント全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
 /// ## Variants
 /// * `Ping` - ボットの接続確認
