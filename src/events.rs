@@ -9,6 +9,7 @@ use super::payloads::{
     UserGroupCreatedPayload, UserGroupDeletedPayload, UserGroupMemberAddedPayload,
     UserGroupMemberRemovedPayload, UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
 };
+use crate::macros::event_converts;
 
 /// イベント全てを網羅するenum
 ///
@@ -77,281 +78,96 @@ pub enum Event {
     UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
-impl From<PingPayload> for Event {
-    fn from(payload: PingPayload) -> Self {
-        Self::Ping(payload)
-    }
+// system
+event_converts! {
+    Ping, Joined, Left
 }
 
-impl From<JoinedPayload> for Event {
-    fn from(payload: JoinedPayload) -> Self {
-        Self::Joined(payload)
-    }
+// message
+event_converts! {
+    MessageCreated, MessageDeleted, MessageUpdated,
+    DirectMessageCreated, DirectMessageDeleted, DirectMessageUpdated,
+    BotMessageStampsUpdated
 }
 
-impl From<LeftPayload> for Event {
-    fn from(payload: LeftPayload) -> Self {
-        Self::Left(payload)
-    }
+// channel
+event_converts! {
+    ChannelCreated, ChannelTopicChanged
 }
 
-impl From<MessageCreatedPayload> for Event {
-    fn from(payload: MessageCreatedPayload) -> Self {
-        Self::MessageCreated(payload)
-    }
+// user
+event_converts! {
+    UserCreated
 }
 
-impl From<MessageDeletedPayload> for Event {
-    fn from(payload: MessageDeletedPayload) -> Self {
-        Self::MessageDeleted(payload)
-    }
+// stamp
+event_converts! {
+    StampCreated
 }
 
-impl From<MessageUpdatedPayload> for Event {
-    fn from(payload: MessageUpdatedPayload) -> Self {
-        Self::MessageUpdated(payload)
-    }
+// tag
+event_converts! {
+    TagAdded, TagRemoved
 }
 
-impl From<DirectMessageCreatedPayload> for Event {
-    fn from(payload: DirectMessageCreatedPayload) -> Self {
-        Self::DirectMessageCreated(payload)
-    }
-}
-
-impl From<DirectMessageDeletedPayload> for Event {
-    fn from(payload: DirectMessageDeletedPayload) -> Self {
-        Self::DirectMessageDeleted(payload)
-    }
-}
-
-impl From<DirectMessageUpdatedPayload> for Event {
-    fn from(payload: DirectMessageUpdatedPayload) -> Self {
-        Self::DirectMessageUpdated(payload)
-    }
-}
-
-impl From<BotMessageStampsUpdatedPayload> for Event {
-    fn from(payload: BotMessageStampsUpdatedPayload) -> Self {
-        Self::BotMessageStampsUpdated(payload)
-    }
-}
-
-impl From<ChannelCreatedPayload> for Event {
-    fn from(payload: ChannelCreatedPayload) -> Self {
-        Self::ChannelCreated(payload)
-    }
-}
-
-impl From<ChannelTopicChangedPayload> for Event {
-    fn from(payload: ChannelTopicChangedPayload) -> Self {
-        Self::ChannelTopicChanged(payload)
-    }
-}
-
-impl From<UserCreatedPayload> for Event {
-    fn from(payload: UserCreatedPayload) -> Self {
-        Self::UserCreated(payload)
-    }
-}
-
-impl From<StampCreatedPayload> for Event {
-    fn from(payload: StampCreatedPayload) -> Self {
-        Self::StampCreated(payload)
-    }
-}
-
-impl From<TagAddedPayload> for Event {
-    fn from(payload: TagAddedPayload) -> Self {
-        Self::TagAdded(payload)
-    }
-}
-
-impl From<TagRemovedPayload> for Event {
-    fn from(payload: TagRemovedPayload) -> Self {
-        Self::TagRemoved(payload)
-    }
-}
-
-impl From<UserGroupCreatedPayload> for Event {
-    fn from(payload: UserGroupCreatedPayload) -> Self {
-        Self::UserGroupCreated(payload)
-    }
-}
-
-impl From<UserGroupUpdatedPayload> for Event {
-    fn from(payload: UserGroupUpdatedPayload) -> Self {
-        Self::UserGroupUpdated(payload)
-    }
-}
-
-impl From<UserGroupDeletedPayload> for Event {
-    fn from(payload: UserGroupDeletedPayload) -> Self {
-        Self::UserGroupDeleted(payload)
-    }
-}
-
-impl From<UserGroupMemberAddedPayload> for Event {
-    fn from(payload: UserGroupMemberAddedPayload) -> Self {
-        Self::UserGroupMemberAdded(payload)
-    }
-}
-
-impl From<UserGroupMemberUpdatedPayload> for Event {
-    fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
-        Self::UserGroupMemberUpdated(payload)
-    }
-}
-
-impl From<UserGroupMemberRemovedPayload> for Event {
-    fn from(payload: UserGroupMemberRemovedPayload) -> Self {
-        Self::UserGroupMemberRemoved(payload)
-    }
-}
-
-impl From<UserGroupAdminAddedPayload> for Event {
-    fn from(payload: UserGroupAdminAddedPayload) -> Self {
-        Self::UserGroupAdminAdded(payload)
-    }
-}
-
-impl From<UserGroupAdminRemovedPayload> for Event {
-    fn from(payload: UserGroupAdminRemovedPayload) -> Self {
-        Self::UserGroupAdminRemoved(payload)
-    }
+// user group
+event_converts! {
+    UserGroupCreated, UserGroupUpdated, UserGroupDeleted,
+    UserGroupMemberAdded, UserGroupMemberUpdated, UserGroupMemberRemoved,
+    UserGroupAdminAdded, UserGroupAdminRemoved
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    use std::fs::read_to_string;
+    use crate::macros::test_event_convert;
 
-    #[test]
-    fn ping_convert() {
-        let data = read_to_string("testdata/system/ping.json").unwrap();
-        let payload: PingPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::Ping(data.parse().unwrap()));
-    }
+    test_event_convert! {"system", Ping}
 
-    #[test]
-    fn joined_convert() {
-        let data = read_to_string("testdata/system/joined.json").unwrap();
-        let payload: JoinedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::Joined(data.parse().unwrap()));
-    }
+    test_event_convert! {"system", Joined}
 
-    #[test]
-    fn left_convert() {
-        let data = read_to_string("testdata/system/left.json").unwrap();
-        let payload: LeftPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::Left(data.parse().unwrap()));
-    }
+    test_event_convert! {"system", Left}
 
-    #[test]
-    fn message_created_convert() {
-        let data = read_to_string("testdata/message/message_created.json").unwrap();
-        let payload: MessageCreatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::MessageCreated(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", MessageCreated}
 
-    #[test]
-    fn message_deleted_convert() {
-        let data = read_to_string("testdata/message/message_deleted.json").unwrap();
-        let payload: MessageDeletedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::MessageDeleted(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", MessageDeleted}
 
-    #[test]
-    fn message_updated_convert() {
-        let data = read_to_string("testdata/message/message_updated.json").unwrap();
-        let payload: MessageUpdatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::MessageUpdated(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", MessageUpdated}
 
-    #[test]
-    fn direct_message_created_convert() {
-        let data = read_to_string("testdata/message/direct_message_created.json").unwrap();
-        let payload: DirectMessageCreatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::DirectMessageCreated(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", DirectMessageCreated}
 
-    #[test]
-    fn direct_message_deleted_convert() {
-        let data = read_to_string("testdata/message/direct_message_deleted.json").unwrap();
-        let payload: DirectMessageDeletedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::DirectMessageDeleted(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", DirectMessageDeleted}
 
-    #[test]
-    fn direct_message_updated_convert() {
-        let data = read_to_string("testdata/message/direct_message_updated.json").unwrap();
-        let payload: DirectMessageUpdatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::DirectMessageUpdated(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", DirectMessageUpdated}
 
-    #[test]
-    fn bot_message_stamps_updated_convert() {
-        let data = read_to_string("testdata/message/bot_message_stamps_updated.json").unwrap();
-        let payload: BotMessageStampsUpdatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::BotMessageStampsUpdated(data.parse().unwrap()));
-    }
+    test_event_convert! {"message", BotMessageStampsUpdated}
 
-    #[test]
-    fn channel_created_convert() {
-        let data = read_to_string("testdata/channel/channel_created.json").unwrap();
-        let payload: ChannelCreatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::ChannelCreated(data.parse().unwrap()));
-    }
+    test_event_convert! {"channel", ChannelCreated}
 
-    #[test]
-    fn channel_topic_changed_convert() {
-        let data = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
-        let payload: ChannelTopicChangedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::ChannelTopicChanged(data.parse().unwrap()));
-    }
+    test_event_convert! {"channel", ChannelTopicChanged}
 
-    #[test]
-    fn user_created_convert() {
-        let data = read_to_string("testdata/user/user_created.json").unwrap();
-        let payload: UserCreatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::UserCreated(data.parse().unwrap()));
-    }
+    test_event_convert! {"user", UserCreated}
 
-    #[test]
-    fn stamp_created_convert() {
-        let data = read_to_string("testdata/stamp/stamp_created.json").unwrap();
-        let payload: StampCreatedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::StampCreated(data.parse().unwrap()));
-    }
+    test_event_convert! {"stamp", StampCreated}
 
-    #[test]
-    fn tag_added_convert() {
-        let data = read_to_string("testdata/tag/tag_added.json").unwrap();
-        let payload: TagAddedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::TagAdded(data.parse().unwrap()));
-    }
+    test_event_convert! {"tag", TagAdded}
 
-    #[test]
-    fn tag_removed_convert() {
-        let data = read_to_string("testdata/tag/tag_removed.json").unwrap();
-        let payload: TagRemovedPayload = data.parse().unwrap();
-        let event: Event = payload.into();
-        assert_eq!(event, Event::TagRemoved(data.parse().unwrap()));
-    }
+    test_event_convert! {"tag", TagRemoved}
+
+    test_event_convert! {"user-group", UserGroupCreated}
+
+    test_event_convert! {"user-group", UserGroupUpdated}
+
+    test_event_convert! {"user-group", UserGroupDeleted}
+
+    test_event_convert! {"user-group", UserGroupMemberAdded}
+
+    test_event_convert! {"user-group", UserGroupMemberUpdated}
+
+    test_event_convert! {"user-group", UserGroupMemberRemoved}
+
+    test_event_convert! {"user-group", UserGroupAdminAdded}
+
+    test_event_convert! {"user-group", UserGroupAdminRemoved}
 }
