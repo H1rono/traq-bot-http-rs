@@ -1,4 +1,12 @@
 //! メッセージ関連のイベントペイロード
+//! ## types
+//! - [`MessageCreatedPayload`](MessageCreatedPayload)
+//! - [`MessageDeletedPayload`](MessageDeletedPayload)
+//! - [`MessageUpdatedPayload`](MessageUpdatedPayload)
+//! - [`DirectMessageCreatedPayload`](DirectMessageCreatedPayload)
+//! - [`DirectMessageDeletedPayload`](DirectMessageDeletedPayload)
+//! - [`DirectMessageUpdatedPayload`](DirectMessageUpdatedPayload)
+//! - [`BotMessageStampsUpdatedPayload`](BotMessageStampsUpdatedPayload)
 
 use serde::{Deserialize, Serialize};
 

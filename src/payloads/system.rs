@@ -1,4 +1,8 @@
 //! システム関連のイベントペイロード
+//! ## types
+//! - [`PingPayload`](PingPayload)
+//! - [`JoinedPayload`](JoinedPayload)
+//! - [`LeftPayload`](LeftPayload)
 
 use serde::{Deserialize, Serialize};
 

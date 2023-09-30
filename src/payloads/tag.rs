@@ -1,4 +1,7 @@
 //! タグ関連のイベントペイロード
+//! ## types
+//! - [`TagAddedPayload`](TagAddedPayload)
+//! - [`TagRemovedPayload`](TagRemovedPayload)
 
 use serde::{Deserialize, Serialize};
 

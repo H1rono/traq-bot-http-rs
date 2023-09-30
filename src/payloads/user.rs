@@ -1,4 +1,6 @@
 //! ユーザー関連のイベントペイロード
+//! ## types
+//! - [`UserCreatedPayload`](UserCreatedPayload)
 
 use serde::{Deserialize, Serialize};
 

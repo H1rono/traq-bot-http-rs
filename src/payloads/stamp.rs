@@ -1,4 +1,6 @@
 //! スタンプ関連のイベントペイロード
+//! ## types
+//! - [`StampCreatedPayload`](StampCreatedPayload)
 
 use serde::{Deserialize, Serialize};
 
