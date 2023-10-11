@@ -12,17 +12,40 @@ use time::OffsetDateTime;
 use crate::macros::payload_impl;
 
 #[cfg(feature = "chrono")]
+/// タイムスタンプ([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))を表現する型
+///
+/// デフォルトでは[`String`](https://doc.rust-lang.org/stable/alloc/string/struct.String.html)型、
+/// `time` featureで[`time::OffsetDateTime`](https://docs.rs/time/latest/time/struct.OffsetDateTime.html)型になる
 pub type TimeStamp = DateTime<Utc>;
+
 #[cfg(not(feature = "chrono"))]
 #[cfg(feature = "time")]
+/// タイムスタンプ([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))を表現する型
+///
+/// デフォルトでは[`String`](https://doc.rust-lang.org/stable/alloc/string/struct.String.html)型、
+/// `chrono` featureで[`chrono::DateTime<chrono::Utc>`](https://docs.rs/chrono/latest/chrono/struct.DateTime.html)型になる
 pub type TimeStamp = OffsetDateTime;
+
 #[cfg(not(feature = "chrono"))]
 #[cfg(not(feature = "time"))]
+/// タイムスタンプ([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))を表現する型
+///
+/// `time` featureで[`time::OffsetDateTime`](https://docs.rs/time/latest/time/struct.OffsetDateTime.html)型、
+/// `chrono` featureで[`chrono::DateTime<chrono::Utc>`](https://docs.rs/chrono/latest/chrono/struct.DateTime.html)型になる
+///
+/// *`chrono` featureが優先
 pub type TimeStamp = String;
 
 #[cfg(feature = "uuid")]
+/// UUIDを表現する型
+///
+/// デフォルトでは[`String`](https://doc.rust-lang.org/stable/alloc/string/struct.String.html)型
 pub type Uuid = uuid::Uuid;
+
 #[cfg(not(feature = "uuid"))]
+/// UUIDを表現する型
+///
+/// `uuid` featureで[`uuid::Uuid`](https://docs.rs/uuid/latest/uuid/struct.Uuid.html)型になる
 pub type Uuid = String;
 
 /// [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/common.go#L69-L75)
