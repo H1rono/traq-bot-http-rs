@@ -1,4 +1,13 @@
 //! ユーザーグループ関連のイベントペイロード
+//! ## types
+//! - [`UserGroupCreatedPayload`](UserGroupCreatedPayload)
+//! - [`UserGroupUpdatedPayload`](UserGroupUpdatedPayload)
+//! - [`UserGroupDeletedPayload`](UserGroupDeletedPayload)
+//! - [`UserGroupMemberAddedPayload`](UserGroupMemberAddedPayload)
+//! - [`UserGroupMemberUpdatedPayload`](UserGroupMemberUpdatedPayload)
+//! - [`UserGroupMemberRemovedPayload`](UserGroupMemberRemovedPayload)
+//! - [`UserGroupAdminAddedPayload`](UserGroupAdminAddedPayload)
+//! - [`UserGroupAdminRemovedPayload`](UserGroupAdminRemovedPayload)
 
 use serde::{Deserialize, Serialize};
 

@@ -60,7 +60,7 @@ pub mod timestamp {
 
 #[cfg(feature = "uuid")]
 pub mod uuid {
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserializer, Serialize, Serializer};
     use uuid::Uuid;
 
     pub fn serialize<S: Serializer>(data: &Uuid, serializer: S) -> Result<S::Ok, S::Error> {
@@ -68,11 +68,13 @@ pub mod uuid {
     }
 
     pub fn deserialize<'a, D: Deserializer<'a>>(deserializer: D) -> Result<Uuid, D::Error> {
+        use serde::Deserialize;
         Uuid::deserialize(deserializer)
     }
 }
 
 #[cfg(not(feature = "uuid"))]
+/// UUID型[`crate::payloads::types::Uuid`]用のモジュール
 pub mod uuid {
     use serde::{Deserializer, Serialize, Serializer};
 

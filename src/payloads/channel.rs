@@ -1,4 +1,7 @@
 //! チャンネル関連のイベントペイロード
+//! ## types
+//! - [`ChannelCreatedPayload`](ChannelCreatedPayload)
+//! - [`ChannelTopicChangedPayload`](ChannelTopicChangedPayload)
 
 use serde::{Deserialize, Serialize};
 
