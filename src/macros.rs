@@ -163,6 +163,32 @@ macro_rules! test_event_kind_to_string {
 }
 
 #[cfg(test)]
+macro_rules! test_parse_payload {
+    ($group:expr, $i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< parse_ $i:snake:lower >]() {
+                let parser = $crate::test_utils::make_parser();
+                let kind = stringify!([< $i:snake:upper >]);
+                let headers = $crate::test_utils::make_headers(kind);
+                let body = ::std::fs::read_to_string(concat!(
+                    "testdata/",
+                    $group,
+                    "/",
+                    stringify!([< $i:snake:lower >]),
+                    ".json"
+                ))
+                .unwrap();
+                let event = parser.parse(headers, body.as_bytes()).unwrap();
+                let payload = ::serde_json::from_str::< [< $i Payload >] >(&body).unwrap();
+                assert_eq!(event, Event::$i(payload));
+            }
+        }
+    };
+}
+
+#[cfg(test)]
 pub(crate) use {
     test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
+    test_parse_payload,
 };

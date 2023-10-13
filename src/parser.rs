@@ -210,10 +210,8 @@ impl Error for ParseError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::macros::test_parse_payload;
     use crate::payloads::*;
-    use crate::test_utils::*;
-
-    use std::fs::read_to_string;
 
     #[test]
     fn request_parser_new() {
@@ -224,6 +222,7 @@ mod tests {
 
     #[test]
     fn parse_error_derives() {
+        use crate::test_utils::PARSE_ERROR_VARIANTS;
         for variant in PARSE_ERROR_VARIANTS.iter() {
             let error = variant.clone();
             assert_eq!(variant, &error);
@@ -233,6 +232,7 @@ mod tests {
 
     #[test]
     fn parse_failure() {
+        use crate::test_utils::make_parser;
         let parser = make_parser();
         let mut headers = HeaderMap::new();
         assert_eq!(
@@ -312,153 +312,33 @@ mod tests {
         }
     }
 
-    #[test]
-    fn parse_ping() {
-        let parser = make_parser();
-        let headers = make_headers("PING");
-        let body = read_to_string("testdata/system/ping.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<PingPayload>(&body).unwrap();
-        assert_eq!(event, Event::Ping(payload));
-    }
+    test_parse_payload! {"system", Ping}
 
-    #[test]
-    fn parse_joined() {
-        let parser = make_parser();
-        let headers = make_headers("JOINED");
-        let body = read_to_string("testdata/system/joined.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<JoinedPayload>(&body).unwrap();
-        assert_eq!(event, Event::Joined(payload));
-    }
+    test_parse_payload! {"system", Joined}
 
-    #[test]
-    fn parse_left() {
-        let parser = make_parser();
-        let headers = make_headers("LEFT");
-        let body = read_to_string("testdata/system/left.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<LeftPayload>(&body).unwrap();
-        assert_eq!(event, Event::Left(payload));
-    }
+    test_parse_payload! {"system", Left}
 
-    #[test]
-    fn parse_message_created() {
-        let parser = make_parser();
-        let headers = make_headers("MESSAGE_CREATED");
-        let body = read_to_string("testdata/message/message_created.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<MessageCreatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::MessageCreated(payload));
-    }
+    test_parse_payload! {"message", MessageCreated}
 
-    #[test]
-    fn parse_message_deleted() {
-        let parser = make_parser();
-        let headers = make_headers("MESSAGE_DELETED");
-        let body = read_to_string("testdata/message/message_deleted.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<MessageDeletedPayload>(&body).unwrap();
-        assert_eq!(event, Event::MessageDeleted(payload));
-    }
+    test_parse_payload! {"message", MessageDeleted}
 
-    #[test]
-    fn parse_message_updated() {
-        let parser = make_parser();
-        let headers = make_headers("MESSAGE_UPDATED");
-        let body = read_to_string("testdata/message/message_updated.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<MessageUpdatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::MessageUpdated(payload));
-    }
+    test_parse_payload! {"message", MessageUpdated}
 
-    #[test]
-    fn parse_direct_message_created() {
-        let parser = make_parser();
-        let headers = make_headers("DIRECT_MESSAGE_CREATED");
-        let body = read_to_string("testdata/message/direct_message_created.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<DirectMessageCreatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::DirectMessageCreated(payload));
-    }
+    test_parse_payload! {"message", DirectMessageCreated}
 
-    #[test]
-    fn parse_direct_message_deleted() {
-        let parser = make_parser();
-        let headers = make_headers("DIRECT_MESSAGE_DELETED");
-        let body = read_to_string("testdata/message/direct_message_deleted.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<DirectMessageDeletedPayload>(&body).unwrap();
-        assert_eq!(event, Event::DirectMessageDeleted(payload));
-    }
+    test_parse_payload! {"message", DirectMessageDeleted}
 
-    #[test]
-    fn parse_direct_message_updated() {
-        let parser = make_parser();
-        let headers = make_headers("DIRECT_MESSAGE_UPDATED");
-        let body = read_to_string("testdata/message/direct_message_updated.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::DirectMessageUpdated(payload));
-    }
+    test_parse_payload! {"message", DirectMessageUpdated}
 
-    #[test]
-    fn parse_bot_message_stamps_updated() {
-        let parser = make_parser();
-        let headers = make_headers("BOT_MESSAGE_STAMPS_UPDATED");
-        let body = read_to_string("testdata/message/bot_message_stamps_updated.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::BotMessageStampsUpdated(payload));
-    }
+    test_parse_payload! {"message", BotMessageStampsUpdated}
 
-    #[test]
-    fn parse_channel_created() {
-        let parser = make_parser();
-        let headers = make_headers("CHANNEL_CREATED");
-        let body = read_to_string("testdata/channel/channel_created.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<ChannelCreatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::ChannelCreated(payload));
-    }
+    test_parse_payload! {"channel", ChannelCreated}
 
-    #[test]
-    fn parse_channel_topic_changed() {
-        let parser = make_parser();
-        let headers = make_headers("CHANNEL_TOPIC_CHANGED");
-        let body = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<ChannelTopicChangedPayload>(&body).unwrap();
-        assert_eq!(event, Event::ChannelTopicChanged(payload));
-    }
+    test_parse_payload! {"channel", ChannelTopicChanged}
 
-    #[test]
-    fn parse_user_created() {
-        let parser = make_parser();
-        let headers = make_headers("USER_CREATED");
-        let body = read_to_string("testdata/user/user_created.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<UserCreatedPayload>(&body).unwrap();
-        assert_eq!(event, Event::UserCreated(payload));
-    }
+    test_parse_payload! {"user", UserCreated}
 
-    #[test]
-    fn parse_tag_added() {
-        let parser = make_parser();
-        let headers = make_headers("TAG_ADDED");
-        let body = read_to_string("testdata/tag/tag_added.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = serde_json::from_str::<TagAddedPayload>(&body).unwrap();
-        assert_eq!(event, Event::TagAdded(payload));
-    }
+    test_parse_payload! {"tag", TagAdded}
 
-    #[test]
-    fn parse_tag_removed() {
-        let parser = make_parser();
-        let headers = make_headers("TAG_REMOVED");
-        let body = read_to_string("testdata/tag/tag_removed.json").unwrap();
-        let event = parser.parse(headers, body.as_bytes()).unwrap();
-        let payload = body.parse().unwrap();
-        assert_eq!(event, Event::TagRemoved(payload));
-    }
+    test_parse_payload! {"tag", TagRemoved}
 }
