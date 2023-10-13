@@ -50,10 +50,44 @@ macro_rules! event_converts {
     };
 }
 
+macro_rules! match_event_to_kind {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( Event::$i(_) => EventKind::$i, )*
+            }
+        }
+    };
+}
+
+macro_rules! match_event_kinds_to_str {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( $i => stringify!([< $i:snake:upper >]), )*
+            }
+        }
+    };
+}
+
+macro_rules! match_str_to_event_kinds {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok($i), )*
+                _ => ::core::result::Result::Err($crate::ParseError::BotEventMismatch),
+            }
+        }
+    };
+}
+
 pub(crate) use event_convert;
 pub(crate) use event_converts;
 pub(crate) use impl_display;
 pub(crate) use impl_from_str;
+pub(crate) use match_event_kinds_to_str;
+pub(crate) use match_event_to_kind;
+pub(crate) use match_str_to_event_kinds;
 pub(crate) use payload_impl;
 
 #[cfg(test)]
@@ -79,4 +113,82 @@ macro_rules! test_event_convert {
 }
 
 #[cfg(test)]
-pub(crate) use test_event_convert;
+macro_rules! test_event_to_kind {
+    ($group:expr, $i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind >]() {
+                let data = ::std::fs::read_to_string(concat!(
+                    "testdata/",
+                    $group,
+                    "/",
+                    stringify!([< $i:snake:lower >]),
+                    ".json"
+                ))
+                .unwrap();
+                let payload: [<$i Payload>] = data.parse().unwrap();
+                let event: Event = payload.into();
+                assert_eq!(event.kind(), EventKind::$i);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+macro_rules! test_event_kind_from_str {
+    ($i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind_from_str >]() {
+                let s = stringify!( [< $i:snake:upper >] );
+                let kind: EventKind = s.parse().unwrap();
+                assert_eq!(kind, EventKind::$i);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+macro_rules! test_event_kind_to_string {
+    ($i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind_to_string >]() {
+                let kind = EventKind::$i;
+                let s = kind.to_string();
+                assert_eq!(&s, stringify!([< $i:snake:upper >]))
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+macro_rules! test_parse_payload {
+    ($group:expr, $i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< parse_ $i:snake:lower >]() {
+                let parser = $crate::test_utils::make_parser();
+                let kind = stringify!([< $i:snake:upper >]);
+                let headers = $crate::test_utils::make_headers(kind);
+                let body = ::std::fs::read_to_string(concat!(
+                    "testdata/",
+                    $group,
+                    "/",
+                    stringify!([< $i:snake:lower >]),
+                    ".json"
+                ))
+                .unwrap();
+                let event = parser.parse(headers, body.as_bytes()).unwrap();
+                let payload = ::serde_json::from_str::< [< $i Payload >] >(&body).unwrap();
+                assert_eq!(event, Event::$i(payload));
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+pub(crate) use {
+    test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
+    test_parse_payload,
+};
