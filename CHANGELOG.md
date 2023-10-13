@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.7.2] - 2023-10-13
+
+### Added
+
+- enum `EventKind`を追加
+
+### Changed
+
+- 一部ドキュメントを修正
+- 内部実装、テストでマクロを使用
+
+### Fixed
+
+- `USER_GROUP_*`のイベントがパースできなかった問題を修正
+
+
 ## [v0.7.1] - 2023-09-25
 
 ### Fixed
@@ -164,6 +180,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.7.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.1..v0.7.2
 [v0.7.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.0..v0.7.1
 [v0.7.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.3..v0.7.0
 [v0.6.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.2..v0.6.3
