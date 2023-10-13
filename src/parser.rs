@@ -338,7 +338,25 @@ mod tests {
 
     test_parse_payload! {"user", UserCreated}
 
+    test_parse_payload! {"stamp", StampCreated}
+
     test_parse_payload! {"tag", TagAdded}
 
     test_parse_payload! {"tag", TagRemoved}
+
+    test_parse_payload! {"user-group", UserGroupCreated}
+
+    test_parse_payload! {"user-group", UserGroupUpdated}
+
+    test_parse_payload! {"user-group", UserGroupDeleted}
+
+    test_parse_payload! {"user-group", UserGroupMemberAdded}
+
+    test_parse_payload! {"user-group", UserGroupMemberUpdated}
+
+    test_parse_payload! {"user-group", UserGroupMemberRemoved}
+
+    test_parse_payload! {"user-group", UserGroupAdminAdded}
+
+    test_parse_payload! {"user-group", UserGroupAdminRemoved}
 }
