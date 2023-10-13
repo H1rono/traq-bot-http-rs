@@ -12,7 +12,7 @@ pub(crate) mod macros;
 mod parser;
 pub mod payloads;
 
-pub use events::Event;
+pub use events::{Event, EventKind};
 pub use parser::{ParseError, RequestParser};
 
 #[cfg(test)]

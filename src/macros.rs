@@ -50,10 +50,44 @@ macro_rules! event_converts {
     };
 }
 
+macro_rules! match_event_to_kind {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( Event::$i(_) => EventKind::$i, )*
+            }
+        }
+    };
+}
+
+macro_rules! match_event_kinds_to_str {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( $i => stringify!([< $i:snake:upper >]), )*
+            }
+        }
+    };
+}
+
+macro_rules! match_str_to_event_kinds {
+    ($v:ident, $($i:ident),*) => {
+        ::paste::paste! {
+            match $v {
+                $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok($i), )*
+                _ => ::core::result::Result::Err($crate::ParseError::BotEventMismatch),
+            }
+        }
+    };
+}
+
 pub(crate) use event_convert;
 pub(crate) use event_converts;
 pub(crate) use impl_display;
 pub(crate) use impl_from_str;
+pub(crate) use match_event_kinds_to_str;
+pub(crate) use match_event_to_kind;
+pub(crate) use match_str_to_event_kinds;
 pub(crate) use payload_impl;
 
 #[cfg(test)]

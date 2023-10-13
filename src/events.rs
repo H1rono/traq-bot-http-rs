@@ -1,5 +1,7 @@
 //! `enum Event`
 
+use std::{fmt::Display, str::FromStr};
+
 use super::payloads::{
     BotMessageStampsUpdatedPayload, ChannelCreatedPayload, ChannelTopicChangedPayload,
     DirectMessageCreatedPayload, DirectMessageDeletedPayload, DirectMessageUpdatedPayload,
@@ -115,6 +117,178 @@ event_converts! {
     UserGroupCreated, UserGroupUpdated, UserGroupDeleted,
     UserGroupMemberAdded, UserGroupMemberUpdated, UserGroupMemberRemoved,
     UserGroupAdminAdded, UserGroupAdminRemoved
+}
+
+/// イベントの種類全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
+///
+/// ## Variants
+/// * `Ping` - ボットの接続確認
+/// * `Joined` - チャンネルに参加した
+/// * `Left` - チャンネルから退出した
+/// * `MessageCreated` - メッセージが作成された
+/// * `MessageDeleted` - メッセージが削除された
+/// * `MessageUpdated` - メッセージが更新された
+/// * `DirectMessageCreated` - ダイレクトメッセージが作成された
+/// * `DirectMessageDeleted` - ダイレクトメッセージが削除された
+/// * `DirectMessageUpdated` - ダイレクトメッセージが更新された
+/// * `BotMessageStampsUpdated` - ボットのメッセージにスタンプが付けられた
+/// * `ChannelCreated` - チャンネルが作成された
+/// * `ChannelTopicChanged` - チャンネルのトピックが変更された
+/// * `UserCreated` - ユーザーが作成された
+/// * `StampCreated` - スタンプが作成された
+/// * `TagAdded` - BOTにタグが追加された
+/// * `TagRemoved` - BOTからタグが削除された
+/// * `UserGroupCreated` - ユーザーグループが作成された
+/// * `UserGroupUpdated` - ユーザーグループが更新された
+/// * `UserGroupDeleted` - ユーザーグループが削除された
+/// * `UserGroupMemberAdded` - ユーザーグループにメンバーが追加された
+/// * `UserGroupMemberUpdated` - ユーザーグループのメンバーが更新された
+/// * `UserGroupMemberRemoved` - ユーザーグループからメンバーが削除された
+/// * `UserGroupAdminAdded` - ユーザーグループに管理者が追加された
+/// * `UserGroupAdminRemoved` - ユーザーグループから管理者が削除された
+///
+/// ## Example
+/// ```
+/// use traq_bot_http::{Event, EventKind};
+/// use traq_bot_http::payloads::PingPayload;
+/// let payload = r#"{
+///     "eventTime": "2019-05-07T04:50:48.582586882Z"
+/// }"#;
+/// let payload = serde_json::from_str::<PingPayload>(payload).unwrap();
+/// let event: Event = payload.into();
+/// assert_eq!(event.kind(), EventKind::Ping);
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum EventKind {
+    Ping,
+    Joined,
+    Left,
+    MessageCreated,
+    MessageDeleted,
+    MessageUpdated,
+    DirectMessageCreated,
+    DirectMessageDeleted,
+    DirectMessageUpdated,
+    BotMessageStampsUpdated,
+    ChannelCreated,
+    ChannelTopicChanged,
+    UserCreated,
+    StampCreated,
+    TagAdded,
+    TagRemoved,
+    UserGroupCreated,
+    UserGroupUpdated,
+    UserGroupDeleted,
+    UserGroupMemberAdded,
+    UserGroupMemberUpdated,
+    UserGroupMemberRemoved,
+    UserGroupAdminAdded,
+    UserGroupAdminRemoved,
+}
+
+impl Event {
+    pub fn kind(&self) -> EventKind {
+        use crate::macros::match_event_to_kind;
+        match_event_to_kind!(
+            self,
+            Ping,
+            Joined,
+            Left,
+            MessageCreated,
+            MessageDeleted,
+            MessageUpdated,
+            DirectMessageCreated,
+            DirectMessageDeleted,
+            DirectMessageUpdated,
+            BotMessageStampsUpdated,
+            ChannelCreated,
+            ChannelTopicChanged,
+            UserCreated,
+            StampCreated,
+            TagAdded,
+            TagRemoved,
+            UserGroupCreated,
+            UserGroupUpdated,
+            UserGroupDeleted,
+            UserGroupMemberAdded,
+            UserGroupMemberUpdated,
+            UserGroupMemberRemoved,
+            UserGroupAdminAdded,
+            UserGroupAdminRemoved
+        )
+    }
+}
+
+impl Display for EventKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use crate::macros::match_event_kinds_to_str;
+        use EventKind::*;
+        let s = match_event_kinds_to_str!(
+            self,
+            Ping,
+            Joined,
+            Left,
+            MessageCreated,
+            MessageDeleted,
+            MessageUpdated,
+            DirectMessageCreated,
+            DirectMessageDeleted,
+            DirectMessageUpdated,
+            BotMessageStampsUpdated,
+            ChannelCreated,
+            ChannelTopicChanged,
+            UserCreated,
+            StampCreated,
+            TagAdded,
+            TagRemoved,
+            UserGroupCreated,
+            UserGroupUpdated,
+            UserGroupDeleted,
+            UserGroupMemberAdded,
+            UserGroupMemberUpdated,
+            UserGroupMemberRemoved,
+            UserGroupAdminAdded,
+            UserGroupAdminRemoved
+        );
+        write!(f, "{}", s)
+    }
+}
+
+impl FromStr for EventKind {
+    type Err = crate::ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use crate::macros::match_str_to_event_kinds;
+        use EventKind::*;
+        match_str_to_event_kinds!(
+            s,
+            Ping,
+            Joined,
+            Left,
+            MessageCreated,
+            MessageDeleted,
+            MessageUpdated,
+            DirectMessageCreated,
+            DirectMessageDeleted,
+            DirectMessageUpdated,
+            BotMessageStampsUpdated,
+            ChannelCreated,
+            ChannelTopicChanged,
+            UserCreated,
+            StampCreated,
+            TagAdded,
+            TagRemoved,
+            UserGroupCreated,
+            UserGroupUpdated,
+            UserGroupDeleted,
+            UserGroupMemberAdded,
+            UserGroupMemberUpdated,
+            UserGroupMemberRemoved,
+            UserGroupAdminAdded,
+            UserGroupAdminRemoved
+        )
+    }
 }
 
 #[cfg(test)]
