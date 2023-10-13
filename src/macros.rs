@@ -113,4 +113,56 @@ macro_rules! test_event_convert {
 }
 
 #[cfg(test)]
-pub(crate) use test_event_convert;
+macro_rules! test_event_to_kind {
+    ($group:expr, $i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind >]() {
+                let data = ::std::fs::read_to_string(concat!(
+                    "testdata/",
+                    $group,
+                    "/",
+                    stringify!([< $i:snake:lower >]),
+                    ".json"
+                ))
+                .unwrap();
+                let payload: [<$i Payload>] = data.parse().unwrap();
+                let event: Event = payload.into();
+                assert_eq!(event.kind(), EventKind::$i);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+macro_rules! test_event_kind_from_str {
+    ($i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind_from_str >]() {
+                let s = stringify!( [< $i:snake:upper >] );
+                let kind: EventKind = s.parse().unwrap();
+                assert_eq!(kind, EventKind::$i);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+macro_rules! test_event_kind_to_string {
+    ($i:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< $i:snake:lower _kind_to_string >]() {
+                let kind = EventKind::$i;
+                let s = kind.to_string();
+                assert_eq!(&s, stringify!([< $i:snake:upper >]))
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+pub(crate) use {
+    test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
+};

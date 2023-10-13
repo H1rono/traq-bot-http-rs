@@ -295,7 +295,9 @@ impl FromStr for EventKind {
 mod tests {
     use super::*;
 
-    use crate::macros::test_event_convert;
+    use crate::macros::{
+        test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
+    };
 
     test_event_convert! {"system", Ping}
 
@@ -344,4 +346,148 @@ mod tests {
     test_event_convert! {"user-group", UserGroupAdminAdded}
 
     test_event_convert! {"user-group", UserGroupAdminRemoved}
+
+    test_event_to_kind! {"system", Ping}
+
+    test_event_to_kind! {"system", Joined}
+
+    test_event_to_kind! {"system", Left}
+
+    test_event_to_kind! {"message", MessageCreated}
+
+    test_event_to_kind! {"message", MessageDeleted}
+
+    test_event_to_kind! {"message", MessageUpdated}
+
+    test_event_to_kind! {"message", DirectMessageCreated}
+
+    test_event_to_kind! {"message", DirectMessageDeleted}
+
+    test_event_to_kind! {"message", DirectMessageUpdated}
+
+    test_event_to_kind! {"message", BotMessageStampsUpdated}
+
+    test_event_to_kind! {"channel", ChannelCreated}
+
+    test_event_to_kind! {"channel", ChannelTopicChanged}
+
+    test_event_to_kind! {"user", UserCreated}
+
+    test_event_to_kind! {"stamp", StampCreated}
+
+    test_event_to_kind! {"tag", TagAdded}
+
+    test_event_to_kind! {"tag", TagRemoved}
+
+    test_event_to_kind! {"user-group", UserGroupCreated}
+
+    test_event_to_kind! {"user-group", UserGroupUpdated}
+
+    test_event_to_kind! {"user-group", UserGroupDeleted}
+
+    test_event_to_kind! {"user-group", UserGroupMemberAdded}
+
+    test_event_to_kind! {"user-group", UserGroupMemberUpdated}
+
+    test_event_to_kind! {"user-group", UserGroupMemberRemoved}
+
+    test_event_to_kind! {"user-group", UserGroupAdminAdded}
+
+    test_event_to_kind! {"user-group", UserGroupAdminRemoved}
+
+    test_event_kind_from_str! {Ping}
+
+    test_event_kind_from_str! {Joined}
+
+    test_event_kind_from_str! {Left}
+
+    test_event_kind_from_str! {MessageCreated}
+
+    test_event_kind_from_str! {MessageDeleted}
+
+    test_event_kind_from_str! {MessageUpdated}
+
+    test_event_kind_from_str! {DirectMessageCreated}
+
+    test_event_kind_from_str! {DirectMessageDeleted}
+
+    test_event_kind_from_str! {DirectMessageUpdated}
+
+    test_event_kind_from_str! {BotMessageStampsUpdated}
+
+    test_event_kind_from_str! {ChannelCreated}
+
+    test_event_kind_from_str! {ChannelTopicChanged}
+
+    test_event_kind_from_str! {UserCreated}
+
+    test_event_kind_from_str! {StampCreated}
+
+    test_event_kind_from_str! {TagAdded}
+
+    test_event_kind_from_str! {TagRemoved}
+
+    test_event_kind_from_str! {UserGroupCreated}
+
+    test_event_kind_from_str! {UserGroupUpdated}
+
+    test_event_kind_from_str! {UserGroupDeleted}
+
+    test_event_kind_from_str! {UserGroupMemberAdded}
+
+    test_event_kind_from_str! {UserGroupMemberUpdated}
+
+    test_event_kind_from_str! {UserGroupMemberRemoved}
+
+    test_event_kind_from_str! {UserGroupAdminAdded}
+
+    test_event_kind_from_str! {UserGroupAdminRemoved}
+
+    test_event_kind_to_string! {Ping}
+
+    test_event_kind_to_string! {Joined}
+
+    test_event_kind_to_string! {Left}
+
+    test_event_kind_to_string! {MessageCreated}
+
+    test_event_kind_to_string! {MessageDeleted}
+
+    test_event_kind_to_string! {MessageUpdated}
+
+    test_event_kind_to_string! {DirectMessageCreated}
+
+    test_event_kind_to_string! {DirectMessageDeleted}
+
+    test_event_kind_to_string! {DirectMessageUpdated}
+
+    test_event_kind_to_string! {BotMessageStampsUpdated}
+
+    test_event_kind_to_string! {ChannelCreated}
+
+    test_event_kind_to_string! {ChannelTopicChanged}
+
+    test_event_kind_to_string! {UserCreated}
+
+    test_event_kind_to_string! {StampCreated}
+
+    test_event_kind_to_string! {TagAdded}
+
+    test_event_kind_to_string! {TagRemoved}
+
+    test_event_kind_to_string! {UserGroupCreated}
+
+    test_event_kind_to_string! {UserGroupUpdated}
+
+    test_event_kind_to_string! {UserGroupDeleted}
+
+    test_event_kind_to_string! {UserGroupMemberAdded}
+
+    test_event_kind_to_string! {UserGroupMemberUpdated}
+
+    test_event_kind_to_string! {UserGroupMemberRemoved}
+
+    test_event_kind_to_string! {UserGroupAdminAdded}
+
+    test_event_kind_to_string! {UserGroupAdminRemoved}
 }
