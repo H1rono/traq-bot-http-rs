@@ -49,8 +49,9 @@ use crate::macros::payload_impl;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MessageCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
 }
@@ -88,8 +89,9 @@ impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MessageDeletedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedMessage,
 }
@@ -132,8 +134,9 @@ payload_impl! {MessageDeletedPayload}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MessageUpdatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
 }
@@ -189,8 +192,9 @@ impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DirectMessageCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
 }
@@ -229,8 +233,9 @@ impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DirectMessageDeletedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: DeletedDirectMessage,
 }
@@ -273,8 +278,9 @@ payload_impl! {DirectMessageDeletedPayload}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DirectMessageUpdatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub message: Message,
 }
@@ -332,10 +338,10 @@ impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct BotMessageStampsUpdatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "messageId")]
     pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
 }
