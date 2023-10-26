@@ -50,8 +50,9 @@ use crate::macros::payload_impl;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub group: UserGroup,
 }
@@ -73,10 +74,10 @@ payload_impl! {UserGroupCreatedPayload}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupUpdatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupId")]
     pub group_id: Uuid,
 }
 
@@ -106,10 +107,10 @@ impl From<UserGroupDeletedPayload> for UserGroupUpdatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupDeletedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupId")]
     pub group_id: Uuid,
 }
 
@@ -142,10 +143,10 @@ impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupMemberAddedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupMember")]
     pub group_member: GroupMember,
 }
 
@@ -196,10 +197,10 @@ impl From<UserGroupAdminAddedPayload> for UserGroupMemberAddedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupMemberUpdatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupMember")]
     pub group_member: GroupMember,
 }
 
@@ -241,10 +242,10 @@ impl From<UserGroupMemberRemovedPayload> for UserGroupMemberUpdatedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupMemberRemovedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupMember")]
     pub group_member: GroupMember,
 }
 
@@ -295,10 +296,10 @@ impl From<UserGroupAdminRemovedPayload> for UserGroupMemberRemovedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupAdminAddedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupMember")]
     pub group_member: GroupMember,
 }
 
@@ -340,10 +341,10 @@ impl From<UserGroupMemberAddedPayload> for UserGroupAdminAddedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupAdminRemovedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "groupMember")]
     pub group_member: GroupMember,
 }
 

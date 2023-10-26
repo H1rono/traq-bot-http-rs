@@ -31,12 +31,12 @@ use crate::macros::payload_impl;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct StampCreatedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub id: Uuid,
     pub name: String,
-    #[serde(rename = "fileId")]
     pub file_id: Uuid,
     pub creator: User,
 }

@@ -24,10 +24,10 @@ use crate::macros::payload_impl;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TagAddedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "tagId")]
     pub tag_id: Uuid,
     pub tag: String,
 }
@@ -65,10 +65,10 @@ impl From<TagRemovedPayload> for TagAddedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TagRemovedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
-    #[serde(rename = "tagId")]
     pub tag_id: Uuid,
     pub tag: String,
 }

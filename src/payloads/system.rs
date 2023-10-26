@@ -23,8 +23,9 @@ use crate::macros::payload_impl;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PingPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
 }
 
@@ -59,8 +60,9 @@ payload_impl! {PingPayload}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct JoinedPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
 }
@@ -109,8 +111,9 @@ impl From<LeftPayload> for JoinedPayload {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LeftPayload {
-    #[serde(rename = "eventTime", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub event_time: TimeStamp,
     pub channel: Channel,
 }

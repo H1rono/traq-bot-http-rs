@@ -64,12 +64,11 @@ pub type Uuid = String;
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: Uuid,
     pub name: String,
-    #[serde(rename = "displayName")]
     pub display_name: String,
-    #[serde(rename = "iconId")]
     pub icon_id: Uuid,
     pub bot: bool,
 }
@@ -99,16 +98,16 @@ payload_impl! {User}
 /// let payload: Channel = payload.parse().unwrap();
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Channel {
     pub id: Uuid,
     pub name: String,
     pub path: String,
-    #[serde(rename = "parentId")]
     pub parent_id: Uuid,
     pub creator: User,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -128,6 +127,7 @@ payload_impl! {Channel}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EmbeddedInfo {
     pub raw: String,
     #[serde(rename = "type")]
@@ -168,18 +168,17 @@ payload_impl! {EmbeddedInfo}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Message {
     pub id: Uuid,
     pub user: User,
-    #[serde(rename = "channelId")]
     pub channel_id: Uuid,
     pub text: String,
-    #[serde(rename = "plainText")]
     pub plain_text: String,
     pub embedded: Vec<EmbeddedInfo>,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -198,9 +197,9 @@ payload_impl! {Message}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DeletedMessage {
     pub id: Uuid,
-    #[serde(rename = "channelId")]
     pub channel_id: Uuid,
 }
 
@@ -220,11 +219,10 @@ payload_impl! {DeletedMessage}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DeletedDirectMessage {
     pub id: Uuid,
-    #[serde(rename = "userId")]
     pub user_id: Uuid,
-    #[serde(rename = "channelId")]
     pub channel_id: Uuid,
 }
 
@@ -246,15 +244,14 @@ payload_impl! {DeletedDirectMessage}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MessageStamp {
-    #[serde(rename = "stampId")]
     pub stamp_id: Uuid,
-    #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub count: i32,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
@@ -262,10 +259,9 @@ payload_impl! {MessageStamp}
 
 /// [traQの定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/common.go#L92-L95)
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GroupMember {
-    #[serde(rename = "groupId")]
     pub group_id: Uuid,
-    #[serde(rename = "userId")]
     pub user_id: Uuid,
 }
 
@@ -284,10 +280,9 @@ payload_impl! {GroupMember}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupAdmin {
-    #[serde(rename = "groupId")]
     pub group_id: Uuid,
-    #[serde(rename = "userId")]
     pub user_id: Uuid,
 }
 
@@ -325,10 +320,9 @@ impl From<GroupMember> for UserGroupAdmin {
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroupMember {
-    #[serde(rename = "groupId")]
     pub group_id: Uuid,
-    #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub role: String,
 }
@@ -366,6 +360,7 @@ payload_impl! {UserGroupMember}
 /// println!("{payload}");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserGroup {
     pub id: Uuid,
     pub name: String,
@@ -375,9 +370,9 @@ pub struct UserGroup {
     pub icon: Uuid,
     pub admins: Vec<UserGroupAdmin>,
     pub members: Vec<UserGroupMember>,
-    #[serde(rename = "createdAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub created_at: TimeStamp,
-    #[serde(rename = "updatedAt", with = "crate::payloads::serde::timestamp")]
+    #[serde(with = "crate::payloads::serde::timestamp")]
     pub updated_at: TimeStamp,
 }
 
