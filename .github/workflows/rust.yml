@@ -11,6 +11,7 @@ env:
   RUSTFLAGS: "-C instrument-coverage"
   LLVM_PROFILE_FILE: "target/profile/traq-bot-http-rs-%p-%m.profraw"
   GRCOV_VERSION: "0.8.13"
+  CARGO_UDEPS_VERSION: "0.1.43"
 
 jobs:
   build:
@@ -30,6 +31,13 @@ jobs:
           curl -sSL -o grcov.tar.bz2 https://github.com/mozilla/grcov/releases/download/v${GRCOV_VERSION}/grcov-x86_64-unknown-linux-gnu.tar.bz2
           tar -jxf grcov.tar.bz2
           rm grcov.tar.bz2
+      - name: install cargo-udeps
+        run: |
+          export UDEPS_ASSET_NAME="cargo-udeps-v${CARGO_UDEPS_VERSION}-x86_64-unknown-linux-gnu"
+          curl -sSL -o cargo-udeps.tar.gz https://github.com/est31/cargo-udeps/releases/download/v${CARGO_UDEPS_VERSION}/${UDEPS_ASSET_NAME}.tar.gz
+          tar -xf cargo-udeps.tar.gz
+          mv ${UDEPS_ASSET_NAME}/cargo-udeps ./
+          rm -rf cargo-udeps.tar.gz ${UDEPS_ASSET_NAME}
       - name: Clean # not to use old coverage
         run: cargo clean
       - name: Build
@@ -38,6 +46,8 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Lint
         run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Check udeps
+        run: ./cargo-udeps udeps
       - name: Run tests
         run: |
           mkdir -p target/profile
