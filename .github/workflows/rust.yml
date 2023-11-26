@@ -60,7 +60,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: target/coverage.lcov
-  security_check:
+  check-deps:
     runs-on: ubuntu-latest
     permissions:
       issues: write
