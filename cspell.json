@@ -1,0 +1,24 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "version": "0.2",
+    "dictionaryDefinitions": [
+        {
+            "name": "lib-words",
+            "path": "./.cspell-dict/lib-words.txt",
+            "addWords": true
+        },
+        {
+            "name": "test-words",
+            "path": "./.cspell-dict/test-words.txt",
+            "addWords": true
+        }
+    ],
+    "dictionaries": [
+        "lib-words",
+        "test-words"
+    ],
+    "ignorePaths": [
+        "target",
+        ".cspell-dict/**"
+    ]
+}

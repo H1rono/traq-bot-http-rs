@@ -17,3 +17,4 @@ Cargo.lock
 !.github
 !.gitignore
 !.cargo
+!.cspell-dict
