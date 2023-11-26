@@ -16,3 +16,4 @@ Cargo.lock
 .*
 !.github
 !.gitignore
+!.cargo
