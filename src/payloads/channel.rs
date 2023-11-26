@@ -125,7 +125,7 @@ mod tests {
     }
 
     #[test]
-    fn chennel_topic_changed_test() {
+    fn channel_topic_changed_test() {
         let data = read_to_string("testdata/channel/channel_topic_changed.json").unwrap();
         let payload: ChannelTopicChangedPayload = data.parse().unwrap();
         println!("{}", serde_json::to_string_pretty(&payload).unwrap());

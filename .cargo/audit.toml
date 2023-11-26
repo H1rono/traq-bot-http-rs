@@ -1,0 +1,29 @@
+# https://github.com/rustsec/rustsec/blob/main/cargo-audit/audit.toml.example
+
+[advisories]
+ignore = ["RUSTSEC-2020-0071"]
+informational_warnings = ["unmaintained"]
+severity_threshold = "low"
+
+# Advisory Database Configuration
+[database]
+path = "./target/advisory-db"
+url = "https://github.com/RustSec/advisory-db.git"
+fetch = true
+stale = false
+
+# Output Configuration
+[output]
+deny = ["unmaintained"]
+format = "terminal"
+quiet = false
+show_tree = true
+
+# Target Configuration - omitted
+# [target]
+# arch = "x86_64"
+# os = "linux"
+
+[yanked]
+enabled = true
+update_index = false
