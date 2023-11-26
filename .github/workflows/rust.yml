@@ -69,4 +69,6 @@ jobs:
           install -m 755 ${UDEPS_ASSET_NAME}/cargo-udeps /usr/local/bin/cargo-udeps
           rm -rf cargo-udeps.tar.gz ${UDEPS_ASSET_NAME}
       - name: Check udeps
-        run: cargo +nightly udeps
+        run: |
+          rustup toolchain install nightly
+          cargo +nightly udeps
