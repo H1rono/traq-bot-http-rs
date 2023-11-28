@@ -28,6 +28,7 @@ jobs:
             | install -m 755 /dev/stdin /usr/local/bin/action-validator
       - name: Validate workflow files
         run: |
+          action-validator .github/workflows/audit.yml
           action-validator .github/workflows/rust.yml
           action-validator .github/workflows/release.yml
           action-validator .github/workflows/validate.yml
