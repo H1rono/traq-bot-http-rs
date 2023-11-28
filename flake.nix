@@ -2,7 +2,7 @@
   description = "Library to parse POST requests of traQ BOT event";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     fenix = {
       url = "github:nix-community/fenix/monthly";
@@ -27,6 +27,14 @@
             toolchain
             grcov # to collect coverage
             libiconv # required to build example `basic-with-axum`
+          ];
+        };
+        devShells.validate = pkgs.stdenv.mkDerivation {
+          name = "validate";
+          nativeBuildInputs = with pkgs; [
+            taplo
+            nixpkgs-fmt
+            action-validator
           ];
         };
       }
