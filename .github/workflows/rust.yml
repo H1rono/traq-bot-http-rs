@@ -10,7 +10,6 @@ env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-C instrument-coverage"
   LLVM_PROFILE_FILE: "target/profile/traq-bot-http-rs-%p-%m.profraw"
-  GRCOV_VERSION: "0.8.13"
   CARGO_UDEPS_VERSION: "0.1.43"
 
 jobs:

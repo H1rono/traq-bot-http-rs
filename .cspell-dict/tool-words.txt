@@ -6,7 +6,6 @@ RUSTFLAGS
 rustsec
 RUSTSEC
 grcov
-GRCOV
 profraw
 Codecov
 UDEPS
