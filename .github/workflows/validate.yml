@@ -14,24 +14,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install taplo
-        run: |
-          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-linux-x86_64.gz \
-            | gzip -d - | install -m 755 /dev/stdin /usr/local/bin/taplo
+      - uses: cachix/install-nix-action@v20
+        with:
+          nix_path: "nixpkgs=channel:release-23.05"
       - name: Validate Cargo.toml
-        run: taplo lint --schema https://json.schemastore.org/cargo.json Cargo.toml
+        run: nix develop .#validate -c taplo lint --schema https://json.schemastore.org/cargo.json Cargo.toml
       - name: Validate rust-toolchain.toml
-        run: taplo lint --schema https://json.schemastore.org/rust-toolchain.json rust-toolchain.toml
-      - name: Install action-validator
-        run: |
-          curl -fsSL https://github.com/mpalmer/action-validator/releases/latest/download/action-validator_linux_amd64 \
-            | install -m 755 /dev/stdin /usr/local/bin/action-validator
+        run: nix develop .#validate -c taplo lint --schema https://json.schemastore.org/rust-toolchain.json rust-toolchain.toml
       - name: Validate workflow files
         run: |
-          action-validator .github/workflows/audit.yml
-          action-validator .github/workflows/rust.yml
-          action-validator .github/workflows/release.yml
-          action-validator .github/workflows/validate.yml
+          nix develop .#validate -c action-validator .github/workflows/audit.yml
+          nix develop .#validate -c action-validator .github/workflows/rust.yml
+          nix develop .#validate -c action-validator .github/workflows/release.yml
+          nix develop .#validate -c action-validator .github/workflows/validate.yml
+          nix develop .#validate -c action-validator .github/workflows/flake-update.yml
       - name: Validate codecov.yml
         run: |
           curl -f --data-binary @codecov.yml https://codecov.io/validate

@@ -6,9 +6,16 @@ RUSTFLAGS
 rustsec
 RUSTSEC
 grcov
-GRCOV
 profraw
 Codecov
 UDEPS
 Swatinem
 taplo
+
+nixos
+nixpkgs
+numtide
+fenix
+pkgs
+stdenv
+libiconv
