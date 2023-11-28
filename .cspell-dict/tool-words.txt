@@ -12,3 +12,11 @@ Codecov
 UDEPS
 Swatinem
 taplo
+
+nixos
+nixpkgs
+numtide
+fenix
+pkgs
+stdenv
+libiconv
