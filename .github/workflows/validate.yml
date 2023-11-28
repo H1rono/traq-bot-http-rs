@@ -27,6 +27,7 @@ jobs:
           nix develop .#validate -c action-validator .github/workflows/rust.yml
           nix develop .#validate -c action-validator .github/workflows/release.yml
           nix develop .#validate -c action-validator .github/workflows/validate.yml
+          nix develop .#validate -c action-validator .github/workflows/flake-update.yml
       - name: Validate codecov.yml
         run: |
           curl -f --data-binary @codecov.yml https://codecov.io/validate
