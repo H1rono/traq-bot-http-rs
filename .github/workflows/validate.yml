@@ -1,4 +1,4 @@
-name: Manifest validation
+name: Validation
 
 on:
   push:
