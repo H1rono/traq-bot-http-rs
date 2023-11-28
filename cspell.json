@@ -8,6 +8,11 @@
             "addWords": true
         },
         {
+            "name": "tool-words",
+            "path": "./.cspell-dict/tool-words.txt",
+            "addWords": true
+        },
+        {
             "name": "test-words",
             "path": "./.cspell-dict/test-words.txt",
             "addWords": true
@@ -15,10 +20,12 @@
     ],
     "dictionaries": [
         "lib-words",
+        "tool-words",
         "test-words"
     ],
     "ignorePaths": [
         "target",
-        ".cspell-dict/**"
+        ".cspell-dict/**",
+        ".git"
     ]
 }
