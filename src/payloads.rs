@@ -2,7 +2,7 @@
 
 mod channel;
 mod message;
-pub mod serde;
+pub(crate) mod serde;
 mod stamp;
 mod system;
 mod tag;
