@@ -179,7 +179,7 @@ macro_rules! test_parse_payload {
                     ".json"
                 ))
                 .unwrap();
-                let event = parser.parse(headers, body.as_bytes()).unwrap();
+                let event = parser.parse(headers.iter(), body.as_bytes()).unwrap();
                 let payload = ::serde_json::from_str::< [< $i Payload >] >(&body).unwrap();
                 assert_eq!(event, Event::$i(payload));
             }

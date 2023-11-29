@@ -141,7 +141,7 @@ impl RequestParser {
     /// let body = br#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
     /// let verification_token = "verification_token";
     /// let parser = RequestParser::new(verification_token);
-    /// let event = parser.parse(headers, body);
+    /// let event = parser.parse(headers.iter(), body);
     /// match event {
     ///     Ok(Event::Ping(_)) => (),
     ///     _ => unreachable!(),
@@ -210,7 +210,7 @@ impl RequestParser {
 /// let parser = RequestParser::new(verification_token);
 /// let headers = HeaderMap::new();
 /// let body = b"";
-/// assert_eq!(parser.parse(headers, body), Err(ParseError::ContentTypeNotFound));
+/// assert_eq!(parser.parse(headers.iter(), body), Err(ParseError::ContentTypeNotFound));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParseError {
@@ -255,6 +255,7 @@ mod tests {
     use crate::macros::test_parse_payload;
     use crate::payloads::*;
 
+    use http::header::HeaderMap;
     use http::header::CONTENT_TYPE;
 
     #[test]
@@ -280,27 +281,27 @@ mod tests {
         let parser = make_parser();
         let mut headers = HeaderMap::new();
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::ContentTypeNotFound)
         );
         headers.insert(CONTENT_TYPE, "text/plain".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::ContentTypeMismatch)
         );
         headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::BotTokenNotFound)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid　token".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::ReadBotTokenFailed)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid_token".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::BotTokenMismatch)
         );
         headers.insert(
@@ -308,26 +309,26 @@ mod tests {
             "traqbotverificationtoken".parse().unwrap(),
         );
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::BotEventNotFound)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid　event".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::ReadBotEventFailed)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid_event".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::BotEventMismatch)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.clone(), &[0, 159, 146, 150]),
+            parser.parse(headers.iter(), &[0, 159, 146, 150]),
             Err(ParseError::ReadBodyFailed)
         );
         assert_eq!(
-            parser.parse(headers.clone(), b""),
+            parser.parse(headers.iter(), b""),
             Err(ParseError::ParseBodyFailed)
         );
     }
