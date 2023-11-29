@@ -388,7 +388,7 @@ mod tests {
                     id: uuid("f265bde2-04cc-4856-9008-3db1d953a539"),
                     name: "fugafuga".to_string(),
                     description: "FUGA_FUGA".to_string(),
-                    type_: "ふがふが".to_string(),
+                    r#type: "ふがふが".to_string(),
                     icon: uuid("81f6da0d-eaab-4c42-84ac-74f5111e1eaa"),
                     admins: vec![UserGroupAdmin {
                         group_id: uuid("f265bde2-04cc-4856-9008-3db1d953a539"),

@@ -68,7 +68,7 @@ pub fn channel_a_po() -> Channel {
 pub fn embedded_takashi_trap() -> EmbeddedInfo {
     EmbeddedInfo {
         raw: "@takashi_trap".to_string(),
-        type_: "user".to_string(),
+        r#type: "user".to_string(),
         id: uuid("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
     }
 }
