@@ -38,9 +38,7 @@ pub fn timestamp(v: &'static str) -> TimeStamp {
 }
 
 pub fn uuid(v: &'static str) -> Uuid {
-    use serde::de::value::{Error, StrDeserializer};
-    let de = StrDeserializer::<'_, Error>::new(v);
-    crate::payloads::serde::uuid::deserialize(de).unwrap()
+    v.parse().unwrap()
 }
 
 pub fn takashi_trap() -> User {
