@@ -55,14 +55,14 @@ impl RequestParser {
     /// * `headers` - リクエストのヘッダー(イテレータ形式で)
     ///
     /// ## Example
-    /// ```ignore
+    /// ```
     /// use http::HeaderMap;
     /// use traq_bot_http::RequestParser;
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
     /// let kind = parser.parse_headers(headers.iter());
     /// ```
-    fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
+    pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + 'static,
