@@ -2,7 +2,6 @@
 
 use std::{error::Error, fmt, str::from_utf8};
 
-use http::header::HeaderMap;
 use serde::Deserialize;
 
 use crate::{Event, EventKind};
@@ -148,9 +147,14 @@ impl RequestParser {
     ///     _ => unreachable!(),
     /// }
     /// ```
-    pub fn parse(&self, headers: HeaderMap, body: &[u8]) -> Result<Event, ParseError> {
+    pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
+    where
+        H: Iterator<Item = (&'a K, &'a V)>,
+        K: AsRef<[u8]> + 'static,
+        V: AsRef<[u8]> + 'static,
+    {
         use EventKind::*;
-        let kind = self.parse_headers(headers.iter())?;
+        let kind = self.parse_headers(headers)?;
         let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
         match kind {
             Ping => parse_body(Event::Ping, body),
