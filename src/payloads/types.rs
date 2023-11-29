@@ -130,8 +130,7 @@ payload_impl! {Channel}
 #[serde(rename_all = "camelCase")]
 pub struct EmbeddedInfo {
     pub raw: String,
-    #[serde(rename = "type")]
-    pub type_: String,
+    pub r#type: String,
     pub id: Uuid,
 }
 
@@ -365,8 +364,7 @@ pub struct UserGroup {
     pub id: Uuid,
     pub name: String,
     pub description: String,
-    #[serde(rename = "type")]
-    pub type_: String,
+    pub r#type: String,
     pub icon: Uuid,
     pub admins: Vec<UserGroupAdmin>,
     pub members: Vec<UserGroupMember>,
