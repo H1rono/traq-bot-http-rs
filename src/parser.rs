@@ -1,8 +1,8 @@
 //! `struct RequestParser`と`enum ParseError`
 
-use std::{error::Error, fmt, str};
+use std::{error::Error, fmt, str::from_utf8};
 
-use http::header::{HeaderMap, CONTENT_TYPE};
+use http::header::HeaderMap;
 use serde::Deserialize;
 
 use crate::{Event, EventKind};
@@ -16,6 +16,14 @@ where
     serde_json::from_str(body)
         .map(f)
         .map_err(|_| ParseError::ParseBodyFailed)
+}
+
+// https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
+fn valid_header_value(value: &str) -> bool {
+    value
+        .as_bytes()
+        .iter()
+        .all(|c| (0x20..=0x7E).contains(c) || *c == 0x09)
 }
 
 /// HTTP POSTリクエストのパーサー
@@ -44,7 +52,7 @@ impl RequestParser {
     /// POSTリクエストのヘッダーからイベント名を取得します。
     ///
     /// ## Arguments
-    /// * `headers` - リクエストのヘッダー
+    /// * `headers` - リクエストのヘッダー(イテレータ形式で)
     ///
     /// ## Example
     /// ```ignore
@@ -52,35 +60,65 @@ impl RequestParser {
     /// use traq_bot_http::RequestParser;
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
-    /// let kind = parser.parse_headers(headers);
+    /// let kind = parser.parse_headers(headers.iter());
     /// ```
-    fn parse_headers(&self, headers: &HeaderMap) -> Result<EventKind, ParseError> {
+    fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
+    where
+        H: Iterator<Item = (&'a K, &'a V)>,
+        K: AsRef<[u8]> + 'static,
+        V: AsRef<[u8]> + 'static,
+    {
         // Content-Type: application/json
-        let content_type = headers
-            .get(CONTENT_TYPE)
-            .ok_or(ParseError::ContentTypeNotFound)?
-            .to_str()
-            .map_err(|_| ParseError::ReadContentTypeFailed)?;
-        if !content_type.starts_with("application/json") {
-            return Err(ParseError::ContentTypeMismatch);
-        }
-        // X-TRAQ-BOT-TOKENがヘッダーに含まれており、かつその値はverification_tokenと等しい
-        let token = headers
-            .get("X-TRAQ-BOT-TOKEN")
-            .ok_or(ParseError::BotTokenNotFound)?
-            .to_str()
-            .map_err(|_| ParseError::ReadBotTokenFailed)?;
-        if token != self.verification_token {
-            return Err(ParseError::BotTokenMismatch);
-        }
+        let mut content_type = None;
+        // X-TRAQ-BOT-TOKEN: ${self.verification_token}
+        let mut token = None;
         // X-TRAQ-BOT-EVENTがヘッダーに含まれており、かつその値はイベント名のいずれかである
-        let kind = headers
-            .get("X-TRAQ-BOT-EVENT")
-            .ok_or(ParseError::BotEventNotFound)?
-            .to_str()
-            .map_err(|_| ParseError::ReadBotEventFailed)?
-            .parse()?;
-        Ok(kind)
+        let mut kind = None;
+        for (k, v) in headers {
+            let k = match from_utf8(k.as_ref()) {
+                Ok(k) => k,
+                Err(_) => continue,
+            };
+            dbg!(k);
+            match k.to_lowercase().as_str() {
+                "content-type" => {
+                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadContentTypeFailed)?;
+                    content_type = Some(v);
+                }
+                "x-traq-bot-token" => {
+                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotTokenFailed)?;
+                    token = Some(v);
+                }
+                "x-traq-bot-event" => {
+                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotEventFailed)?;
+                    kind = Some(v);
+                }
+                _ => continue,
+            }
+        }
+        content_type
+            .ok_or(ParseError::ContentTypeNotFound)
+            .map(|ct| ct.starts_with("application/json"))?
+            .then_some(())
+            .ok_or(ParseError::ContentTypeMismatch)?;
+        token
+            .ok_or(ParseError::BotTokenNotFound)
+            .and_then(|t| {
+                valid_header_value(t)
+                    .then_some(t)
+                    .ok_or(ParseError::ReadBotTokenFailed)
+            })
+            .map(|t| t == self.verification_token)?
+            .then_some(())
+            .ok_or(ParseError::BotTokenMismatch)?;
+        kind.ok_or(ParseError::BotEventNotFound)
+            .and_then(|k| {
+                valid_header_value(k)
+                    .then_some(k)
+                    .ok_or(ParseError::ReadBotEventFailed)
+            })?
+            .parse()
+            .map_err(|_| ParseError::BotEventMismatch)
     }
 
     /// HTTP POSTリクエストをパースします。
@@ -112,8 +150,8 @@ impl RequestParser {
     /// ```
     pub fn parse(&self, headers: HeaderMap, body: &[u8]) -> Result<Event, ParseError> {
         use EventKind::*;
-        let kind = self.parse_headers(&headers)?;
-        let body = str::from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
+        let kind = self.parse_headers(headers.iter())?;
+        let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
         match kind {
             Ping => parse_body(Event::Ping, body),
             Joined => parse_body(Event::Joined, body),
@@ -212,6 +250,8 @@ mod tests {
     use super::*;
     use crate::macros::test_parse_payload;
     use crate::payloads::*;
+
+    use http::header::CONTENT_TYPE;
 
     #[test]
     fn request_parser_new() {
