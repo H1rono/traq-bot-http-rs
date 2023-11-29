@@ -57,7 +57,7 @@ async fn handler(
     headers: HeaderMap,
     body: Bytes,
 ) -> StatusCode {
-    match parser.parse(headers, &body) {
+    match parser.parse(headers.iter(), &body) {
         Ok(Event::MessageCreated(payload)) => {
             print!(
                 "{}さんがメッセージを投稿しました。\n内容: {}\n",
