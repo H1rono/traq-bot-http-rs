@@ -150,8 +150,8 @@ impl RequestParser {
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
-        K: AsRef<[u8]> + 'static,
-        V: AsRef<[u8]> + 'static,
+        K: AsRef<[u8]> + ?Sized + 'static,
+        V: AsRef<[u8]> + ?Sized + 'static,
     {
         use EventKind::*;
         let kind = self.parse_headers(headers)?;
