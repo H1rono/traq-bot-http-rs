@@ -64,8 +64,8 @@ impl RequestParser {
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
-        K: AsRef<[u8]> + 'static,
-        V: AsRef<[u8]> + 'static,
+        K: AsRef<[u8]> + ?Sized + 'static,
+        V: AsRef<[u8]> + ?Sized + 'static,
     {
         // Content-Type: application/json
         let mut content_type = None;
@@ -78,18 +78,18 @@ impl RequestParser {
                 Ok(k) => k,
                 Err(_) => continue,
             };
-            dbg!(k);
+            let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {
                 "content-type" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadContentTypeFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadContentTypeFailed)?;
                     content_type = Some(v);
                 }
                 "x-traq-bot-token" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotTokenFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadBotTokenFailed)?;
                     token = Some(v);
                 }
                 "x-traq-bot-event" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotEventFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadBotEventFailed)?;
                     kind = Some(v);
                 }
                 _ => continue,
