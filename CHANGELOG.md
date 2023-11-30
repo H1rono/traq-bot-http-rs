@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.8.0] - 2023-11-30
+
+### Added
+
+- `RequestParser::parse_headers`を公開
+- (for developers) `rust-toolchain.toml`を追加
+- (for developers) Nix flake, direnvをセットアップ
+- (for developers) cSpellによるスペルチェックを追加
+
+### Changed
+
+- ペイロード型内の`type_`を`r#type`に変更
+- `RequestParser::parse`の引数`headers`の型を`http::HeaderMap`からイテレータ型に変更
+- `RequestParser::parse`の変更に伴ってexampleを修正
+- MSRVを1.64.0から1.67.1に変更
+
+### Removed
+
+- `payloads::serde`を非公開に
+- `http`クレートへの依存を削除
+
+### Security
+
+- cargo-audit, cargo-udepsのチェックを追加
+
 ## [v0.7.2] - 2023-10-13
 
 ### Added
@@ -180,6 +205,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.8.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.2..v0.8.0
 [v0.7.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.1..v0.7.2
 [v0.7.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.0..v0.7.1
 [v0.7.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.6.3..v0.7.0
