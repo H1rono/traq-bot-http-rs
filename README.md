@@ -22,7 +22,7 @@ traQ BOTのPOSTリクエストをパースするライブラリです。
 [dependencies]
 axum = "0.6"
 tokio = { version = "1.0", features = ["full"] }
-traq-bot-http = "0.7"
+traq-bot-http = "0.8"
 ```
 
 `main.rs`
