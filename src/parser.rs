@@ -64,8 +64,8 @@ impl RequestParser {
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
-        K: AsRef<[u8]> + 'static,
-        V: AsRef<[u8]> + 'static,
+        K: AsRef<[u8]> + ?Sized + 'static,
+        V: AsRef<[u8]> + ?Sized + 'static,
     {
         // Content-Type: application/json
         let mut content_type = None;
