@@ -78,18 +78,18 @@ impl RequestParser {
                 Ok(k) => k,
                 Err(_) => continue,
             };
-            dbg!(k);
+            let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {
                 "content-type" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadContentTypeFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadContentTypeFailed)?;
                     content_type = Some(v);
                 }
                 "x-traq-bot-token" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotTokenFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadBotTokenFailed)?;
                     token = Some(v);
                 }
                 "x-traq-bot-event" => {
-                    let v = from_utf8(v.as_ref()).map_err(|_| ParseError::ReadBotEventFailed)?;
+                    let v = v.map_err(|_| ParseError::ReadBotEventFailed)?;
                     kind = Some(v);
                 }
                 _ => continue,
