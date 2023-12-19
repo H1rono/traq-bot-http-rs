@@ -2,6 +2,7 @@ rustup
 rustc
 rustfmt
 clippy
+MSRV
 RUSTFLAGS
 rustsec
 RUSTSEC
@@ -19,3 +20,4 @@ fenix
 pkgs
 stdenv
 libiconv
+direnv
