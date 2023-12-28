@@ -14,7 +14,7 @@ jobs:
     outputs:
       contains: ${{ steps.check.outputs.contains }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
@@ -33,7 +33,7 @@ jobs:
     needs: check-main-branch
     if: needs.check-main-branch.outputs.contains == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
