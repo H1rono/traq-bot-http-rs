@@ -85,6 +85,13 @@
             pkgs.grcov
           ];
         };
+        devShells.validate = pkgs.mkShell {
+          packages = with pkgs; [
+            taplo
+            nixpkgs-fmt
+            action-validator
+          ];
+        };
       }
     );
 }
