@@ -16,6 +16,8 @@ taplo
 nixos
 nixpkgs
 numtide
+ipetkov
+oxalica
 fenix
 pkgs
 stdenv
