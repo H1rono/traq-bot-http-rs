@@ -1,12 +1,8 @@
 use std::{env, net::SocketAddr};
 
-use axum::{
-    body::Bytes,
-    extract::State,
-    http::{HeaderMap, StatusCode},
-    routing::post,
-    Router,
-};
+use axum::{body::Bytes, extract::State, routing::post, Router};
+use http::{HeaderMap, StatusCode};
+use tokio::net::TcpListener;
 
 use traq_bot_http::{Event, RequestParser};
 
@@ -16,10 +12,8 @@ async fn main() {
     let parser = RequestParser::new(&verification_token);
     let app = Router::new().route("/", post(handler)).with_state(parser);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let server = TcpListener::bind(addr).await.unwrap();
+    axum::serve(server, app).await.unwrap();
 }
 
 async fn handler(
