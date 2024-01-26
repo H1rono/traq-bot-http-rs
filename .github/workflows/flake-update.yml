@@ -54,6 +54,6 @@ jobs:
           git push origin "$BRANCH_NAME"
       - name: Create pull request
         run: |
-          gh pr create --title "CI: update submodule" --body "" --base main --assignee H1rono
+          gh pr create --title ":arrow_up: CI: update flake" --body "" --base main --assignee H1rono
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
