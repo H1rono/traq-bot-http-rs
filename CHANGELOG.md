@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.8.1] - 2023-11-30
+
+### Changed
+
+- `RequestParser::parse`のExampleを修正
+- exampleに使用するライブラリのバージョンを更新
+
+### For Developers
+
+- 一部CIを修正
+- flake.nixを改善
+- CIの依存関係を更新
+
 ## [v0.8.0] - 2023-11-30
 
 ### Added
@@ -205,6 +218,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.0..v0.8.1
 [v0.8.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.2..v0.8.0
 [v0.7.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.1..v0.7.2
 [v0.7.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.0..v0.7.1
