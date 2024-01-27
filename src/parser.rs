@@ -128,24 +128,17 @@ impl RequestParser {
     ///
     /// ## Example
     /// ```
-    /// use http::HeaderMap;
     /// use traq_bot_http::{RequestParser, Event};
-    /// let headers: HeaderMap = [
+    /// let headers = [
     ///     ("Content-Type", "application/json"),
     ///     ("X-TRAQ-BOT-TOKEN", "verification_token"),
     ///     ("X-TRAQ-BOT-EVENT", "PING"),
-    /// ]
-    /// .into_iter()
-    /// .map(|(k, v)| (k.parse().unwrap(), v.parse().unwrap()))
-    /// .collect();
+    /// ];
     /// let body = br#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
     /// let verification_token = "verification_token";
     /// let parser = RequestParser::new(verification_token);
-    /// let event = parser.parse(headers.iter(), body);
-    /// match event {
-    ///     Ok(Event::Ping(_)) => (),
-    ///     _ => unreachable!(),
-    /// }
+    /// let event = parser.parse(headers.into_iter(), body);
+    /// assert!(matches!(event, Ok(Event::Ping(_))));
     /// ```
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
     where
