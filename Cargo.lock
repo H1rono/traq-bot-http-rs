@@ -867,7 +867,7 @@ dependencies = [
 
 [[package]]
 name = "traq-bot-http"
-version = "0.8.0"
+version = "0.8.1"
 dependencies = [
  "axum",
  "chrono",
