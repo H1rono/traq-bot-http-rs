@@ -19,10 +19,11 @@ traQ BOTのPOSTリクエストをパースするライブラリです。
 ```toml
 # ...
 
-[dev-dependencies]
+[dependencies]
 http = "1.0"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
+traq-bot-http = "0.8"
 ```
 
 `main.rs`
