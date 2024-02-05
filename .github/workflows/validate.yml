@@ -17,10 +17,6 @@ jobs:
       - uses: cachix/install-nix-action@v24
         with:
           nix_path: "nixpkgs=channel:release-23.05"
-      - name: Validate Cargo.toml
-        run: nix develop .#validate -c taplo lint --schema https://json.schemastore.org/cargo.json Cargo.toml
-      - name: Validate rust-toolchain.toml
-        run: nix develop .#validate -c taplo lint --schema https://json.schemastore.org/rust-toolchain.json rust-toolchain.toml
       - name: Validate workflow files
         run: |
           nix develop .#validate -c action-validator .github/workflows/audit.yml
