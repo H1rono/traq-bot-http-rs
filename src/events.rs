@@ -223,7 +223,13 @@ impl Event {
 impl Display for EventKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         use crate::macros::match_event_kinds_to_str;
-        use EventKind::*;
+        use EventKind::{
+            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
+            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
+            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
+            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
+            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
+        };
         let s = match_event_kinds_to_str!(
             self,
             Ping,
@@ -260,7 +266,13 @@ impl FromStr for EventKind {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         use crate::macros::match_str_to_event_kinds;
-        use EventKind::*;
+        use EventKind::{
+            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
+            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
+            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
+            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
+            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
+        };
         match_str_to_event_kinds!(
             s,
             Ping,

@@ -1,22 +1,21 @@
 use crate::{payloads::types::*, ParseError, RequestParser};
-use ParseError::*;
 
 use http::header::{HeaderMap, CONTENT_TYPE};
 
 pub const VERIFICATION_TOKEN: &str = "traqbotverificationtoken";
 
 pub const PARSE_ERROR_VARIANTS: [ParseError; 11] = [
-    ContentTypeNotFound,
-    ReadContentTypeFailed,
-    ContentTypeMismatch,
-    BotTokenNotFound,
-    ReadBotTokenFailed,
-    BotTokenMismatch,
-    BotEventNotFound,
-    ReadBotEventFailed,
-    BotEventMismatch,
-    ReadBodyFailed,
-    ParseBodyFailed,
+    ParseError::ContentTypeNotFound,
+    ParseError::ReadContentTypeFailed,
+    ParseError::ContentTypeMismatch,
+    ParseError::BotTokenNotFound,
+    ParseError::ReadBotTokenFailed,
+    ParseError::BotTokenMismatch,
+    ParseError::BotEventNotFound,
+    ParseError::ReadBotEventFailed,
+    ParseError::BotEventMismatch,
+    ParseError::ReadBodyFailed,
+    ParseError::ParseBodyFailed,
 ];
 
 pub fn make_parser() -> RequestParser {
