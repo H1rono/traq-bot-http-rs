@@ -1,3 +1,5 @@
+#![allow(clippy::module_name_repetitions)]
+
 //! イベントペイロードの型定義
 
 mod channel;

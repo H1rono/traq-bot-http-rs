@@ -13,7 +13,13 @@ mod parser;
 pub mod payloads;
 
 pub use events::{Event, EventKind};
-pub use parser::{ParseError, RequestParser};
+pub use parser::ParseError;
+
+/// HTTP POSTリクエストのパーサー
+#[derive(Debug, Clone)]
+pub struct RequestParser {
+    verification_token: String,
+}
 
 #[cfg(test)]
 pub(crate) mod test_utils;
