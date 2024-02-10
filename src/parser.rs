@@ -35,7 +35,7 @@ impl RequestParser {
     /// 新しい`RequestParser`を作成します。
     ///
     /// ## Arguments
-    /// * `verification_token` - ボットのVerificationToken
+    /// * `verification_token` - ボットのVerification Token
     ///
     /// ## Example
     /// ```

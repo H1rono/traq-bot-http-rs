@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
 use crate::macros::payload_impl;
 
-/// MESSAGE_CREATEDペイロード
+/// `MESSAGE_CREATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_created.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#message_created)
 ///
@@ -71,7 +71,7 @@ impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
     }
 }
 
-/// MESSAGE_DELETEDペイロード
+/// `MESSAGE_DELETED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_deleted.go#L11-L18)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#message_deleted)
 ///
@@ -98,7 +98,7 @@ pub struct MessageDeletedPayload {
 
 payload_impl! {MessageDeletedPayload}
 
-/// MESSAGE_UPDATEDペイロード
+/// `MESSAGE_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#message_updated)
 ///
@@ -156,7 +156,7 @@ impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
     }
 }
 
-/// DIRECT_MESSAGE_CREATEDペイロード
+/// `DIRECT_MESSAGE_CREATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_created.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_created)
 ///
@@ -214,7 +214,7 @@ impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
     }
 }
 
-/// DIRECT_MESSAGE_DELETEDペイロード
+/// `DIRECT_MESSAGE_DELETED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_deleted.go#L11-L19)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_deleted)
 ///
@@ -242,7 +242,7 @@ pub struct DirectMessageDeletedPayload {
 
 payload_impl! {DirectMessageDeletedPayload}
 
-/// DIRECT_MESSAGE_UPDATEDペイロード
+/// `DIRECT_MESSAGE_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#direct_message_updated)
 ///
@@ -300,7 +300,7 @@ impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
     }
 }
 
-/// BOT_MESSAGE_STAMPS_UPDATEDペイロード
+/// `BOT_MESSAGE_STAMPS_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_bot_message_stamps_updated.go#L11-L16)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/message.md#bot_message_stamps_updated)
 ///

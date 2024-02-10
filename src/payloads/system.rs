@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use super::types::{Channel, TimeStamp};
 use crate::macros::payload_impl;
 
-/// PINGペイロード
+/// `PING`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_ping.go#L5-L8)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#ping)
 ///
@@ -31,7 +31,7 @@ pub struct PingPayload {
 
 payload_impl! {PingPayload}
 
-/// JOINEDペイロード
+/// `JOINED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_joined.go#L9-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#joined)
 ///
@@ -82,7 +82,7 @@ impl From<LeftPayload> for JoinedPayload {
     }
 }
 
-/// LEFTペイロード
+/// `LEFT`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_left.go#L9-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/system.md#left)
 ///
