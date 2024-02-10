@@ -425,7 +425,7 @@ mod tests {
                     updated_at: timestamp("2019-05-08T13:33:51.632149265Z"),
                 }
             }
-        )
+        );
     }
 
     #[test]
@@ -538,6 +538,6 @@ mod tests {
                     },
                 ],
             }
-        )
+        );
     }
 }

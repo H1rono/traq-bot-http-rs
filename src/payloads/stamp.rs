@@ -70,6 +70,6 @@ mod tests {
                     creator
                 },
             }
-        )
+        );
     }
 }
