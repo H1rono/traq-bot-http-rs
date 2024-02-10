@@ -5,3 +5,6 @@ TRAQ
 chrono
 eprintln
 serde
+
+HTAB
+VCHAR
