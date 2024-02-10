@@ -146,34 +146,33 @@ impl RequestParser {
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
-        use EventKind::*;
         let kind = self.parse_headers(headers)?;
         let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
         match kind {
-            Ping => parse_body(Event::Ping, body),
-            Joined => parse_body(Event::Joined, body),
-            Left => parse_body(Event::Left, body),
-            MessageCreated => parse_body(Event::MessageCreated, body),
-            MessageDeleted => parse_body(Event::MessageDeleted, body),
-            MessageUpdated => parse_body(Event::MessageUpdated, body),
-            DirectMessageCreated => parse_body(Event::DirectMessageCreated, body),
-            DirectMessageDeleted => parse_body(Event::DirectMessageDeleted, body),
-            DirectMessageUpdated => parse_body(Event::DirectMessageUpdated, body),
-            BotMessageStampsUpdated => parse_body(Event::BotMessageStampsUpdated, body),
-            ChannelCreated => parse_body(Event::ChannelCreated, body),
-            ChannelTopicChanged => parse_body(Event::ChannelTopicChanged, body),
-            UserCreated => parse_body(Event::UserCreated, body),
-            StampCreated => parse_body(Event::StampCreated, body),
-            TagAdded => parse_body(Event::TagAdded, body),
-            TagRemoved => parse_body(Event::TagRemoved, body),
-            UserGroupCreated => parse_body(Event::UserGroupCreated, body),
-            UserGroupUpdated => parse_body(Event::UserGroupUpdated, body),
-            UserGroupDeleted => parse_body(Event::UserGroupDeleted, body),
-            UserGroupMemberAdded => parse_body(Event::UserGroupMemberAdded, body),
-            UserGroupMemberUpdated => parse_body(Event::UserGroupMemberUpdated, body),
-            UserGroupMemberRemoved => parse_body(Event::UserGroupMemberRemoved, body),
-            UserGroupAdminAdded => parse_body(Event::UserGroupAdminAdded, body),
-            UserGroupAdminRemoved => parse_body(Event::UserGroupAdminRemoved, body),
+            EventKind::Ping => parse_body(Event::Ping, body),
+            EventKind::Joined => parse_body(Event::Joined, body),
+            EventKind::Left => parse_body(Event::Left, body),
+            EventKind::MessageCreated => parse_body(Event::MessageCreated, body),
+            EventKind::MessageDeleted => parse_body(Event::MessageDeleted, body),
+            EventKind::MessageUpdated => parse_body(Event::MessageUpdated, body),
+            EventKind::DirectMessageCreated => parse_body(Event::DirectMessageCreated, body),
+            EventKind::DirectMessageDeleted => parse_body(Event::DirectMessageDeleted, body),
+            EventKind::DirectMessageUpdated => parse_body(Event::DirectMessageUpdated, body),
+            EventKind::BotMessageStampsUpdated => parse_body(Event::BotMessageStampsUpdated, body),
+            EventKind::ChannelCreated => parse_body(Event::ChannelCreated, body),
+            EventKind::ChannelTopicChanged => parse_body(Event::ChannelTopicChanged, body),
+            EventKind::UserCreated => parse_body(Event::UserCreated, body),
+            EventKind::StampCreated => parse_body(Event::StampCreated, body),
+            EventKind::TagAdded => parse_body(Event::TagAdded, body),
+            EventKind::TagRemoved => parse_body(Event::TagRemoved, body),
+            EventKind::UserGroupCreated => parse_body(Event::UserGroupCreated, body),
+            EventKind::UserGroupUpdated => parse_body(Event::UserGroupUpdated, body),
+            EventKind::UserGroupDeleted => parse_body(Event::UserGroupDeleted, body),
+            EventKind::UserGroupMemberAdded => parse_body(Event::UserGroupMemberAdded, body),
+            EventKind::UserGroupMemberUpdated => parse_body(Event::UserGroupMemberUpdated, body),
+            EventKind::UserGroupMemberRemoved => parse_body(Event::UserGroupMemberRemoved, body),
+            EventKind::UserGroupAdminAdded => parse_body(Event::UserGroupAdminAdded, body),
+            EventKind::UserGroupAdminRemoved => parse_body(Event::UserGroupAdminRemoved, body),
         }
     }
 }
@@ -222,19 +221,20 @@ pub enum ParseError {
 
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        use ParseError::*;
         let message = match self {
-            ContentTypeNotFound => "Content-Type is not set",
-            ReadContentTypeFailed => "Failed to read Content-Type value",
-            ContentTypeMismatch => "Content-Type value is wrong; it must be application/json",
-            BotTokenNotFound => "X-TRAQ-BOT-TOKEN is not set",
-            ReadBotTokenFailed => "Failed to read X-TRAQ-BOT-TOKEN value",
-            BotTokenMismatch => "X-TRAQ-BOT-TOKEN value is wrong",
-            BotEventNotFound => "X-TRAQ-BOT-EVENT is not set",
-            ReadBotEventFailed => "Failed to read X-TRAQ-BOT-EVENT value",
-            BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
-            ReadBodyFailed => "Failed to read request body",
-            ParseBodyFailed => "Failed to parse request body",
+            ParseError::ContentTypeNotFound => "Content-Type is not set",
+            ParseError::ReadContentTypeFailed => "Failed to read Content-Type value",
+            ParseError::ContentTypeMismatch => {
+                "Content-Type value is wrong; it must be application/json"
+            }
+            ParseError::BotTokenNotFound => "X-TRAQ-BOT-TOKEN is not set",
+            ParseError::ReadBotTokenFailed => "Failed to read X-TRAQ-BOT-TOKEN value",
+            ParseError::BotTokenMismatch => "X-TRAQ-BOT-TOKEN value is wrong",
+            ParseError::BotEventNotFound => "X-TRAQ-BOT-EVENT is not set",
+            ParseError::ReadBotEventFailed => "Failed to read X-TRAQ-BOT-EVENT value",
+            ParseError::BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
+            ParseError::ReadBodyFailed => "Failed to read request body",
+            ParseError::ParseBodyFailed => "Failed to parse request body",
         };
         write!(f, "{message}")
     }
@@ -328,22 +328,36 @@ mod tests {
 
     #[test]
     fn err_display() {
-        use ParseError::*;
         let pairs = [
-            (ContentTypeNotFound, "Content-Type is not set"),
-            (ReadContentTypeFailed, "Failed to read Content-Type value"),
+            (ParseError::ContentTypeNotFound, "Content-Type is not set"),
             (
-                ContentTypeMismatch,
+                ParseError::ReadContentTypeFailed,
+                "Failed to read Content-Type value",
+            ),
+            (
+                ParseError::ContentTypeMismatch,
                 "Content-Type value is wrong; it must be application/json",
             ),
-            (BotTokenNotFound, "X-TRAQ-BOT-TOKEN is not set"),
-            (ReadBotTokenFailed, "Failed to read X-TRAQ-BOT-TOKEN value"),
-            (BotTokenMismatch, "X-TRAQ-BOT-TOKEN value is wrong"),
-            (BotEventNotFound, "X-TRAQ-BOT-EVENT is not set"),
-            (ReadBotEventFailed, "Failed to read X-TRAQ-BOT-EVENT value"),
-            (BotEventMismatch, "X-TRAQ-BOT-EVENT value is wrong"),
-            (ReadBodyFailed, "Failed to read request body"),
-            (ParseBodyFailed, "Failed to parse request body"),
+            (ParseError::BotTokenNotFound, "X-TRAQ-BOT-TOKEN is not set"),
+            (
+                ParseError::ReadBotTokenFailed,
+                "Failed to read X-TRAQ-BOT-TOKEN value",
+            ),
+            (
+                ParseError::BotTokenMismatch,
+                "X-TRAQ-BOT-TOKEN value is wrong",
+            ),
+            (ParseError::BotEventNotFound, "X-TRAQ-BOT-EVENT is not set"),
+            (
+                ParseError::ReadBotEventFailed,
+                "Failed to read X-TRAQ-BOT-EVENT value",
+            ),
+            (
+                ParseError::BotEventMismatch,
+                "X-TRAQ-BOT-EVENT value is wrong",
+            ),
+            (ParseError::ReadBodyFailed, "Failed to read request body"),
+            (ParseError::ParseBodyFailed, "Failed to parse request body"),
         ];
         for (err, msg) in pairs.iter() {
             assert_eq!(err.to_string(), *msg);
