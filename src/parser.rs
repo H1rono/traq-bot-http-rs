@@ -260,9 +260,9 @@ mod tests {
     #[test]
     fn parse_error_derives() {
         use crate::test_utils::PARSE_ERROR_VARIANTS;
-        for variant in PARSE_ERROR_VARIANTS.iter() {
+        for variant in PARSE_ERROR_VARIANTS {
             let error = variant.clone();
-            assert_eq!(variant, &error);
+            assert_eq!(&variant, &error);
             assert_eq!(format!("{variant:?}"), format!("{error:?}"));
         }
     }
@@ -358,7 +358,7 @@ mod tests {
             (ParseError::ReadBodyFailed, "Failed to read request body"),
             (ParseError::ParseBodyFailed, "Failed to parse request body"),
         ];
-        for (err, msg) in pairs.iter() {
+        for (err, msg) in pairs {
             assert_eq!(err.to_string(), *msg);
         }
     }
