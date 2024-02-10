@@ -63,6 +63,6 @@ mod tests {
                     bot: false,
                 }
             }
-        )
+        );
     }
 }
