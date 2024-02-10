@@ -4,7 +4,7 @@ use std::{error::Error, fmt, str::from_utf8};
 
 use serde::Deserialize;
 
-use crate::{Event, EventKind};
+use crate::{Event, EventKind, RequestParser};
 
 /// ボディをDeserializeして`Event`に渡す
 fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event, ParseError>
@@ -23,12 +23,6 @@ fn valid_header_value(value: &str) -> bool {
         .as_bytes()
         .iter()
         .all(|c| (0x20..=0x7E).contains(c) || *c == 0x09)
-}
-
-/// HTTP POSTリクエストのパーサー
-#[derive(Debug, Clone)]
-pub struct RequestParser {
-    verification_token: String,
 }
 
 impl RequestParser {
