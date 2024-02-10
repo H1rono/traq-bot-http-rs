@@ -58,7 +58,7 @@ mod tests {
                 user: User {
                     id: uuid("dfdff0c9-5de0-46ee-9721-2525e8bb3d45"),
                     name: "takashi_trap".to_string(),
-                    display_name: "".to_string(),
+                    display_name: String::new(),
                     icon_id: uuid("2bc06cda-bdb9-4a68-8000-62f907f36a92"),
                     bot: false,
                 }
