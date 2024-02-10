@@ -74,9 +74,8 @@ impl RequestParser {
         // X-TRAQ-BOT-EVENTがヘッダーに含まれており、かつその値はイベント名のいずれかである
         let mut kind = None;
         for (k, v) in headers {
-            let k = match from_utf8(k.as_ref()) {
-                Ok(k) => k,
-                Err(_) => continue,
+            let Ok(k) = from_utf8(k.as_ref()) else {
+                continue
             };
             let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {
