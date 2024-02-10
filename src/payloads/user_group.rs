@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 use super::types::{GroupMember, TimeStamp, UserGroup, Uuid};
 use crate::macros::payload_impl;
 
-/// USER_GROUP_CREATEDペイロード
+/// `USER_GROUP_CREATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_created.go#L9-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_created)
 ///
@@ -59,7 +59,7 @@ pub struct UserGroupCreatedPayload {
 
 payload_impl! {UserGroupCreatedPayload}
 
-/// USER_GROUP_UPDATEDペイロード
+/// `USER_GROUP_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_updated.go#L10-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_updated)
 ///
@@ -92,7 +92,7 @@ impl From<UserGroupDeletedPayload> for UserGroupUpdatedPayload {
     }
 }
 
-/// USER_GROUP_DELETEDペイロード
+/// `USER_GROUP_DELETED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_deleted.go#L11-L14)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_deleted)
 ///
@@ -125,7 +125,7 @@ impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
     }
 }
 
-/// USER_GROUP_MEMBER_ADDEDペイロード
+/// `USER_GROUP_MEMBER_ADDED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_added.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_member_added)
 ///
@@ -179,7 +179,7 @@ impl From<UserGroupAdminAddedPayload> for UserGroupMemberAddedPayload {
     }
 }
 
-/// USER_GROUP_MEMBER_UPDATEDペイロード
+/// `USER_GROUP_MEMBER_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_updated.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_member_updated)
 ///
@@ -224,7 +224,7 @@ impl From<UserGroupMemberRemovedPayload> for UserGroupMemberUpdatedPayload {
     }
 }
 
-/// USER_GROUP_MEMBER_REMOVEDペイロード
+/// `USER_GROUP_MEMBER_REMOVED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_member_removed.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_member_removed)
 ///
@@ -278,7 +278,7 @@ impl From<UserGroupAdminRemovedPayload> for UserGroupMemberRemovedPayload {
     }
 }
 
-/// USER_GROUP_ADMIN_ADDEDペイロード
+/// `USER_GROUP_ADMIN_ADDED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_admin_added.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_admin_added)
 ///
@@ -323,7 +323,7 @@ impl From<UserGroupMemberAddedPayload> for UserGroupAdminAddedPayload {
     }
 }
 
-/// USER_GROUP_ADMIN_REMOVEDペイロード
+/// `USER_GROUP_ADMIN_REMOVED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_admin_removed.go#L9-L12)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_admin_removed)
 ///

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use super::types::{TimeStamp, Uuid};
 use crate::macros::payload_impl;
 
-/// TAG_ADDEDペイロード
+/// `TAG_ADDED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_tag_added.go#L11-L16)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/tag.md#tag_added)
 ///
@@ -49,7 +49,7 @@ impl From<TagRemovedPayload> for TagAddedPayload {
     }
 }
 
-/// TAG_REMOVEDペイロード
+/// `TAG_REMOVED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_tag_removed.go#L11-L16)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/tag.md#tag_removed)
 ///
