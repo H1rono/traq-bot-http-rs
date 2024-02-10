@@ -46,7 +46,7 @@ payload_impl! {StampCreatedPayload}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::*;
+    use crate::test_utils::{takashi_trap, timestamp, uuid};
 
     use std::fs::read_to_string;
 

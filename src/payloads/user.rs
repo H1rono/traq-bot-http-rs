@@ -40,7 +40,7 @@ payload_impl! {UserCreatedPayload}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::*;
+    use crate::test_utils::{timestamp, uuid};
 
     use std::fs::read_to_string;
 

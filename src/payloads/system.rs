@@ -136,7 +136,7 @@ impl From<JoinedPayload> for LeftPayload {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::*;
+    use crate::test_utils::{channel_a_po, timestamp};
 
     use std::fs::read_to_string;
 

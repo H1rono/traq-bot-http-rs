@@ -245,7 +245,6 @@ impl Error for ParseError {}
 mod tests {
     use super::*;
     use crate::macros::test_parse_payload;
-    use crate::payloads::*;
 
     use http::header::HeaderMap;
     use http::header::CONTENT_TYPE;
