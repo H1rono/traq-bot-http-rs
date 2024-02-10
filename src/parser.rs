@@ -55,6 +55,33 @@ impl RequestParser {
     /// let headers = HeaderMap::new();
     /// let kind = parser.parse_headers(headers.iter());
     /// ```
+    ///
+    /// ## Errors
+    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    ///
+    /// - [`ParseError::ReadContentTypeFailed`] :
+    ///     ヘッダー`Content-Type`の値をUTF8の文字列として解釈できなかった
+    /// - [`ParseError::ContentTypeNotFound`] :
+    ///     ヘッダー`Content-Type`が見つからなかった
+    /// - [`ParseError::ContentTypeMismatch`] :
+    ///     ヘッダー`Content-Type`の値が`application/json`で始まらない
+    /// - [`ParseError::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
+    ///     - 値をUTF8の文字列として解釈できなかった
+    ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
+    /// - [`ParseError::BotTokenNotFound`] :
+    ///     ヘッダー`X-TRAQ-BOT-TOKEN`が見つからなかった
+    /// - [`ParseError::BotTokenMismatch`] :
+    ///     ヘッダー`X-TRAQ-BOT-TOKEN`の値が[`new`]で与えられたVerification Tokenと合わない
+    /// - [`ParseError::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
+    ///     - 値をUTF8の文字列として解釈できなかった
+    ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
+    /// - [`ParseError::BotEventNotFound`] :
+    ///     ヘッダー`X-TRAQ-BOT-EVENT`が見つからなかった
+    /// - [`ParseError::BotEventMismatch`] :
+    ///     ヘッダー`X-TRAQ-BOT-EVENT`の値が[`EventKind`]の[`std::str::FromStr`]でパースできなかった
+    ///
+    /// [RFC9110 5.5]: https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
+    /// [`new`]: RequestParser::new
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
@@ -133,6 +160,18 @@ impl RequestParser {
     /// let event = parser.parse(headers.into_iter(), body);
     /// assert!(matches!(event, Ok(Event::Ping(_))));
     /// ```
+    ///
+    /// ## Errors
+    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    ///
+    /// - [`parse_headers`]で返されるもの
+    /// - [`ParseError::ReadBodyFailed`] :
+    ///     `body`をUTF8の文字列として解釈できなかった
+    /// - [`ParseError::ParseBodyFailed`] :
+    ///     `body`を[`parse_headers`]で返される[`EventKind`]に対応する
+    ///     [`Event`]のペイロードJSONとしてデシリアライズできなかった。
+    ///
+    /// [`parse_headers`]: RequestParser::parse_headers
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
     where
         H: Iterator<Item = (&'a K, &'a V)>,
