@@ -255,7 +255,7 @@ mod tests {
     fn request_parser_new() {
         let verification_token = "verification_token";
         let parser = RequestParser::new(verification_token);
-        println!("{:?}", parser);
+        println!("{parser:?}");
     }
 
     #[test]
@@ -264,7 +264,7 @@ mod tests {
         for variant in PARSE_ERROR_VARIANTS.iter() {
             let error = variant.clone();
             assert_eq!(variant, &error);
-            assert_eq!(format!("{:?}", variant), format!("{:?}", error));
+            assert_eq!(format!("{variant:?}"), format!("{error:?}"));
         }
     }
 

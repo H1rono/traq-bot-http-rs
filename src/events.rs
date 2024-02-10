@@ -251,7 +251,7 @@ impl Display for EventKind {
             UserGroupAdminAdded,
             UserGroupAdminRemoved
         );
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
