@@ -150,7 +150,7 @@ mod tests {
         assert_eq!(
             payload,
             PingPayload {
-                event_time: timestamp("2019-05-07T04:50:48.582586882Z"),
+                event_time: timestamp("2019-05-07T04:50:48.582586882Z")
             }
         );
     }
