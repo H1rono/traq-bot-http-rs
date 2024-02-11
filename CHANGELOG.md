@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.8.2] - 2024-02-11
+
+### Added
+
+- `RequestParser::parse_headers`, `RequestParser::parse`のドキュメントを追加
+
+### Changed
+
+- rustfmtの設定を修正
+
+### Fixed
+
+- READMEの`Cargo.toml`記述例を修正
+- `clippy::pedantic`の対象ルールに一部対応
+
+### For Developers
+
+- GitHub ActionsでのTOMLファイルのバリデーションを削除
+- GitHub Actionsの依存関係を更新
+
 ## [v0.8.1] - 2023-11-30
 
 ### Changed
@@ -218,6 +238,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.1..v0.8.2
 [v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.0..v0.8.1
 [v0.8.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.2..v0.8.0
 [v0.7.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.1..v0.7.2
