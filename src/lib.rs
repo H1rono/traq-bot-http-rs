@@ -16,6 +16,7 @@ pub use events::{Event, EventKind};
 pub use parser::ParseError;
 
 /// HTTP POSTリクエストのパーサー
+#[must_use]
 #[derive(Debug, Clone)]
 pub struct RequestParser {
     verification_token: String,

@@ -236,6 +236,7 @@ impl RequestParser {
 /// let body = b"";
 /// assert_eq!(parser.parse(headers.iter(), body), Err(ParseError::ContentTypeNotFound));
 /// ```
+#[must_use]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParseError {
     ContentTypeNotFound,
