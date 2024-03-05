@@ -51,6 +51,7 @@ use crate::macros::event_converts;
 /// let payload = serde_json::from_str::<PingPayload>(payload).unwrap();
 /// let event = Event::Ping(payload);
 /// ```
+#[must_use]
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum Event {
@@ -158,6 +159,7 @@ event_converts! {
 /// let event: Event = payload.into();
 /// assert_eq!(event.kind(), EventKind::Ping);
 /// ```
+#[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum EventKind {
