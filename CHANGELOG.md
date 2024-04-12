@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.8.3] - 2024-04-13
+
+### Added
+
+- `Event`, `RequestParser`, `ParseError`型に`#[must_use]`を追加
+
+### Changed
+
+- 依存ライブラリを更新
+- ドキュメント内の`.unwrap()`を全て`?`に変更 ([C-QUESTION-MARK](https://rust-lang.github.io/api-guidelines/documentation.html#c-question-mark))
+- [`clippy::pedantic`](https://doc.rust-lang.org/clippy/lints.html#pedantic)に完全対応
+
+### For Developers
+
+- GitHub Actions, Nix Flakesの依存関係を更新
+
 ## [v0.8.2] - 2024-02-11
 
 ### Added
@@ -238,6 +254,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.8.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.2..v0.8.3
 [v0.8.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.1..v0.8.2
 [v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.0..v0.8.1
 [v0.8.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.2..v0.8.0
