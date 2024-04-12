@@ -238,7 +238,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.1..v0.8.2
+[v0.8.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.1..v0.8.2
 [v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.0..v0.8.1
 [v0.8.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.2..v0.8.0
 [v0.7.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.7.1..v0.7.2
