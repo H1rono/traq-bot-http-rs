@@ -13,6 +13,7 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::StampCreatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T08:31:06.566228282Z",
@@ -27,8 +28,10 @@ use crate::macros::payload_impl;
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: StampCreatedPayload = payload.parse().unwrap();
+/// let payload: StampCreatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

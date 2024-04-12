@@ -14,6 +14,7 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::ChannelCreatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:45:51.506206852Z",
@@ -33,8 +34,10 @@ use crate::macros::payload_impl;
 ///         "updatedAt": "2019-05-08T13:45:51.487718Z"
 ///     }
 /// }"##;
-/// let payload: ChannelCreatedPayload = payload.parse().unwrap();
+/// let payload: ChannelCreatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -52,6 +55,7 @@ payload_impl! {ChannelCreatedPayload}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::ChannelTopicChangedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-09T11:32:49.505357701Z",
@@ -79,8 +83,10 @@ payload_impl! {ChannelCreatedPayload}
 ///         "bot": false
 ///     }
 /// }"##;
-/// let payload: ChannelTopicChangedPayload = payload.parse().unwrap();
+/// let payload: ChannelTopicChangedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

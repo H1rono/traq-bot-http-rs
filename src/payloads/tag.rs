@@ -14,14 +14,17 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::TagAddedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T08:31:06.566228282Z",
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagAddedPayload = payload.parse().unwrap();
+/// let payload: TagAddedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -55,14 +58,17 @@ impl From<TagRemovedPayload> for TagAddedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::TagRemovedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T08:31:06.566228282Z",
 ///     "tagId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "tag": "全強"
 /// }"##;
-/// let payload: TagRemovedPayload = payload.parse().unwrap();
+/// let payload: TagRemovedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

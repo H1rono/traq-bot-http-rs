@@ -15,12 +15,15 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::PingPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-07T04:50:48.582586882Z"
 /// }"##;
-/// let payload: PingPayload = payload.parse().unwrap();
+/// let payload: PingPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -37,6 +40,7 @@ payload_impl! {PingPayload}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::JoinedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:49:13.769110201Z",
@@ -56,8 +60,10 @@ payload_impl! {PingPayload}
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: JoinedPayload = payload.parse().unwrap();
+/// let payload: JoinedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -88,6 +94,7 @@ impl From<LeftPayload> for JoinedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::LeftPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:49:16.497848449Z",
@@ -107,8 +114,10 @@ impl From<LeftPayload> for JoinedPayload {
 ///         "updatedAt": "2018-04-25T12:22:02Z"
 ///     }
 /// }"##;
-/// let payload: LeftPayload = payload.parse().unwrap();
+/// let payload: LeftPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
