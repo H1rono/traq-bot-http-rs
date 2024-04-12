@@ -52,6 +52,7 @@ pub type Uuid = String;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::User;
 /// let payload = r##"{
 ///     "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45",
@@ -60,8 +61,10 @@ pub type Uuid = String;
 ///     "iconId": "2bc06cda-bdb9-4a68-8000-62f907f36a92",
 ///     "bot": false
 /// }"##;
-/// let payload: User = payload.parse().unwrap();
+/// let payload: User = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -79,6 +82,7 @@ payload_impl! {User}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::Channel;
 /// let payload = r##"{
 ///     "id": "f86c925c-3002-4ba5-939a-c92344e534f9",
@@ -95,7 +99,10 @@ payload_impl! {User}
 ///     "createdAt": "2018-04-25T12:22:02Z",
 ///     "updatedAt": "2018-04-25T12:22:02Z"
 /// }"##;
-/// let payload: Channel = payload.parse().unwrap();
+/// let payload: Channel = payload.parse()?;
+/// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -117,14 +124,17 @@ payload_impl! {Channel}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::EmbeddedInfo;
 /// let payload = r##"{
 ///     "raw": "@takashi_trap",
 ///     "type": "user",
 ///     "id": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45"
 /// }"##;
-/// let payload: EmbeddedInfo = payload.parse().unwrap();
+/// let payload: EmbeddedInfo = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -140,6 +150,7 @@ payload_impl! {EmbeddedInfo}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::Message;
 /// let payload = r##"{
 ///     "id": "bc9106b3-f9b2-4eca-9ba1-72b39b40954e",
@@ -163,8 +174,10 @@ payload_impl! {EmbeddedInfo}
 ///     "createdAt": "2019-05-08T13:33:51.632149265Z",
 ///     "updatedAt": "2019-05-08T13:33:51.632149265Z"
 /// }"##;
-/// let payload: Message = payload.parse().unwrap();
+/// let payload: Message = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -187,13 +200,16 @@ payload_impl! {Message}
 ///
 /// ### Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::DeletedMessage;
 /// let payload = r##"{
 ///     "id": "bc9106b3-f9b2-4eca-9ba1-72b39b40954e",
 ///     "channelId": "9aba50da-f605-4cd0-a428-5e4558cb911e"
 /// }"##;
-/// let payload: DeletedMessage = payload.parse().unwrap();
+/// let payload: DeletedMessage = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -208,14 +224,17 @@ payload_impl! {DeletedMessage}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::DeletedDirectMessage;
 /// let payload = r##"{
 ///     "id": "2d7ff3f5-c313-4f4a-a9bb-0b5f84d2b6f8",
 ///     "userId": "dfdff0c9-5de0-46ee-9721-2525e8bb3d45",
 ///     "channelId": "c5a5a697-3bad-4540-b2da-93dc88181d34"
 /// }"##;
-/// let payload: DeletedDirectMessage = payload.parse().unwrap();
+/// let payload: DeletedDirectMessage = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -231,6 +250,7 @@ payload_impl! {DeletedDirectMessage}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::MessageStamp;
 /// let payload = r##"{
 ///     "stampId": "b77fad4e-b63f-42a2-916c-5cfe5af3d8b9",
@@ -239,8 +259,10 @@ payload_impl! {DeletedDirectMessage}
 ///     "createdAt": "2020-10-17T03:34:56.575099Z",
 ///     "updatedAt": "2020-10-17T03:35:34Z"
 /// }"##;
-/// let payload: MessageStamp = payload.parse().unwrap();
+/// let payload: MessageStamp = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -270,13 +292,16 @@ payload_impl! {GroupMember}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::UserGroupAdmin;
 /// let payload = r#"{
 ///     "groupId": "f265bde2-04cc-4856-9008-3db1d953a539",
 ///     "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 /// }"#;
-/// let payload: UserGroupAdmin = payload.parse().unwrap();
+/// let payload: UserGroupAdmin = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -309,14 +334,17 @@ impl From<GroupMember> for UserGroupAdmin {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::UserGroupMember;
 /// let payload = r##"{
 ///     "groupId": "f265bde2-04cc-4856-9008-3db1d953a539",
 ///     "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b",
 ///     "role": ""
 /// }"##;
-/// let payload: UserGroupMember = payload.parse().unwrap();
+/// let payload: UserGroupMember = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -332,6 +360,7 @@ payload_impl! {UserGroupMember}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::types::UserGroup;
 /// let payload = r##"{
 ///     "id": "f265bde2-04cc-4856-9008-3db1d953a539",
@@ -355,8 +384,10 @@ payload_impl! {UserGroupMember}
 ///     "createdAt": "2023-08-25T04:04:32.912312Z",
 ///     "updatedAt": "2023-08-25T04:04:32.912312Z"
 /// }"##;
-/// let payload: UserGroup = payload.parse().unwrap();
+/// let payload: UserGroup = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
