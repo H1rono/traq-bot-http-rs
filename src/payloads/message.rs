@@ -19,6 +19,7 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::MessageCreatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:33:51.690308239Z",
@@ -45,8 +46,10 @@ use crate::macros::payload_impl;
 ///         "updatedAt": "2019-05-08T13:33:51.632149265Z"
 ///     }
 /// }"##;
-/// let payload: MessageCreatedPayload = payload.parse().unwrap();
+/// let payload: MessageCreatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -77,6 +80,7 @@ impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::MessageDeletedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:33:51.690308239Z",
@@ -85,8 +89,10 @@ impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
 ///         "channelId": "9aba50da-f605-4cd0-a428-5e4558cb911e"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<MessageDeletedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<MessageDeletedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -104,6 +110,7 @@ payload_impl! {MessageDeletedPayload}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::MessageUpdatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:33:51.690308239Z",
@@ -130,8 +137,10 @@ payload_impl! {MessageDeletedPayload}
 ///         "updatedAt": "2019-05-08T13:33:51.632149265Z"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<MessageUpdatedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<MessageUpdatedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -162,6 +171,7 @@ impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::DirectMessageCreatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:36:09.421492525Z",
@@ -188,8 +198,10 @@ impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
 ///         "updatedAt": "2019-05-08T13:36:09.365393261Z"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<DirectMessageCreatedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<DirectMessageCreatedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -220,6 +232,7 @@ impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::DirectMessageDeletedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:36:09.421492525Z",
@@ -229,8 +242,10 @@ impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
 ///         "channelId": "c5a5a697-3bad-4540-b2da-93dc88181d34"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<DirectMessageDeletedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<DirectMessageDeletedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -248,6 +263,7 @@ payload_impl! {DirectMessageDeletedPayload}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::DirectMessageUpdatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2019-05-08T13:36:09.421492525Z",
@@ -274,8 +290,10 @@ payload_impl! {DirectMessageDeletedPayload}
 ///         "updatedAt": "2019-05-08T13:36:09.365393261Z"
 ///     }
 /// }"##;
-/// let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<DirectMessageUpdatedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -306,6 +324,7 @@ impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::BotMessageStampsUpdatedPayload;
 /// let payload = r##"{
 ///     "eventTime": "2020-10-17T03:35:34.5326265Z",
@@ -334,8 +353,10 @@ impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
 ///         }
 ///     ]
 /// }"##;
-/// let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<BotMessageStampsUpdatedPayload>(payload)?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

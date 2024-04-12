@@ -20,6 +20,7 @@ use crate::macros::payload_impl;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupCreatedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.912312Z",
@@ -46,8 +47,10 @@ use crate::macros::payload_impl;
 ///         "updatedAt": "2023-08-25T04:04:32.912312Z"
 ///     }
 /// }"#;
-/// let payload: UserGroupCreatedPayload = payload.parse().unwrap();
+/// let payload: UserGroupCreatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -65,13 +68,16 @@ payload_impl! {UserGroupCreatedPayload}
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupUpdatedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
 ///     "groupId": "f265bde2-04cc-4856-9008-3db1d953a539"
 /// }"#;
-/// let payload: UserGroupUpdatedPayload = payload.parse().unwrap();
+/// let payload: UserGroupUpdatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -98,13 +104,16 @@ impl From<UserGroupDeletedPayload> for UserGroupUpdatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupDeletedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T06:40:35.971142Z",
 ///     "groupId": "f265bde2-04cc-4856-9008-3db1d953a539"
 /// }"#;
-/// let payload: UserGroupDeletedPayload = payload.parse().unwrap();
+/// let payload: UserGroupDeletedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -131,6 +140,7 @@ impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupMemberAddedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
@@ -139,8 +149,10 @@ impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
 ///         "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 ///     }
 /// }"#;
-/// let payload: UserGroupMemberAddedPayload = payload.parse().unwrap();
+/// let payload: UserGroupMemberAddedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -185,6 +197,7 @@ impl From<UserGroupAdminAddedPayload> for UserGroupMemberAddedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupMemberUpdatedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
@@ -193,8 +206,10 @@ impl From<UserGroupAdminAddedPayload> for UserGroupMemberAddedPayload {
 ///         "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 ///     }
 /// }"#;
-/// let payload: UserGroupMemberUpdatedPayload = payload.parse().unwrap();
+/// let payload: UserGroupMemberUpdatedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -230,6 +245,7 @@ impl From<UserGroupMemberRemovedPayload> for UserGroupMemberUpdatedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupMemberRemovedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
@@ -238,8 +254,10 @@ impl From<UserGroupMemberRemovedPayload> for UserGroupMemberUpdatedPayload {
 ///         "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 ///     }
 /// }"#;
-/// let payload: UserGroupMemberRemovedPayload = payload.parse().unwrap();
+/// let payload: UserGroupMemberRemovedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -284,6 +302,7 @@ impl From<UserGroupAdminRemovedPayload> for UserGroupMemberRemovedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupAdminAddedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
@@ -292,8 +311,10 @@ impl From<UserGroupAdminRemovedPayload> for UserGroupMemberRemovedPayload {
 ///         "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 ///     }
 /// }"#;
-/// let payload: UserGroupAdminAddedPayload = payload.parse().unwrap();
+/// let payload: UserGroupAdminAddedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -329,6 +350,7 @@ impl From<UserGroupMemberAddedPayload> for UserGroupAdminAddedPayload {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::payloads::UserGroupAdminRemovedPayload;
 /// let payload = r#"{
 ///     "eventTime": "2023-08-25T04:04:32.962264Z",
@@ -337,8 +359,10 @@ impl From<UserGroupMemberAddedPayload> for UserGroupAdminAddedPayload {
 ///         "userId": "8e6a088f-9274-42c0-bb20-cee7913d144b"
 ///     }
 /// }"#;
-/// let payload: UserGroupAdminRemovedPayload = payload.parse().unwrap();
+/// let payload: UserGroupAdminRemovedPayload = payload.parse()?;
 /// println!("{payload}");
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
