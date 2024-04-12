@@ -43,13 +43,16 @@ use crate::macros::event_converts;
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::Event;
 /// use traq_bot_http::payloads::PingPayload;
 /// let payload = r#"{
 ///     "eventTime": "2019-05-07T04:50:48.582586882Z"
 /// }"#;
-/// let payload = serde_json::from_str::<PingPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<PingPayload>(payload)?;
 /// let event = Event::Ping(payload);
+/// # Ok(())
+/// # }
 /// ```
 #[must_use]
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -150,14 +153,17 @@ event_converts! {
 ///
 /// ## Example
 /// ```
+/// # fn main() -> Result<(), serde_json::Error> {
 /// use traq_bot_http::{Event, EventKind};
 /// use traq_bot_http::payloads::PingPayload;
 /// let payload = r#"{
 ///     "eventTime": "2019-05-07T04:50:48.582586882Z"
 /// }"#;
-/// let payload = serde_json::from_str::<PingPayload>(payload).unwrap();
+/// let payload = serde_json::from_str::<PingPayload>(payload)?;
 /// let event: Event = payload.into();
 /// assert_eq!(event.kind(), EventKind::Ping);
+/// # Ok(())
+/// # }
 /// ```
 #[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
