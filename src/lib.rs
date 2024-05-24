@@ -1,4 +1,4 @@
-#![deny(clippy::pedantic)]
+#![deny(clippy::pedantic, clippy::cargo)]
 
 //! [![GitHub](https://img.shields.io/github/license/H1rono/traq-bot-http-rs?style=for-the-badge&logo=github)](https://github.com/H1rono/traq-bot-http-rs/blob/main/LICENSE)
 //! [![Crates.io](https://img.shields.io/crates/l/traq-bot-http?style=for-the-badge&logo=docsdotrs)](https://crates.io/crates/traq-bot-http)
