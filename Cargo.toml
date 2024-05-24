@@ -36,7 +36,7 @@ optional = true
 features = ["serde"]
 
 [dev-dependencies]
-http = "1.0"
+http = "1.1"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
 
