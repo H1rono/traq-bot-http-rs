@@ -7,6 +7,7 @@ description = "Library to parse POST requests of traQ BOT event"
 rust-version = "1.67.1"
 homepage = "https://github.com/H1rono/traq-bot-http-rs"
 keywords = ["http", "web", "framework"]
+categories = ["web-programming::http-server"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/H1rono/traq-bot-http-rs"
