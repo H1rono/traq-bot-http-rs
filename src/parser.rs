@@ -50,10 +50,11 @@ impl RequestParser {
     /// ## Example
     /// ```
     /// use http::HeaderMap;
-    /// use traq_bot_http::RequestParser;
+    /// use traq_bot_http::{RequestParser, ParseError};
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
-    /// let kind = parser.parse_headers(headers.iter());
+    /// let kind = parser.parse_headers(&headers);
+    /// assert!(matches!(kind, Err(ParseError::ContentTypeNotFound)));
     /// ```
     ///
     /// ## Errors
@@ -157,7 +158,7 @@ impl RequestParser {
     /// let body = br#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
     /// let verification_token = "verification_token";
     /// let parser = RequestParser::new(verification_token);
-    /// let event = parser.parse(headers.into_iter(), body);
+    /// let event = parser.parse(headers, body);
     /// assert!(matches!(event, Ok(Event::Ping(_))));
     /// ```
     ///
