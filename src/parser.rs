@@ -84,7 +84,7 @@ impl RequestParser {
     /// [`new`]: RequestParser::new
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
-        H: Iterator<Item = (&'a K, &'a V)>,
+        H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
@@ -174,7 +174,7 @@ impl RequestParser {
     /// [`parse_headers`]: RequestParser::parse_headers
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
     where
-        H: Iterator<Item = (&'a K, &'a V)>,
+        H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
