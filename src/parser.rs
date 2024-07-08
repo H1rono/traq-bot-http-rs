@@ -50,10 +50,11 @@ impl RequestParser {
     /// ## Example
     /// ```
     /// use http::HeaderMap;
-    /// use traq_bot_http::RequestParser;
+    /// use traq_bot_http::{RequestParser, ParseError};
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
-    /// let kind = parser.parse_headers(headers.iter());
+    /// let kind = parser.parse_headers(&headers);
+    /// assert!(matches!(kind, Err(ParseError::ContentTypeNotFound)));
     /// ```
     ///
     /// ## Errors
@@ -84,7 +85,7 @@ impl RequestParser {
     /// [`new`]: RequestParser::new
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
     where
-        H: Iterator<Item = (&'a K, &'a V)>,
+        H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
@@ -157,7 +158,7 @@ impl RequestParser {
     /// let body = br#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
     /// let verification_token = "verification_token";
     /// let parser = RequestParser::new(verification_token);
-    /// let event = parser.parse(headers.into_iter(), body);
+    /// let event = parser.parse(headers, body);
     /// assert!(matches!(event, Ok(Event::Ping(_))));
     /// ```
     ///
@@ -174,7 +175,7 @@ impl RequestParser {
     /// [`parse_headers`]: RequestParser::parse_headers
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
     where
-        H: Iterator<Item = (&'a K, &'a V)>,
+        H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
