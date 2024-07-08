@@ -120,6 +120,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "basic-with-axum"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "http",
+ "tokio",
+ "traq-bot-http",
+]
+
+[[package]]
 name = "bitflags"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -808,14 +818,12 @@ dependencies = [
 name = "traq-bot-http"
 version = "0.8.3"
 dependencies = [
- "axum",
  "chrono",
  "http",
  "paste",
  "serde",
  "serde_json",
  "time",
- "tokio",
  "uuid",
 ]
 
