@@ -45,7 +45,7 @@ impl RequestParser {
     /// POSTリクエストのヘッダーからイベント名を取得します。
     ///
     /// ## Arguments
-    /// * `headers` - リクエストのヘッダー(イテレータ形式で)
+    /// * `headers` - リクエストのヘッダー
     ///
     /// ## Example
     /// ```
@@ -235,7 +235,7 @@ impl RequestParser {
 /// let parser = RequestParser::new(verification_token);
 /// let headers = HeaderMap::new();
 /// let body = b"";
-/// assert_eq!(parser.parse(headers.iter(), body), Err(ParseError::ContentTypeNotFound));
+/// assert_eq!(parser.parse(&headers, body), Err(ParseError::ContentTypeNotFound));
 /// ```
 #[must_use]
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -307,27 +307,27 @@ mod tests {
         let parser = make_parser();
         let mut headers = HeaderMap::new();
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::ContentTypeNotFound)
         );
         headers.insert(CONTENT_TYPE, "text/plain".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::ContentTypeMismatch)
         );
         headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::BotTokenNotFound)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid　token".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::ReadBotTokenFailed)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid_token".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::BotTokenMismatch)
         );
         headers.insert(
@@ -335,26 +335,26 @@ mod tests {
             "traqbotverificationtoken".parse().unwrap(),
         );
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::BotEventNotFound)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid　event".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::ReadBotEventFailed)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid_event".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::BotEventMismatch)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
         assert_eq!(
-            parser.parse(headers.iter(), &[0, 159, 146, 150]),
+            parser.parse(&headers, &[0, 159, 146, 150]),
             Err(ParseError::ReadBodyFailed)
         );
         assert_eq!(
-            parser.parse(headers.iter(), b""),
+            parser.parse(&headers, b""),
             Err(ParseError::ParseBodyFailed)
         );
     }
