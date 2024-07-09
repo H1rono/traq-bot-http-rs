@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.9.0] - 2024-07-09
+
+### Added
+
+- [rocket](https://rocket.rs)を使用したexampleを追加
+
+### Changed
+
+- 依存ライブラリを更新
+- `RequestParser::parse_headers`および`RequestParser::parse`の引数を変更
+    - `header`が`IntoIterator`を受け入れるようになりました
+    - この変更でコンパイルできなくなるコードが存在する可能性があります
+- 内部コードの改善
+- [`clippy::cargo`](https://doc.rust-lang.org/clippy/lints.html#cargo)に対応
+
+### For Developers
+
+- GitHub Actions, Nix Flakesの依存関係を更新
+
 ## [v0.8.3] - 2024-04-13
 
 ### Added
@@ -254,6 +273,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.9.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.3..v0.9.0
 [v0.8.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.2..v0.8.3
 [v0.8.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.1..v0.8.2
 [v0.8.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.0..v0.8.1
