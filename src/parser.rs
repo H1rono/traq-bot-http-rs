@@ -4,6 +4,7 @@ use std::{error::Error, fmt, str::from_utf8};
 
 use serde::Deserialize;
 
+use crate::macros::all_events;
 use crate::{Event, EventKind, RequestParser};
 
 /// ボディをDeserializeして`Event`に渡す
@@ -181,32 +182,18 @@ impl RequestParser {
     {
         let kind = self.parse_headers(headers)?;
         let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
-        match kind {
-            EventKind::Ping => parse_body(Event::Ping, body),
-            EventKind::Joined => parse_body(Event::Joined, body),
-            EventKind::Left => parse_body(Event::Left, body),
-            EventKind::MessageCreated => parse_body(Event::MessageCreated, body),
-            EventKind::MessageDeleted => parse_body(Event::MessageDeleted, body),
-            EventKind::MessageUpdated => parse_body(Event::MessageUpdated, body),
-            EventKind::DirectMessageCreated => parse_body(Event::DirectMessageCreated, body),
-            EventKind::DirectMessageDeleted => parse_body(Event::DirectMessageDeleted, body),
-            EventKind::DirectMessageUpdated => parse_body(Event::DirectMessageUpdated, body),
-            EventKind::BotMessageStampsUpdated => parse_body(Event::BotMessageStampsUpdated, body),
-            EventKind::ChannelCreated => parse_body(Event::ChannelCreated, body),
-            EventKind::ChannelTopicChanged => parse_body(Event::ChannelTopicChanged, body),
-            EventKind::UserCreated => parse_body(Event::UserCreated, body),
-            EventKind::StampCreated => parse_body(Event::StampCreated, body),
-            EventKind::TagAdded => parse_body(Event::TagAdded, body),
-            EventKind::TagRemoved => parse_body(Event::TagRemoved, body),
-            EventKind::UserGroupCreated => parse_body(Event::UserGroupCreated, body),
-            EventKind::UserGroupUpdated => parse_body(Event::UserGroupUpdated, body),
-            EventKind::UserGroupDeleted => parse_body(Event::UserGroupDeleted, body),
-            EventKind::UserGroupMemberAdded => parse_body(Event::UserGroupMemberAdded, body),
-            EventKind::UserGroupMemberUpdated => parse_body(Event::UserGroupMemberUpdated, body),
-            EventKind::UserGroupMemberRemoved => parse_body(Event::UserGroupMemberRemoved, body),
-            EventKind::UserGroupAdminAdded => parse_body(Event::UserGroupAdminAdded, body),
-            EventKind::UserGroupAdminRemoved => parse_body(Event::UserGroupAdminRemoved, body),
+
+        macro_rules! match_kind_parse_body {
+            ($( $k:ident ),*) => {
+                match kind {
+                    $(
+                        EventKind::$k => parse_body(Event::$k, body),
+                    )*
+                }
+            };
         }
+
+        all_events!(match_kind_parse_body)
     }
 }
 

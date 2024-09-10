@@ -2,7 +2,8 @@
 
 use std::{fmt::Display, str::FromStr};
 
-use super::payloads::{
+use crate::macros::{all_events, event_converts};
+use crate::payloads::{
     BotMessageStampsUpdatedPayload, ChannelCreatedPayload, ChannelTopicChangedPayload,
     DirectMessageCreatedPayload, DirectMessageDeletedPayload, DirectMessageUpdatedPayload,
     JoinedPayload, LeftPayload, MessageCreatedPayload, MessageDeletedPayload,
@@ -11,7 +12,6 @@ use super::payloads::{
     UserGroupCreatedPayload, UserGroupDeletedPayload, UserGroupMemberAddedPayload,
     UserGroupMemberRemovedPayload, UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
 };
-use crate::macros::event_converts;
 
 /// イベント全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
@@ -197,39 +197,26 @@ pub enum EventKind {
 
 impl Event {
     pub fn kind(&self) -> EventKind {
+        macro_rules! match_self_to_kind {
+            ($($i:ident),*) => {
+                match_event_to_kind!(self, $($i),*)
+            };
+        }
+
         use crate::macros::match_event_to_kind;
-        match_event_to_kind!(
-            self,
-            Ping,
-            Joined,
-            Left,
-            MessageCreated,
-            MessageDeleted,
-            MessageUpdated,
-            DirectMessageCreated,
-            DirectMessageDeleted,
-            DirectMessageUpdated,
-            BotMessageStampsUpdated,
-            ChannelCreated,
-            ChannelTopicChanged,
-            UserCreated,
-            StampCreated,
-            TagAdded,
-            TagRemoved,
-            UserGroupCreated,
-            UserGroupUpdated,
-            UserGroupDeleted,
-            UserGroupMemberAdded,
-            UserGroupMemberUpdated,
-            UserGroupMemberRemoved,
-            UserGroupAdminAdded,
-            UserGroupAdminRemoved
-        )
+
+        all_events!(match_self_to_kind)
     }
 }
 
 impl Display for EventKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        macro_rules! match_self_to_str {
+            ($($i:ident),*) => {
+                match_event_kinds_to_str!(self, $($i),*)
+            };
+        }
+
         use crate::macros::match_event_kinds_to_str;
         use EventKind::{
             BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
@@ -238,33 +225,8 @@ impl Display for EventKind {
             UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
             UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
         };
-        let s = match_event_kinds_to_str!(
-            self,
-            Ping,
-            Joined,
-            Left,
-            MessageCreated,
-            MessageDeleted,
-            MessageUpdated,
-            DirectMessageCreated,
-            DirectMessageDeleted,
-            DirectMessageUpdated,
-            BotMessageStampsUpdated,
-            ChannelCreated,
-            ChannelTopicChanged,
-            UserCreated,
-            StampCreated,
-            TagAdded,
-            TagRemoved,
-            UserGroupCreated,
-            UserGroupUpdated,
-            UserGroupDeleted,
-            UserGroupMemberAdded,
-            UserGroupMemberUpdated,
-            UserGroupMemberRemoved,
-            UserGroupAdminAdded,
-            UserGroupAdminRemoved
-        );
+
+        let s = all_events!(match_self_to_str);
         write!(f, "{s}")
     }
 }
@@ -273,6 +235,12 @@ impl FromStr for EventKind {
     type Err = crate::ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        macro_rules! match_s_to_event_kinds {
+            ($($i:ident),*) => {
+                match_str_to_event_kinds!(s, $($i),*)
+            };
+        }
+
         use crate::macros::match_str_to_event_kinds;
         use EventKind::{
             BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
@@ -281,33 +249,7 @@ impl FromStr for EventKind {
             UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
             UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
         };
-        match_str_to_event_kinds!(
-            s,
-            Ping,
-            Joined,
-            Left,
-            MessageCreated,
-            MessageDeleted,
-            MessageUpdated,
-            DirectMessageCreated,
-            DirectMessageDeleted,
-            DirectMessageUpdated,
-            BotMessageStampsUpdated,
-            ChannelCreated,
-            ChannelTopicChanged,
-            UserCreated,
-            StampCreated,
-            TagAdded,
-            TagRemoved,
-            UserGroupCreated,
-            UserGroupUpdated,
-            UserGroupDeleted,
-            UserGroupMemberAdded,
-            UserGroupMemberUpdated,
-            UserGroupMemberRemoved,
-            UserGroupAdminAdded,
-            UserGroupAdminRemoved
-        )
+        all_events!(match_s_to_event_kinds)
     }
 }
 
