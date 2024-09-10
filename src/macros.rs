@@ -32,6 +32,37 @@ macro_rules! payload_impl {
     };
 }
 
+macro_rules! all_events {
+    ($n:ident) => {
+        $n!(
+            Ping,
+            Joined,
+            Left,
+            MessageCreated,
+            MessageDeleted,
+            MessageUpdated,
+            DirectMessageCreated,
+            DirectMessageDeleted,
+            DirectMessageUpdated,
+            BotMessageStampsUpdated,
+            ChannelCreated,
+            ChannelTopicChanged,
+            UserCreated,
+            StampCreated,
+            TagAdded,
+            TagRemoved,
+            UserGroupCreated,
+            UserGroupUpdated,
+            UserGroupDeleted,
+            UserGroupMemberAdded,
+            UserGroupMemberUpdated,
+            UserGroupMemberRemoved,
+            UserGroupAdminAdded,
+            UserGroupAdminRemoved
+        )
+    };
+}
+
 macro_rules! event_convert {
     ($i:ident) => {
         ::paste::paste! {
@@ -81,6 +112,7 @@ macro_rules! match_str_to_event_kinds {
     };
 }
 
+pub(crate) use all_events;
 pub(crate) use event_convert;
 pub(crate) use event_converts;
 pub(crate) use impl_display;
