@@ -2,6 +2,8 @@
 
 //! イベントペイロードの型定義
 
+use crate::macros::{all_events, payloads_impl_for_kinds};
+
 mod channel;
 mod message;
 pub(crate) mod serde;
@@ -27,6 +29,8 @@ pub use user_group::{
     UserGroupDeletedPayload, UserGroupMemberAddedPayload, UserGroupMemberRemovedPayload,
     UserGroupMemberUpdatedPayload, UserGroupUpdatedPayload,
 };
+
+all_events! {payloads_impl_for_kinds}
 
 #[cfg(test)]
 mod tests {

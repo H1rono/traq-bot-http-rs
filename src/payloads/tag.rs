@@ -6,7 +6,6 @@
 use serde::{Deserialize, Serialize};
 
 use super::types::{TimeStamp, Uuid};
-use crate::macros::payload_impl;
 
 /// `TAG_ADDED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_tag_added.go#L11-L16)
@@ -34,8 +33,6 @@ pub struct TagAddedPayload {
     pub tag_id: Uuid,
     pub tag: String,
 }
-
-payload_impl! {TagAddedPayload}
 
 impl From<TagRemovedPayload> for TagAddedPayload {
     fn from(payload: TagRemovedPayload) -> Self {
@@ -78,8 +75,6 @@ pub struct TagRemovedPayload {
     pub tag_id: Uuid,
     pub tag: String,
 }
-
-payload_impl! {TagRemovedPayload}
 
 impl From<TagAddedPayload> for TagRemovedPayload {
     fn from(payload: TagAddedPayload) -> Self {

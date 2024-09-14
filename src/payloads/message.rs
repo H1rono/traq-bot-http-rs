@@ -11,7 +11,6 @@
 use serde::{Deserialize, Serialize};
 
 use super::types::{DeletedDirectMessage, DeletedMessage, Message, MessageStamp, TimeStamp, Uuid};
-use crate::macros::payload_impl;
 
 /// `MESSAGE_CREATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_message_created.go#L10-L14)
@@ -59,8 +58,6 @@ pub struct MessageCreatedPayload {
     pub message: Message,
 }
 
-payload_impl! {MessageCreatedPayload}
-
 impl From<DirectMessageCreatedPayload> for MessageCreatedPayload {
     fn from(payload: DirectMessageCreatedPayload) -> Self {
         let DirectMessageCreatedPayload {
@@ -101,8 +98,6 @@ pub struct MessageDeletedPayload {
     pub event_time: TimeStamp,
     pub message: DeletedMessage,
 }
-
-payload_impl! {MessageDeletedPayload}
 
 /// `MESSAGE_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
@@ -149,8 +144,6 @@ pub struct MessageUpdatedPayload {
     pub event_time: TimeStamp,
     pub message: Message,
 }
-
-payload_impl! {MessageUpdatedPayload}
 
 impl From<DirectMessageUpdatedPayload> for MessageUpdatedPayload {
     fn from(payload: DirectMessageUpdatedPayload) -> Self {
@@ -211,8 +204,6 @@ pub struct DirectMessageCreatedPayload {
     pub message: Message,
 }
 
-payload_impl! {DirectMessageCreatedPayload}
-
 impl From<MessageCreatedPayload> for DirectMessageCreatedPayload {
     fn from(payload: MessageCreatedPayload) -> Self {
         let MessageCreatedPayload {
@@ -254,8 +245,6 @@ pub struct DirectMessageDeletedPayload {
     pub event_time: TimeStamp,
     pub message: DeletedDirectMessage,
 }
-
-payload_impl! {DirectMessageDeletedPayload}
 
 /// `DIRECT_MESSAGE_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/d2bc98f1e0e68f4acc371eb78e6a49a167446761/service/bot/event/payload/ev_direct_message_updated.go#L10-L14)
@@ -302,8 +291,6 @@ pub struct DirectMessageUpdatedPayload {
     pub event_time: TimeStamp,
     pub message: Message,
 }
-
-payload_impl! {DirectMessageUpdatedPayload}
 
 impl From<MessageUpdatedPayload> for DirectMessageUpdatedPayload {
     fn from(payload: MessageUpdatedPayload) -> Self {
@@ -366,8 +353,6 @@ pub struct BotMessageStampsUpdatedPayload {
     pub message_id: Uuid,
     pub stamps: Vec<MessageStamp>,
 }
-
-payload_impl! {BotMessageStampsUpdatedPayload}
 
 #[cfg(test)]
 mod tests {

@@ -84,44 +84,7 @@ pub enum Event {
     UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
-// system
-event_converts! {
-    Ping, Joined, Left
-}
-
-// message
-event_converts! {
-    MessageCreated, MessageDeleted, MessageUpdated,
-    DirectMessageCreated, DirectMessageDeleted, DirectMessageUpdated,
-    BotMessageStampsUpdated
-}
-
-// channel
-event_converts! {
-    ChannelCreated, ChannelTopicChanged
-}
-
-// user
-event_converts! {
-    UserCreated
-}
-
-// stamp
-event_converts! {
-    StampCreated
-}
-
-// tag
-event_converts! {
-    TagAdded, TagRemoved
-}
-
-// user group
-event_converts! {
-    UserGroupCreated, UserGroupUpdated, UserGroupDeleted,
-    UserGroupMemberAdded, UserGroupMemberUpdated, UserGroupMemberRemoved,
-    UserGroupAdminAdded, UserGroupAdminRemoved
-}
+all_events! {event_converts}
 
 /// イベントの種類全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
@@ -218,13 +181,6 @@ impl Display for EventKind {
         }
 
         use crate::macros::match_event_kinds_to_str;
-        use EventKind::{
-            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
-            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
-            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
-            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
-            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
-        };
 
         let s = all_events!(match_self_to_str);
         write!(f, "{s}")
@@ -242,13 +198,7 @@ impl FromStr for EventKind {
         }
 
         use crate::macros::match_str_to_event_kinds;
-        use EventKind::{
-            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
-            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
-            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
-            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
-            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
-        };
+
         all_events!(match_s_to_event_kinds)
     }
 }
@@ -257,9 +207,7 @@ impl FromStr for EventKind {
 mod tests {
     use super::*;
 
-    use crate::macros::{
-        test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
-    };
+    use crate::macros::{all_events, test_event_convert, test_event_to_kind};
 
     test_event_convert! {"system", Ping}
 
@@ -357,99 +305,19 @@ mod tests {
 
     test_event_to_kind! {"user-group", UserGroupAdminRemoved}
 
-    test_event_kind_from_str! {Ping}
+    macro_rules! tests_event_kind_from_str {
+        ($($kind:ident),*) => {
+            $( $crate::macros::test_event_kind_from_str! {$kind} )*
+        };
+    }
 
-    test_event_kind_from_str! {Joined}
+    all_events! {tests_event_kind_from_str}
 
-    test_event_kind_from_str! {Left}
+    macro_rules! tests_event_kind_to_string {
+        ($($kind:ident),*) => {
+            $( $crate::macros::test_event_kind_to_string! {$kind} )*
+        };
+    }
 
-    test_event_kind_from_str! {MessageCreated}
-
-    test_event_kind_from_str! {MessageDeleted}
-
-    test_event_kind_from_str! {MessageUpdated}
-
-    test_event_kind_from_str! {DirectMessageCreated}
-
-    test_event_kind_from_str! {DirectMessageDeleted}
-
-    test_event_kind_from_str! {DirectMessageUpdated}
-
-    test_event_kind_from_str! {BotMessageStampsUpdated}
-
-    test_event_kind_from_str! {ChannelCreated}
-
-    test_event_kind_from_str! {ChannelTopicChanged}
-
-    test_event_kind_from_str! {UserCreated}
-
-    test_event_kind_from_str! {StampCreated}
-
-    test_event_kind_from_str! {TagAdded}
-
-    test_event_kind_from_str! {TagRemoved}
-
-    test_event_kind_from_str! {UserGroupCreated}
-
-    test_event_kind_from_str! {UserGroupUpdated}
-
-    test_event_kind_from_str! {UserGroupDeleted}
-
-    test_event_kind_from_str! {UserGroupMemberAdded}
-
-    test_event_kind_from_str! {UserGroupMemberUpdated}
-
-    test_event_kind_from_str! {UserGroupMemberRemoved}
-
-    test_event_kind_from_str! {UserGroupAdminAdded}
-
-    test_event_kind_from_str! {UserGroupAdminRemoved}
-
-    test_event_kind_to_string! {Ping}
-
-    test_event_kind_to_string! {Joined}
-
-    test_event_kind_to_string! {Left}
-
-    test_event_kind_to_string! {MessageCreated}
-
-    test_event_kind_to_string! {MessageDeleted}
-
-    test_event_kind_to_string! {MessageUpdated}
-
-    test_event_kind_to_string! {DirectMessageCreated}
-
-    test_event_kind_to_string! {DirectMessageDeleted}
-
-    test_event_kind_to_string! {DirectMessageUpdated}
-
-    test_event_kind_to_string! {BotMessageStampsUpdated}
-
-    test_event_kind_to_string! {ChannelCreated}
-
-    test_event_kind_to_string! {ChannelTopicChanged}
-
-    test_event_kind_to_string! {UserCreated}
-
-    test_event_kind_to_string! {StampCreated}
-
-    test_event_kind_to_string! {TagAdded}
-
-    test_event_kind_to_string! {TagRemoved}
-
-    test_event_kind_to_string! {UserGroupCreated}
-
-    test_event_kind_to_string! {UserGroupUpdated}
-
-    test_event_kind_to_string! {UserGroupDeleted}
-
-    test_event_kind_to_string! {UserGroupMemberAdded}
-
-    test_event_kind_to_string! {UserGroupMemberUpdated}
-
-    test_event_kind_to_string! {UserGroupMemberRemoved}
-
-    test_event_kind_to_string! {UserGroupAdminAdded}
-
-    test_event_kind_to_string! {UserGroupAdminRemoved}
+    all_events! {tests_event_kind_to_string}
 }
