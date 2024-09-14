@@ -84,44 +84,7 @@ pub enum Event {
     UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
-// system
-event_converts! {
-    Ping, Joined, Left
-}
-
-// message
-event_converts! {
-    MessageCreated, MessageDeleted, MessageUpdated,
-    DirectMessageCreated, DirectMessageDeleted, DirectMessageUpdated,
-    BotMessageStampsUpdated
-}
-
-// channel
-event_converts! {
-    ChannelCreated, ChannelTopicChanged
-}
-
-// user
-event_converts! {
-    UserCreated
-}
-
-// stamp
-event_converts! {
-    StampCreated
-}
-
-// tag
-event_converts! {
-    TagAdded, TagRemoved
-}
-
-// user group
-event_converts! {
-    UserGroupCreated, UserGroupUpdated, UserGroupDeleted,
-    UserGroupMemberAdded, UserGroupMemberUpdated, UserGroupMemberRemoved,
-    UserGroupAdminAdded, UserGroupAdminRemoved
-}
+all_events! {event_converts}
 
 /// イベントの種類全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
