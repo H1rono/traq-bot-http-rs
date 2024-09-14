@@ -330,15 +330,10 @@ macro_rules! match_str_to_event_kinds {
     };
 }
 
-pub(crate) use all_events;
-pub(crate) use event_convert;
-pub(crate) use event_converts;
-pub(crate) use impl_display;
-pub(crate) use impl_from_str;
-pub(crate) use match_event_kinds_to_str;
-pub(crate) use match_event_to_kind;
-pub(crate) use match_str_to_event_kinds;
-pub(crate) use payload_impl;
+pub(crate) use {
+    all_events, event_convert, event_converts, impl_display, impl_from_str,
+    match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
+};
 
 #[cfg(test)]
 macro_rules! test_event_convert {
