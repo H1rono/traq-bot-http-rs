@@ -336,6 +336,7 @@ pub(crate) use {
 };
 
 #[cfg(test)]
+/// ペイロード型に対して`into Event`のテスト
 macro_rules! test_event_convert {
     ($group:expr, $i:ident) => {
         ::paste::paste! {
@@ -358,6 +359,9 @@ macro_rules! test_event_convert {
 }
 
 #[cfg(test)]
+/// [`Event::kind`]のテスト
+///
+/// [`Event::kind`]: crate::events::Event::kind
 macro_rules! test_event_to_kind {
     ($group:expr, $i:ident) => {
         ::paste::paste! {
@@ -380,6 +384,7 @@ macro_rules! test_event_to_kind {
 }
 
 #[cfg(test)]
+/// `FromStr for EventKind`のテスト
 macro_rules! test_event_kind_from_str {
     ($i:ident) => {
         ::paste::paste! {
@@ -394,6 +399,7 @@ macro_rules! test_event_kind_from_str {
 }
 
 #[cfg(test)]
+/// `Display for EventKind`のテスト
 macro_rules! test_event_kind_to_string {
     ($i:ident) => {
         ::paste::paste! {
@@ -408,6 +414,9 @@ macro_rules! test_event_kind_to_string {
 }
 
 #[cfg(test)]
+/// [`RequestParser::parse`]のテスト
+///
+/// [`RequestParser::parse`]: crate::RequestParser::parse
 macro_rules! test_parse_payload {
     ($group:expr, $i:ident) => {
         ::paste::paste! {
