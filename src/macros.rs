@@ -95,7 +95,7 @@ macro_rules! match_event_kinds_to_str {
     ($v:ident, $($i:ident),*) => {
         ::paste::paste! {
             match $v {
-                $( $i => stringify!([< $i:snake:upper >]), )*
+                $( EventKind::$i => stringify!([< $i:snake:upper >]), )*
             }
         }
     };
@@ -105,7 +105,7 @@ macro_rules! match_str_to_event_kinds {
     ($v:ident, $($i:ident),*) => {
         ::paste::paste! {
             match $v {
-                $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok($i), )*
+                $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok(EventKind::$i), )*
                 _ => ::core::result::Result::Err($crate::ParseError::BotEventMismatch),
             }
         }

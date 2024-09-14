@@ -218,13 +218,6 @@ impl Display for EventKind {
         }
 
         use crate::macros::match_event_kinds_to_str;
-        use EventKind::{
-            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
-            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
-            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
-            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
-            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
-        };
 
         let s = all_events!(match_self_to_str);
         write!(f, "{s}")
@@ -242,13 +235,7 @@ impl FromStr for EventKind {
         }
 
         use crate::macros::match_str_to_event_kinds;
-        use EventKind::{
-            BotMessageStampsUpdated, ChannelCreated, ChannelTopicChanged, DirectMessageCreated,
-            DirectMessageDeleted, DirectMessageUpdated, Joined, Left, MessageCreated,
-            MessageDeleted, MessageUpdated, Ping, StampCreated, TagAdded, TagRemoved, UserCreated,
-            UserGroupAdminAdded, UserGroupAdminRemoved, UserGroupCreated, UserGroupDeleted,
-            UserGroupMemberAdded, UserGroupMemberRemoved, UserGroupMemberUpdated, UserGroupUpdated,
-        };
+
         all_events!(match_s_to_event_kinds)
     }
 }
