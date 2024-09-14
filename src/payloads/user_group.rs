@@ -12,7 +12,6 @@
 use serde::{Deserialize, Serialize};
 
 use super::types::{GroupMember, TimeStamp, UserGroup, Uuid};
-use crate::macros::payload_impl;
 
 /// `USER_GROUP_CREATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_created.go#L9-L13)
@@ -60,8 +59,6 @@ pub struct UserGroupCreatedPayload {
     pub group: UserGroup,
 }
 
-payload_impl! {UserGroupCreatedPayload}
-
 /// `USER_GROUP_UPDATED`ペイロード
 /// - [traQの型定義](https://github.com/traPtitech/traQ/blob/a1aaf12d089a9033461d0f1fcabb69a92873a3b1/service/bot/event/payload/ev_user_group_updated.go#L10-L13)
 /// - [traQ-bot-consoleのリファレンス](https://github.com/traPtitech/traQ-bot-console/blob/dev/src/docs/bot/events/user-group.md#user_group_updated)
@@ -86,8 +83,6 @@ pub struct UserGroupUpdatedPayload {
     pub event_time: TimeStamp,
     pub group_id: Uuid,
 }
-
-payload_impl! {UserGroupUpdatedPayload}
 
 impl From<UserGroupDeletedPayload> for UserGroupUpdatedPayload {
     fn from(payload: UserGroupDeletedPayload) -> Self {
@@ -122,8 +117,6 @@ pub struct UserGroupDeletedPayload {
     pub event_time: TimeStamp,
     pub group_id: Uuid,
 }
-
-payload_impl! {UserGroupDeletedPayload}
 
 impl From<UserGroupUpdatedPayload> for UserGroupDeletedPayload {
     fn from(payload: UserGroupUpdatedPayload) -> Self {
@@ -161,8 +154,6 @@ pub struct UserGroupMemberAddedPayload {
     pub event_time: TimeStamp,
     pub group_member: GroupMember,
 }
-
-payload_impl! {UserGroupMemberAddedPayload}
 
 impl From<UserGroupMemberUpdatedPayload> for UserGroupMemberAddedPayload {
     fn from(payload: UserGroupMemberUpdatedPayload) -> Self {
@@ -219,8 +210,6 @@ pub struct UserGroupMemberUpdatedPayload {
     pub group_member: GroupMember,
 }
 
-payload_impl! {UserGroupMemberUpdatedPayload}
-
 impl From<UserGroupMemberAddedPayload> for UserGroupMemberUpdatedPayload {
     fn from(payload: UserGroupMemberAddedPayload) -> Self {
         Self {
@@ -266,8 +255,6 @@ pub struct UserGroupMemberRemovedPayload {
     pub event_time: TimeStamp,
     pub group_member: GroupMember,
 }
-
-payload_impl! {UserGroupMemberRemovedPayload}
 
 impl From<UserGroupMemberAddedPayload> for UserGroupMemberRemovedPayload {
     fn from(payload: UserGroupMemberAddedPayload) -> Self {
@@ -324,8 +311,6 @@ pub struct UserGroupAdminAddedPayload {
     pub group_member: GroupMember,
 }
 
-payload_impl! {UserGroupAdminAddedPayload}
-
 impl From<UserGroupAdminRemovedPayload> for UserGroupAdminAddedPayload {
     fn from(payload: UserGroupAdminRemovedPayload) -> Self {
         Self {
@@ -371,8 +356,6 @@ pub struct UserGroupAdminRemovedPayload {
     pub event_time: TimeStamp,
     pub group_member: GroupMember,
 }
-
-payload_impl! {UserGroupAdminRemovedPayload}
 
 impl From<UserGroupAdminAddedPayload> for UserGroupAdminRemovedPayload {
     fn from(payload: UserGroupAdminAddedPayload) -> Self {
