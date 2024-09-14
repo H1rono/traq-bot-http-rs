@@ -15,32 +15,6 @@ use crate::payloads::{
 
 /// イベント全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
-/// ## Variants
-/// * `Ping` - ボットの接続確認
-/// * `Joined` - チャンネルに参加した
-/// * `Left` - チャンネルから退出した
-/// * `MessageCreated` - メッセージが作成された
-/// * `MessageDeleted` - メッセージが削除された
-/// * `MessageUpdated` - メッセージが更新された
-/// * `DirectMessageCreated` - ダイレクトメッセージが作成された
-/// * `DirectMessageDeleted` - ダイレクトメッセージが削除された
-/// * `DirectMessageUpdated` - ダイレクトメッセージが更新された
-/// * `BotMessageStampsUpdated` - ボットのメッセージにスタンプが付けられた
-/// * `ChannelCreated` - チャンネルが作成された
-/// * `ChannelTopicChanged` - チャンネルのトピックが変更された
-/// * `UserCreated` - ユーザーが作成された
-/// * `StampCreated` - スタンプが作成された
-/// * `TagAdded` - BOTにタグが追加された
-/// * `TagRemoved` - BOTからタグが削除された
-/// * `UserGroupCreated` - ユーザーグループが作成された
-/// * `UserGroupUpdated` - ユーザーグループが更新された
-/// * `UserGroupDeleted` - ユーザーグループが削除された
-/// * `UserGroupMemberAdded` - ユーザーグループにメンバーが追加された
-/// * `UserGroupMemberUpdated` - ユーザーグループのメンバーが更新された
-/// * `UserGroupMemberRemoved` - ユーザーグループからメンバーが削除された
-/// * `UserGroupAdminAdded` - ユーザーグループに管理者が追加された
-/// * `UserGroupAdminRemoved` - ユーザーグループから管理者が削除された
-///
 /// ## Example
 /// ```
 /// # fn main() -> Result<(), serde_json::Error> {
@@ -58,29 +32,53 @@ use crate::payloads::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum Event {
+    /// ボットの接続確認
     Ping(PingPayload),
+    /// チャンネルに参加した
     Joined(JoinedPayload),
+    /// チャンネルから退出した
     Left(LeftPayload),
+    /// メッセージが作成された
     MessageCreated(MessageCreatedPayload),
+    /// メッセージが削除された
     MessageDeleted(MessageDeletedPayload),
+    /// メッセージが更新された
     MessageUpdated(MessageUpdatedPayload),
+    /// ダイレクトメッセージが作成された
     DirectMessageCreated(DirectMessageCreatedPayload),
+    /// ダイレクトメッセージが削除された
     DirectMessageDeleted(DirectMessageDeletedPayload),
+    /// ダイレクトメッセージが更新された
     DirectMessageUpdated(DirectMessageUpdatedPayload),
+    /// ボットのメッセージにスタンプが付けられた
     BotMessageStampsUpdated(BotMessageStampsUpdatedPayload),
+    /// チャンネルが作成された
     ChannelCreated(ChannelCreatedPayload),
+    /// チャンネルのトピックが変更された
     ChannelTopicChanged(ChannelTopicChangedPayload),
+    /// ユーザーが作成された
     UserCreated(UserCreatedPayload),
+    /// スタンプが作成された
     StampCreated(StampCreatedPayload),
+    /// BOTにタグが追加された
     TagAdded(TagAddedPayload),
+    /// BOTからタグが削除された
     TagRemoved(TagRemovedPayload),
+    /// ユーザーグループが作成された
     UserGroupCreated(UserGroupCreatedPayload),
+    /// ユーザーグループが更新された
     UserGroupUpdated(UserGroupUpdatedPayload),
+    /// ユーザーグループが削除された
     UserGroupDeleted(UserGroupDeletedPayload),
+    /// ユーザーグループにメンバーが追加された
     UserGroupMemberAdded(UserGroupMemberAddedPayload),
+    /// ユーザーグループのメンバーが更新された
     UserGroupMemberUpdated(UserGroupMemberUpdatedPayload),
+    /// ユーザーグループからメンバーが削除された
     UserGroupMemberRemoved(UserGroupMemberRemovedPayload),
+    /// ユーザーグループに管理者が追加された
     UserGroupAdminAdded(UserGroupAdminAddedPayload),
+    /// ユーザーグループから管理者が削除された
     UserGroupAdminRemoved(UserGroupAdminRemovedPayload),
 }
 
@@ -125,32 +123,6 @@ event_converts! {
 
 /// イベントの種類全てを網羅するenum ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 ///
-/// ## Variants
-/// * `Ping` - ボットの接続確認
-/// * `Joined` - チャンネルに参加した
-/// * `Left` - チャンネルから退出した
-/// * `MessageCreated` - メッセージが作成された
-/// * `MessageDeleted` - メッセージが削除された
-/// * `MessageUpdated` - メッセージが更新された
-/// * `DirectMessageCreated` - ダイレクトメッセージが作成された
-/// * `DirectMessageDeleted` - ダイレクトメッセージが削除された
-/// * `DirectMessageUpdated` - ダイレクトメッセージが更新された
-/// * `BotMessageStampsUpdated` - ボットのメッセージにスタンプが付けられた
-/// * `ChannelCreated` - チャンネルが作成された
-/// * `ChannelTopicChanged` - チャンネルのトピックが変更された
-/// * `UserCreated` - ユーザーが作成された
-/// * `StampCreated` - スタンプが作成された
-/// * `TagAdded` - BOTにタグが追加された
-/// * `TagRemoved` - BOTからタグが削除された
-/// * `UserGroupCreated` - ユーザーグループが作成された
-/// * `UserGroupUpdated` - ユーザーグループが更新された
-/// * `UserGroupDeleted` - ユーザーグループが削除された
-/// * `UserGroupMemberAdded` - ユーザーグループにメンバーが追加された
-/// * `UserGroupMemberUpdated` - ユーザーグループのメンバーが更新された
-/// * `UserGroupMemberRemoved` - ユーザーグループからメンバーが削除された
-/// * `UserGroupAdminAdded` - ユーザーグループに管理者が追加された
-/// * `UserGroupAdminRemoved` - ユーザーグループから管理者が削除された
-///
 /// ## Example
 /// ```
 /// # fn main() -> Result<(), serde_json::Error> {
@@ -169,29 +141,53 @@ event_converts! {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum EventKind {
+    /// ボットの接続確認
     Ping,
+    /// チャンネルに参加した
     Joined,
+    /// チャンネルから退出した
     Left,
+    /// メッセージが作成された
     MessageCreated,
+    /// メッセージが削除された
     MessageDeleted,
+    /// メッセージが更新された
     MessageUpdated,
+    /// ダイレクトメッセージが作成された
     DirectMessageCreated,
+    /// ダイレクトメッセージが削除された
     DirectMessageDeleted,
+    /// ダイレクトメッセージが更新された
     DirectMessageUpdated,
+    /// ボットのメッセージにスタンプが付けられた
     BotMessageStampsUpdated,
+    /// チャンネルが作成された
     ChannelCreated,
+    /// チャンネルのトピックが変更された
     ChannelTopicChanged,
+    /// ユーザーが作成された
     UserCreated,
+    /// スタンプが作成された
     StampCreated,
+    /// BOTにタグが追加された
     TagAdded,
+    /// BOTからタグが削除された
     TagRemoved,
+    /// ユーザーグループが作成された
     UserGroupCreated,
+    /// ユーザーグループが更新された
     UserGroupUpdated,
+    /// ユーザーグループが削除された
     UserGroupDeleted,
+    /// ユーザーグループにメンバーが追加された
     UserGroupMemberAdded,
+    /// ユーザーグループのメンバーが更新された
     UserGroupMemberUpdated,
+    /// ユーザーグループからメンバーが削除された
     UserGroupMemberRemoved,
+    /// ユーザーグループに管理者が追加された
     UserGroupAdminAdded,
+    /// ユーザーグループから管理者が削除された
     UserGroupAdminRemoved,
 }
 
