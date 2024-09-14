@@ -148,7 +148,7 @@ macro_rules! payload_impl {
 ///     };
 /// }
 ///
-/// let events: Vec<&'staic str> = all_events!(events_vec);
+/// let events: Vec<&'static str> = all_events!(events_vec);
 /// ```
 ///
 /// expands to:
