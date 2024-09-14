@@ -137,6 +137,31 @@ macro_rules! payload_impl {
     };
 }
 
+/// イベントの種類名に対応するペイロード型に[`payload_impl`]を適用するマクロ。[`all_events`]と組み合わせること
+///
+/// # Example
+///
+/// ```ignore
+/// payloads_impl_for_kind! {Ping, Joined}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// crate::macros::payload_impl! {PingPayload}
+/// crate::macros::payload_impl! {JoinedPayload}
+/// ```
+///
+/// [`payload_impl`]: crate::macros::payload_impl
+/// [`all_events`]: crate::macros::all_events
+macro_rules! payloads_impl_for_kinds {
+    ($($t:ty),*) => {
+        ::paste::paste! {
+            $( $crate::macros::payload_impl! { [< $t Payload >] } )*
+        }
+    };
+}
+
 /// イベントの種類名全てを適用するマクロ
 ///
 /// # Example
@@ -333,6 +358,7 @@ macro_rules! match_str_to_event_kinds {
 pub(crate) use {
     all_events, event_convert, event_converts, impl_display, impl_from_str,
     match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
+    payloads_impl_for_kinds,
 };
 
 #[cfg(test)]
