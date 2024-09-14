@@ -158,7 +158,7 @@ macro_rules! payload_impl {
 /// ```
 macro_rules! all_events {
     ($n:ident) => {
-        $n!(
+        $n! {
             Ping,
             Joined,
             Left,
@@ -183,7 +183,7 @@ macro_rules! all_events {
             UserGroupMemberRemoved,
             UserGroupAdminAdded,
             UserGroupAdminRemoved
-        )
+        }
     };
 }
 
