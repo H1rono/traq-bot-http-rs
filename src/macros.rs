@@ -1,3 +1,37 @@
+//! 内部実装で使用されるマクロ集
+
+/// [`Deserialize`]を実装する型に[`serde_json::from_str`]で[`FromStr`]の実装を追加するマクロ
+///
+/// # Example
+///
+/// ```ignore
+/// #[derive(serde::Deserialize)]
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// impl_from_str! {User}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// impl ::serde::Deserialize for User { ... }
+///
+/// impl ::std::str::FromStr for User {
+///     type Err = ::serde_json::Error;
+///     fn from_str(s: &str) -> ::std::result::Result<Self, Self::Error> {
+///         ::serde_json::from_str(s)
+///     }
+/// }
+/// ```
+///
+/// [`Deserialize`]: serde::Deserialize
+/// [`FromStr`]: std::str::FromStr
 macro_rules! impl_from_str {
     ($t:ty) => {
         impl ::std::str::FromStr for $t {
@@ -10,6 +44,42 @@ macro_rules! impl_from_str {
     };
 }
 
+/// [`Serialize`]を実装する型に[`serde_json::to_string`]で[`Display`]の実装を追加するマクロ
+///
+/// # Example
+///
+/// ```ignore
+/// #[derive(serde::Serialize)]
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// impl_display! {User}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// impl ::serde::Serialize for User { ... }
+///
+/// impl ::std::fmt::Display for User {
+///     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+///         write!(
+///             f,
+///             "{}",
+///             ::serde_json::to_string(self)
+///                 .expect("failed to serialize User")
+///         )
+///     }
+/// }
+/// ```
+///
+/// [`Serialize`]: serde::Serialize
+/// [`Display`]: std::fmt::Display
 macro_rules! impl_display {
     ($t:ty) => {
         impl ::std::fmt::Display for $t {
@@ -25,6 +95,41 @@ macro_rules! impl_display {
     };
 }
 
+/// [`Deserialize`]と[`Serialize`]を実装している型に[`FromStr`]と[`Display`]の実装を与えるマクロ
+///
+/// ref: [`impl_from_str`], [`impl_display`]
+///
+/// # Example
+///
+/// ```ignore
+/// #[derive(serde::Deserialize, serde::Serialize)]
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// payload_impl! {User}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// struct User {
+///     pub name: String,
+/// }
+///
+/// impl ::serde::Deserialize for User { ... }
+/// impl ::serde::Serialize for User { ... }
+///
+/// impl ::std::str::FromStr for User { ... }
+/// impl ::std::fmt::Display for User { ... }
+/// ```
+///
+/// [`Deserialize`]: serde::Deserialize
+/// [`Serialize`]: serde::Serialize
+/// [`FromStr`]: std::str::FromStr
+/// [`Display`]: std::fmt::Display
+/// [`impl_from_str`]: crate::macros::impl_from_str
+/// [`impl_display`]: crate::macros::impl_display
 macro_rules! payload_impl {
     ($t:ty) => {
         $crate::macros::impl_from_str! {$t}
@@ -32,6 +137,25 @@ macro_rules! payload_impl {
     };
 }
 
+/// イベントの種類名全てを適用するマクロ
+///
+/// # Example
+///
+/// ```ignore
+/// macro_rules! events_vec {
+///     ( $( $kind:ident ),* ) => {
+///         vec![ $( stringify!($kind) ),* ]
+///     };
+/// }
+///
+/// let events: Vec<&'staic str> = all_events!(events_vec);
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// let events: Vec<&'static str> = vec!["Ping", "Joined", ...];
+/// ```
 macro_rules! all_events {
     ($n:ident) => {
         $n!(
@@ -63,6 +187,23 @@ macro_rules! all_events {
     };
 }
 
+/// イベントペイロードの型に対して`From<t> for Event`の実装を与えるマクロ
+///
+/// # Example
+///
+/// ```ignore
+/// event_convert! {Ping}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// impl ::std::convert::From<PingPayload> for Event {
+///     fn from(event: PingPayload) -> Self {
+///         Event::Ping(event)
+///     }
+/// }
+/// ```
 macro_rules! event_convert {
     ($i:ident) => {
         ::paste::paste! {
@@ -75,12 +216,50 @@ macro_rules! event_convert {
     };
 }
 
+/// 複数のイベントペイロードに対して[`event_convert`]を適用するマクロ
+///
+/// # Example
+///
+/// ```ignore
+/// event_converts! {Ping, Joined}
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// impl ::std::convert::From<PingPayload> for Event { ... }
+/// impl ::std::convert::From<JoinedPayload> for Event { ... }
+/// ```
+///
+/// [`event_convert`]: crate::macros::event_convert
 macro_rules! event_converts {
     ($($i:ident),*) => {
         $($crate::macros::event_convert! {$i})*
     };
 }
 
+/// [`Event`]の値から[`EventKind`]への`match`を提供するマクロ。[`all_events`]と組み合わせること
+///
+/// # Example
+///
+/// ```ignore
+/// let event: Event = todo!();
+/// let kind: EventKind = match_event_to_kind!(event, Ping, Joined);
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// let event: Event = todo!()
+/// let kind: EventKind = match event {
+///     Event::Ping(_) => EventKind::Ping,
+///     Event::Joined(_) => EventKind::Joined,
+/// };
+/// ```
+///
+/// [`Event`]: crate::events::Event
+/// [`EventKind`]: crate::events::EventKind
+/// [`all_events`]: crate::macros::all_events
 macro_rules! match_event_to_kind {
     ($v:ident, $($i:ident),*) => {
         ::paste::paste! {
@@ -91,6 +270,27 @@ macro_rules! match_event_to_kind {
     };
 }
 
+/// [`EventKind`]の値から対応する文字列リテラルへの`match`を提供するマクロ。[`all_events`]と組み合わせること
+///
+/// # Example
+///
+/// ```ignore
+/// let kind: EventKind = todo!();
+/// let kind_str: &'static str = match_event_kinds_to_str(kind, Ping, Joined);
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// let kind: EventKind = todo!();
+/// let kind_str: &'static str = match kind {
+///     EventKind::Ping => "PING",
+///     EventKind::Joined => "Joined",
+/// }
+/// ```
+///
+/// [`EventKind`]: crate::events::EventKind
+/// [`all_events`]: crate::macros::all_events
 macro_rules! match_event_kinds_to_str {
     ($v:ident, $($i:ident),*) => {
         ::paste::paste! {
@@ -101,6 +301,24 @@ macro_rules! match_event_kinds_to_str {
     };
 }
 
+/// 文字列リテラルから対応する[`EventKind`]の値への`match`を提供するマクロ。[`all_events`]と組み合わせること
+///
+/// # Example
+///
+/// ```ignore
+/// let kind_str: &str = "PING";
+/// let kind: EventKind = match_str_to_event_kinds!(kind_str, Ping, Joined);
+/// ```
+///
+/// expands to:
+///
+/// ```ignore
+/// let kind_str: &str = "PING"
+/// let kind: EventKind = match kind_str {
+///     "PING" => EventKind::Ping,
+///     "JOINED" => EventKind::Joined,
+/// };
+/// ```
 macro_rules! match_str_to_event_kinds {
     ($v:ident, $($i:ident),*) => {
         ::paste::paste! {
