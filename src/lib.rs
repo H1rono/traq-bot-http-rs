@@ -9,11 +9,13 @@
 //!
 //! [examples](https://github.com/H1rono/traq-bot-http-rs/blob/main/examples)
 
+mod error;
 mod events;
 pub(crate) mod macros;
 mod parser;
 pub mod payloads;
 
+pub use error::{Error, ErrorKind, Result};
 pub use events::{Event, EventKind};
 pub use parser::ParseError;
 
