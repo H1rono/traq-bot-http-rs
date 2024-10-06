@@ -45,13 +45,13 @@ impl Error {
         }
     }
 
-    error_with_source! {pub(crate) ContentTypeNotFound}
+    error_with_source! {#[allow(dead_code)] pub(crate) ContentTypeNotFound}
     error_with_source! {pub(crate) ReadContentTypeFailed}
-    error_with_source! {pub(crate) ContentTypeMismatch}
-    error_with_source! {pub(crate) BotTokenNotFound}
+    error_with_source! {#[allow(dead_code)] pub(crate) ContentTypeMismatch}
+    error_with_source! {#[allow(dead_code)] pub(crate) BotTokenNotFound}
     error_with_source! {pub(crate) ReadBotTokenFailed}
-    error_with_source! {pub(crate) BotTokenMismatch}
-    error_with_source! {pub(crate) BotEventNotFound}
+    error_with_source! {#[allow(dead_code)] pub(crate) BotTokenMismatch}
+    error_with_source! {#[allow(dead_code)] pub(crate) BotEventNotFound}
     error_with_source! {pub(crate) ReadBotEventFailed}
     error_with_source! {pub(crate) BotEventMismatch}
     error_with_source! {pub(crate) ReadBodyFailed}
