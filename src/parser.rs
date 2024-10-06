@@ -1,21 +1,22 @@
 //! `struct RequestParser`と`enum ParseError`
 
-use std::{error::Error, fmt, str::from_utf8};
+use std::{fmt, str::from_utf8};
 
 use serde::Deserialize;
 
+use crate::error::{Error, ErrorKind, Result};
 use crate::macros::all_events;
 use crate::{Event, EventKind, RequestParser};
 
 /// ボディをDeserializeして`Event`に渡す
-fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event, ParseError>
+fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event>
 where
     T: Deserialize<'a>,
     F: Fn(T) -> Event,
 {
     serde_json::from_str(body)
         .map(f)
-        .map_err(|_| ParseError::ParseBodyFailed)
+        .map_err(Error::parse_body_failed)
 }
 
 // https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
@@ -84,7 +85,7 @@ impl RequestParser {
     ///
     /// [RFC9110 5.5]: https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
     /// [`new`]: RequestParser::new
-    pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
+    pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind>
     where
         H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
@@ -103,43 +104,43 @@ impl RequestParser {
             let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {
                 "content-type" => {
-                    let v = v.map_err(|_| ParseError::ReadContentTypeFailed)?;
+                    let v = v.map_err(Error::read_content_type_failed)?;
                     content_type = Some(v);
                 }
                 "x-traq-bot-token" => {
-                    let v = v.map_err(|_| ParseError::ReadBotTokenFailed)?;
+                    let v = v.map_err(Error::read_bot_token_failed)?;
                     token = Some(v);
                 }
                 "x-traq-bot-event" => {
-                    let v = v.map_err(|_| ParseError::ReadBotEventFailed)?;
+                    let v = v.map_err(Error::read_bot_event_failed)?;
                     kind = Some(v);
                 }
                 _ => continue,
             }
         }
         content_type
-            .ok_or(ParseError::ContentTypeNotFound)
+            .ok_or(ErrorKind::ContentTypeNotFound)
             .map(|ct| ct.starts_with("application/json"))?
             .then_some(())
-            .ok_or(ParseError::ContentTypeMismatch)?;
+            .ok_or(ErrorKind::ContentTypeMismatch)?;
         token
-            .ok_or(ParseError::BotTokenNotFound)
+            .ok_or(ErrorKind::BotTokenNotFound)
             .and_then(|t| {
                 valid_header_value(t)
                     .then_some(t)
-                    .ok_or(ParseError::ReadBotTokenFailed)
+                    .ok_or(ErrorKind::ReadBotTokenFailed)
             })
             .map(|t| t == self.verification_token)?
             .then_some(())
-            .ok_or(ParseError::BotTokenMismatch)?;
-        kind.ok_or(ParseError::BotEventNotFound)
+            .ok_or(ErrorKind::BotTokenMismatch)?;
+        kind.ok_or(ErrorKind::BotEventNotFound)
             .and_then(|k| {
                 valid_header_value(k)
                     .then_some(k)
-                    .ok_or(ParseError::ReadBotEventFailed)
+                    .ok_or(ErrorKind::ReadBotEventFailed)
             })?
             .parse()
-            .map_err(|_| ParseError::BotEventMismatch)
+            .map_err(Error::bot_event_mismatch)
     }
 
     /// HTTP POSTリクエストをパースします。
@@ -174,14 +175,14 @@ impl RequestParser {
     ///     [`Event`]のペイロードJSONとしてデシリアライズできなかった。
     ///
     /// [`parse_headers`]: RequestParser::parse_headers
-    pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
+    pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event>
     where
         H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
         let kind = self.parse_headers(headers)?;
-        let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
+        let body = from_utf8(body).map_err(Error::read_body_failed)?;
 
         macro_rules! match_kind_parse_body {
             ($( $k:ident ),*) => {
@@ -261,7 +262,7 @@ impl fmt::Display for ParseError {
     }
 }
 
-impl Error for ParseError {}
+impl std::error::Error for ParseError {}
 
 #[cfg(test)]
 mod tests {
@@ -294,55 +295,57 @@ mod tests {
         let parser = make_parser();
         let mut headers = HeaderMap::new();
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ContentTypeNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ContentTypeNotFound)
         );
         headers.insert(CONTENT_TYPE, "text/plain".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ContentTypeMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ContentTypeMismatch)
         );
         headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotTokenNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotTokenNotFound)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid　token".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ReadBotTokenFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBotTokenFailed)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid_token".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotTokenMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotTokenMismatch)
         );
         headers.insert(
             "X-TRAQ-BOT-TOKEN",
             "traqbotverificationtoken".parse().unwrap(),
         );
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotEventNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotEventNotFound)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid　event".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ReadBotEventFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBotEventFailed)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid_event".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotEventMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotEventMismatch)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, &[0, 159, 146, 150]),
-            Err(ParseError::ReadBodyFailed)
+            parser
+                .parse(&headers, &[0, 159, 146, 150])
+                .map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBodyFailed)
         );
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ParseBodyFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ParseBodyFailed)
         );
     }
 
