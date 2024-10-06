@@ -101,5 +101,3 @@ impl fmt::Display for ErrorKind {
         f.write_str(self.as_str())
     }
 }
-
-impl std::error::Error for ErrorKind {}
