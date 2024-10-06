@@ -9,6 +9,7 @@ pub struct Error {
     source: Option<Box<dyn std::error::Error + Send + Sync + 'static>>,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
@@ -78,7 +79,7 @@ impl std::error::Error for Error {
 }
 
 impl ErrorKind {
-    pub(crate) fn as_str(&self) -> &'static str {
+    pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::ContentTypeNotFound => "Content-Type is not set",
             Self::ReadContentTypeFailed => "Failed to read Content-Type value",
