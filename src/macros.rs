@@ -349,7 +349,7 @@ macro_rules! match_str_to_event_kinds {
         ::paste::paste! {
             match $v {
                 $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok(EventKind::$i), )*
-                _ => ::core::result::Result::Err($crate::ParseError::BotEventMismatch),
+                _ => ::core::result::Result::Err($crate::ErrorKind::BotEventMismatch.into()),
             }
         }
     };
