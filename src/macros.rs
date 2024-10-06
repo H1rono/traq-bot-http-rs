@@ -355,7 +355,7 @@ macro_rules! match_str_to_event_kinds {
     };
 }
 
-macro_rules! error_kinded_with_source {
+macro_rules! error_with_source {
     (
         $( #[$m:meta] )*
         $v:vis $k:ident
@@ -375,9 +375,9 @@ macro_rules! error_kinded_with_source {
 }
 
 pub(crate) use {
-    all_events, error_kinded_with_source, event_convert, event_converts, impl_display,
-    impl_from_str, match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds,
-    payload_impl, payloads_impl_for_kinds,
+    all_events, error_with_source, event_convert, event_converts, impl_display, impl_from_str,
+    match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
+    payloads_impl_for_kinds,
 };
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::macros::error_kinded_with_source;
+use crate::macros::error_with_source;
 
 #[must_use]
 #[derive(Debug)]
@@ -45,17 +45,17 @@ impl Error {
         }
     }
 
-    error_kinded_with_source! {pub(crate) ContentTypeNotFound}
-    error_kinded_with_source! {pub(crate) ReadContentTypeFailed}
-    error_kinded_with_source! {pub(crate) ContentTypeMismatch}
-    error_kinded_with_source! {pub(crate) BotTokenNotFound}
-    error_kinded_with_source! {pub(crate) ReadBotTokenFailed}
-    error_kinded_with_source! {pub(crate) BotTokenMismatch}
-    error_kinded_with_source! {pub(crate) BotEventNotFound}
-    error_kinded_with_source! {pub(crate) ReadBotEventFailed}
-    error_kinded_with_source! {pub(crate) BotEventMismatch}
-    error_kinded_with_source! {pub(crate) ReadBodyFailed}
-    error_kinded_with_source! {pub(crate) ParseBodyFailed}
+    error_with_source! {pub(crate) ContentTypeNotFound}
+    error_with_source! {pub(crate) ReadContentTypeFailed}
+    error_with_source! {pub(crate) ContentTypeMismatch}
+    error_with_source! {pub(crate) BotTokenNotFound}
+    error_with_source! {pub(crate) ReadBotTokenFailed}
+    error_with_source! {pub(crate) BotTokenMismatch}
+    error_with_source! {pub(crate) BotEventNotFound}
+    error_with_source! {pub(crate) ReadBotEventFailed}
+    error_with_source! {pub(crate) BotEventMismatch}
+    error_with_source! {pub(crate) ReadBodyFailed}
+    error_with_source! {pub(crate) ParseBodyFailed}
 }
 
 impl From<ErrorKind> for Error {
