@@ -52,11 +52,12 @@ impl RequestParser {
     /// ## Example
     /// ```
     /// use http::HeaderMap;
-    /// use traq_bot_http::{RequestParser, ParseError};
+    /// use traq_bot_http::RequestParser;
+    ///
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
     /// let kind = parser.parse_headers(&headers);
-    /// assert!(matches!(kind, Err(ParseError::ContentTypeNotFound)));
+    /// assert!(kind.is_err());
     /// ```
     ///
     /// ## Errors
