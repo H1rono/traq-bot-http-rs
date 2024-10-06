@@ -1,6 +1,6 @@
 //! `struct RequestParser`と`enum ParseError`
 
-use std::{fmt, str::from_utf8};
+use std::str::from_utf8;
 
 use serde::Deserialize;
 
@@ -197,72 +197,6 @@ impl RequestParser {
         all_events!(match_kind_parse_body)
     }
 }
-
-/// `RequestParser::parse`時のエラー型
-///
-/// ## Variants
-/// * `ContentTypeNotFound` - Content-Typeがヘッダーに含まれていない
-/// * `ReadContentTypeFailed` - Content-Typeの値を読み取れなかった
-/// * `ContentTypeMismatch` - Content-Typeの値がapplication/jsonで始まっていない
-/// * `BotTokenNotFound` - X-TRAQ-BOT-TOKENがヘッダーに含まれていない
-/// * `ReadBotTokenFailed` - X-TRAQ-BOT-TOKENの値を読み取れなかった3
-/// * `BotTokenMismatch` - X-TRAQ-BOT-TOKENの値がverification_tokenと等しくない
-/// * `BotEventNotFound` - X-TRAQ-BOT-EVENTがヘッダーに含まれていない
-/// * `ReadBotEventFailed` - X-TRAQ-BOT-EVENTの値を読み取れなかった
-/// * `BotEventMismatch` - X-TRAQ-BOT-EVENTの値がイベント名のいずれでもない
-/// * `ReadBodyFailed` - リクエストボディの値を読み取れなかった
-/// * `ParseBodyFailed` - リクエストボディの値をパースできなかった
-///
-/// ## Example
-/// ```
-/// use traq_bot_http::RequestParser;
-/// use traq_bot_http::ParseError;
-/// use http::HeaderMap;
-///
-/// let verification_token = "verification_token";
-/// let parser = RequestParser::new(verification_token);
-/// let headers = HeaderMap::new();
-/// let body = b"";
-/// assert_eq!(parser.parse(&headers, body), Err(ParseError::ContentTypeNotFound));
-/// ```
-#[must_use]
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ParseError {
-    ContentTypeNotFound,
-    ReadContentTypeFailed,
-    ContentTypeMismatch,
-    BotTokenNotFound,
-    ReadBotTokenFailed,
-    BotTokenMismatch,
-    BotEventNotFound,
-    ReadBotEventFailed,
-    BotEventMismatch,
-    ReadBodyFailed,
-    ParseBodyFailed,
-}
-
-impl fmt::Display for ParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let message = match self {
-            ParseError::ContentTypeNotFound => "Content-Type is not set",
-            ParseError::ReadContentTypeFailed => "Failed to read Content-Type value",
-            ParseError::ContentTypeMismatch => {
-                "Content-Type value is wrong; it must be application/json"
-            }
-            ParseError::BotTokenNotFound => "X-TRAQ-BOT-TOKEN is not set",
-            ParseError::ReadBotTokenFailed => "Failed to read X-TRAQ-BOT-TOKEN value",
-            ParseError::BotTokenMismatch => "X-TRAQ-BOT-TOKEN value is wrong",
-            ParseError::BotEventNotFound => "X-TRAQ-BOT-EVENT is not set",
-            ParseError::ReadBotEventFailed => "Failed to read X-TRAQ-BOT-EVENT value",
-            ParseError::BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
-            ParseError::ReadBodyFailed => "Failed to read request body",
-            ParseError::ParseBodyFailed => "Failed to parse request body",
-        };
-        write!(f, "{message}")
-    }
-}
-
-impl std::error::Error for ParseError {}
 
 #[cfg(test)]
 mod tests {

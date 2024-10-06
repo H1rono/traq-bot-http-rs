@@ -17,7 +17,6 @@ pub mod payloads;
 
 pub use error::{Error, ErrorKind, Result};
 pub use events::{Event, EventKind};
-pub use parser::ParseError;
 
 /// HTTP POSTリクエストのパーサー
 #[must_use]
