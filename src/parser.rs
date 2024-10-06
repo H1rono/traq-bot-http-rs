@@ -280,16 +280,6 @@ mod tests {
     }
 
     #[test]
-    fn parse_error_derives() {
-        use crate::test_utils::PARSE_ERROR_VARIANTS;
-        for variant in PARSE_ERROR_VARIANTS {
-            let error = variant.clone();
-            assert_eq!(&variant, &error);
-            assert_eq!(format!("{variant:?}"), format!("{error:?}"));
-        }
-    }
-
-    #[test]
     fn parse_failure() {
         use crate::test_utils::make_parser;
         let parser = make_parser();
@@ -347,44 +337,6 @@ mod tests {
             parser.parse(&headers, b"").map_err(|e| e.kind()),
             Err(ErrorKind::ParseBodyFailed)
         );
-    }
-
-    #[test]
-    fn err_display() {
-        let pairs = [
-            (ParseError::ContentTypeNotFound, "Content-Type is not set"),
-            (
-                ParseError::ReadContentTypeFailed,
-                "Failed to read Content-Type value",
-            ),
-            (
-                ParseError::ContentTypeMismatch,
-                "Content-Type value is wrong; it must be application/json",
-            ),
-            (ParseError::BotTokenNotFound, "X-TRAQ-BOT-TOKEN is not set"),
-            (
-                ParseError::ReadBotTokenFailed,
-                "Failed to read X-TRAQ-BOT-TOKEN value",
-            ),
-            (
-                ParseError::BotTokenMismatch,
-                "X-TRAQ-BOT-TOKEN value is wrong",
-            ),
-            (ParseError::BotEventNotFound, "X-TRAQ-BOT-EVENT is not set"),
-            (
-                ParseError::ReadBotEventFailed,
-                "Failed to read X-TRAQ-BOT-EVENT value",
-            ),
-            (
-                ParseError::BotEventMismatch,
-                "X-TRAQ-BOT-EVENT value is wrong",
-            ),
-            (ParseError::ReadBodyFailed, "Failed to read request body"),
-            (ParseError::ParseBodyFailed, "Failed to parse request body"),
-        ];
-        for (err, msg) in pairs {
-            assert_eq!(err.to_string(), *msg);
-        }
     }
 
     test_parse_payload! {"system", Ping}
