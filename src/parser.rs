@@ -1,4 +1,4 @@
-//! `struct RequestParser`と`enum ParseError`
+//! `struct RequestParser`の定義
 
 use std::str::from_utf8;
 
@@ -61,29 +61,30 @@ impl RequestParser {
     /// ```
     ///
     /// ## Errors
-    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
     ///
-    /// - [`ParseError::ReadContentTypeFailed`] :
+    /// - [`ErrorKind::ReadContentTypeFailed`] :
     ///     ヘッダー`Content-Type`の値をUTF8の文字列として解釈できなかった
-    /// - [`ParseError::ContentTypeNotFound`] :
+    /// - [`ErrorKind::ContentTypeNotFound`] :
     ///     ヘッダー`Content-Type`が見つからなかった
-    /// - [`ParseError::ContentTypeMismatch`] :
+    /// - [`ErrorKind::ContentTypeMismatch`] :
     ///     ヘッダー`Content-Type`の値が`application/json`で始まらない
-    /// - [`ParseError::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
+    /// - [`ErrorKind::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
-    /// - [`ParseError::BotTokenNotFound`] :
+    /// - [`ErrorKind::BotTokenNotFound`] :
     ///     ヘッダー`X-TRAQ-BOT-TOKEN`が見つからなかった
-    /// - [`ParseError::BotTokenMismatch`] :
+    /// - [`ErrorKind::BotTokenMismatch`] :
     ///     ヘッダー`X-TRAQ-BOT-TOKEN`の値が[`new`]で与えられたVerification Tokenと合わない
-    /// - [`ParseError::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
+    /// - [`ErrorKind::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
-    /// - [`ParseError::BotEventNotFound`] :
+    /// - [`ErrorKind::BotEventNotFound`] :
     ///     ヘッダー`X-TRAQ-BOT-EVENT`が見つからなかった
-    /// - [`ParseError::BotEventMismatch`] :
+    /// - [`ErrorKind::BotEventMismatch`] :
     ///     ヘッダー`X-TRAQ-BOT-EVENT`の値が[`EventKind`]の[`std::str::FromStr`]でパースできなかった
     ///
+    /// [`Error::kind`]: crate::Error::kind
     /// [RFC9110 5.5]: https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
     /// [`new`]: RequestParser::new
     pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind>
@@ -166,15 +167,16 @@ impl RequestParser {
     /// ```
     ///
     /// ## Errors
-    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
     ///
     /// - [`parse_headers`]で返されるもの
-    /// - [`ParseError::ReadBodyFailed`] :
+    /// - [`ErrorKind::ReadBodyFailed`] :
     ///     `body`をUTF8の文字列として解釈できなかった
-    /// - [`ParseError::ParseBodyFailed`] :
+    /// - [`ErrorKind::ParseBodyFailed`] :
     ///     `body`を[`parse_headers`]で返される[`EventKind`]に対応する
     ///     [`Event`]のペイロードJSONとしてデシリアライズできなかった。
     ///
+    /// [`Error::kind`]: crate::Error::kind
     /// [`parse_headers`]: RequestParser::parse_headers
     pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event>
     where
