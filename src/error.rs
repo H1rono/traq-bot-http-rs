@@ -1,7 +1,27 @@
+//! エラー型の定義
+
 use std::fmt;
 
 use crate::macros::error_with_source;
 
+/// リクエスト処理時に発生しうるエラー型です。発生したエラーの種類は[`Error::kind`]を参照してください。
+///
+/// ## Example
+/// ```
+/// use traq_bot_http::RequestParser;
+/// use http::HeaderMap;
+///
+/// let verification_token = "verification_token";
+/// let parser = RequestParser::new(verification_token);
+/// let headers = HeaderMap::new();
+/// let body = b"";
+/// let parsed = parser.parse(&headers, body);
+/// assert!(parsed.is_err());
+/// let error = parsed.unwrap_err();
+/// println!("{error}");
+/// ```
+///
+/// [`Error::kind`]: crate::error::Error::kind
 #[must_use]
 #[derive(Debug)]
 pub struct Error {
@@ -9,27 +29,50 @@ pub struct Error {
     source: Option<Box<dyn std::error::Error + Send + Sync + 'static>>,
 }
 
+/// 発生したエラーの種類です。 ([non-exhaustive](https://doc.rust-lang.org/reference/attributes/type_system.html))
 #[allow(clippy::module_name_repetitions)]
 #[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum ErrorKind {
+    /// Content-Typeがヘッダーに含まれていない
     ContentTypeNotFound,
+    /// Content-Typeの値を読み取れなかった
     ReadContentTypeFailed,
+    /// Content-Typeの値がapplication/jsonで始まっていない
     ContentTypeMismatch,
+    /// X-TRAQ-BOT-TOKENがヘッダーに含まれていない
     BotTokenNotFound,
+    /// X-TRAQ-BOT-TOKENの値を読み取れなかった
     ReadBotTokenFailed,
+    /// X-TRAQ-BOT-TOKENの値がverification_tokenと等しくない
     BotTokenMismatch,
+    /// X-TRAQ-BOT-EVENTがヘッダーに含まれていない
     BotEventNotFound,
+    /// X-TRAQ-BOT-EVENTの値を読み取れなかった
     ReadBotEventFailed,
+    /// X-TRAQ-BOT-EVENTの値がイベント名のいずれでもない
     BotEventMismatch,
+    /// リクエストボディの値を読み取れなかった
     ReadBodyFailed,
+    /// リクエストボディの値をパースできなかった
     ParseBodyFailed,
 }
 
+/// type alias
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
 impl Error {
+    /// 対応する[`ErrorKind`]を返します。
+    ///
+    /// ## Example
+    /// ```
+    /// use traq_bot_http::{Error, ErrorKind};
+    ///
+    /// let error_kind = ErrorKind::ContentTypeNotFound;
+    /// let error = Error::from(error_kind);
+    /// assert_eq!(error.kind(), error_kind);
+    /// ```
     pub fn kind(&self) -> ErrorKind {
         self.kind
     }
