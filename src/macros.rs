@@ -487,7 +487,48 @@ macro_rules! test_parse_payload {
 }
 
 #[cfg(test)]
+/// [`ErrorKind`] into [`Error`]および[`Error::kind`]のテストを生成するマクロ
+///
+/// [`ErrorKind`]: crate::error::ErrorKind
+/// [`Error`]: crate::error::Error
+/// [`Error::kind`]: crate::error::Error::kind
+macro_rules! test_error_kind_convert {
+    ($kind:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< error_kind_ $kind:snake:lower >]() {
+                let kind = ErrorKind::$kind;
+                let error = Error::from(kind);
+                assert_eq!(error.kind(), kind);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+/// [`ErrorKind`]のvariant全てを列挙するマクロ
+///
+/// [`ErrorKind`]: crate::error::ErrorKind
+macro_rules! all_error_kinds {
+    ($n:ident) => {
+        $n! {
+            ContentTypeNotFound,
+            ReadContentTypeFailed,
+            ContentTypeMismatch,
+            BotTokenNotFound,
+            ReadBotTokenFailed,
+            BotTokenMismatch,
+            BotEventNotFound,
+            ReadBotEventFailed,
+            BotEventMismatch,
+            ReadBodyFailed,
+            ParseBodyFailed
+        }
+    };
+}
+
+#[cfg(test)]
 pub(crate) use {
-    test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
-    test_parse_payload,
+    all_error_kinds, test_error_kind_convert, test_event_convert, test_event_kind_from_str,
+    test_event_kind_to_string, test_event_to_kind, test_parse_payload,
 };

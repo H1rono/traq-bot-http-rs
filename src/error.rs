@@ -144,3 +144,43 @@ impl fmt::Display for ErrorKind {
         f.write_str(self.as_str())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::macros::all_error_kinds;
+
+    fn assert_send_sync_static<T: Send + Sync + 'static>() {}
+    fn assert_display<T: std::fmt::Display>() {}
+    fn assert_error<T: std::error::Error>() {}
+
+    /// `A into B`
+    fn assert_convert<A, B>()
+    where
+        A: Into<B>,
+    {
+    }
+
+    #[test]
+    fn error_impl() {
+        assert_send_sync_static::<Error>();
+        assert_error::<Error>();
+        assert_convert::<ErrorKind, Error>();
+    }
+
+    #[test]
+    fn error_kind_impl() {
+        assert_send_sync_static::<ErrorKind>();
+        assert_display::<ErrorKind>();
+    }
+
+    macro_rules! tests_error_kind_convert {
+        ($( $kind:ident ),*) => {
+            $(
+                $crate::macros::test_error_kind_convert! {$kind}
+            )*
+        };
+    }
+
+    all_error_kinds! {tests_error_kind_convert}
+}
