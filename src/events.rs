@@ -184,7 +184,7 @@ impl Display for EventKind {
 }
 
 impl FromStr for EventKind {
-    type Err = crate::ParseError;
+    type Err = crate::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         macro_rules! match_s_to_event_kinds {

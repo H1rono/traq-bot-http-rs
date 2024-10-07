@@ -349,14 +349,33 @@ macro_rules! match_str_to_event_kinds {
         ::paste::paste! {
             match $v {
                 $( stringify!([< $i:snake:upper >]) => ::core::result::Result::Ok(EventKind::$i), )*
-                _ => ::core::result::Result::Err($crate::ParseError::BotEventMismatch),
+                _ => ::core::result::Result::Err($crate::ErrorKind::BotEventMismatch.into()),
+            }
+        }
+    };
+}
+
+macro_rules! error_with_source {
+    (
+        $( #[$m:meta] )*
+        $v:vis $k:ident
+    ) => {
+        ::paste::paste! {
+            $(#[$m])*
+            $v fn [< $k:snake >] <E>(source: E) -> Self
+            where
+                E: ::std::convert::Into<::std::boxed::Box<
+                    dyn ::std::error::Error + Send + Sync + 'static
+                >>,
+            {
+                Self::new($crate::error::ErrorKind::[< $k:camel >], source)
             }
         }
     };
 }
 
 pub(crate) use {
-    all_events, event_convert, event_converts, impl_display, impl_from_str,
+    all_events, error_with_source, event_convert, event_converts, impl_display, impl_from_str,
     match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
     payloads_impl_for_kinds,
 };
@@ -468,7 +487,48 @@ macro_rules! test_parse_payload {
 }
 
 #[cfg(test)]
+/// [`ErrorKind`] into [`Error`]および[`Error::kind`]のテストを生成するマクロ
+///
+/// [`ErrorKind`]: crate::error::ErrorKind
+/// [`Error`]: crate::error::Error
+/// [`Error::kind`]: crate::error::Error::kind
+macro_rules! test_error_kind_convert {
+    ($kind:ident) => {
+        ::paste::paste! {
+            #[test]
+            fn [< error_kind_ $kind:snake:lower >]() {
+                let kind = ErrorKind::$kind;
+                let error = Error::from(kind);
+                assert_eq!(error.kind(), kind);
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+/// [`ErrorKind`]のvariant全てを列挙するマクロ
+///
+/// [`ErrorKind`]: crate::error::ErrorKind
+macro_rules! all_error_kinds {
+    ($n:ident) => {
+        $n! {
+            ContentTypeNotFound,
+            ReadContentTypeFailed,
+            ContentTypeMismatch,
+            BotTokenNotFound,
+            ReadBotTokenFailed,
+            BotTokenMismatch,
+            BotEventNotFound,
+            ReadBotEventFailed,
+            BotEventMismatch,
+            ReadBodyFailed,
+            ParseBodyFailed
+        }
+    };
+}
+
+#[cfg(test)]
 pub(crate) use {
-    test_event_convert, test_event_kind_from_str, test_event_kind_to_string, test_event_to_kind,
-    test_parse_payload,
+    all_error_kinds, test_error_kind_convert, test_event_convert, test_event_kind_from_str,
+    test_event_kind_to_string, test_event_to_kind, test_parse_payload,
 };
