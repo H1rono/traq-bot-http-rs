@@ -101,7 +101,7 @@ all_events! {event_converts}
 /// # }
 /// ```
 #[must_use]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum EventKind {
     /// ボットの接続確認
