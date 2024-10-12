@@ -23,7 +23,7 @@ traQ BOTのPOSTリクエストをパースするライブラリです。
 http = "1.0"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
-traq-bot-http = "0.9"
+traq-bot-http = { version = "HEAD", features = ["http"] }
 ```
 
 `main.rs`
@@ -31,8 +31,9 @@ traq-bot-http = "0.9"
 ```rust
 use std::{env, net::SocketAddr};
 
-use axum::{body::Bytes, extract::State, routing::post, Router};
-use http::{HeaderMap, StatusCode};
+use axum::extract::{Request, State};
+use axum::{routing::post, Router};
+use http::StatusCode;
 use tokio::net::TcpListener;
 
 use traq_bot_http::{Event, RequestParser};
@@ -47,12 +48,8 @@ async fn main() {
     axum::serve(server, app).await.unwrap();
 }
 
-async fn handler(
-    State(parser): State<RequestParser>,
-    headers: HeaderMap,
-    body: Bytes,
-) -> StatusCode {
-    match parser.parse(&headers, &body) {
+async fn handler(State(parser): State<RequestParser>, request: Request) -> StatusCode {
+    match parser.parse_request(request).await {
         Ok(Event::MessageCreated(payload)) => {
             print!(
                 "{}さんがメッセージを投稿しました。\n内容: {}\n",
