@@ -1,21 +1,22 @@
-//! `struct RequestParser`と`enum ParseError`
+//! `struct RequestParser`の定義
 
-use std::{error::Error, fmt, str::from_utf8};
+use std::str::from_utf8;
 
 use serde::Deserialize;
 
+use crate::error::{Error, ErrorKind, Result};
 use crate::macros::all_events;
 use crate::{Event, EventKind, RequestParser};
 
 /// ボディをDeserializeして`Event`に渡す
-fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event, ParseError>
+fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event>
 where
     T: Deserialize<'a>,
     F: Fn(T) -> Event,
 {
     serde_json::from_str(body)
         .map(f)
-        .map_err(|_| ParseError::ParseBodyFailed)
+        .map_err(Error::parse_body_failed)
 }
 
 // https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
@@ -51,40 +52,42 @@ impl RequestParser {
     /// ## Example
     /// ```
     /// use http::HeaderMap;
-    /// use traq_bot_http::{RequestParser, ParseError};
+    /// use traq_bot_http::RequestParser;
+    ///
     /// let parser = RequestParser::new("verification_token");
     /// let headers = HeaderMap::new();
     /// let kind = parser.parse_headers(&headers);
-    /// assert!(matches!(kind, Err(ParseError::ContentTypeNotFound)));
+    /// assert!(kind.is_err());
     /// ```
     ///
     /// ## Errors
-    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
     ///
-    /// - [`ParseError::ReadContentTypeFailed`] :
+    /// - [`ErrorKind::ReadContentTypeFailed`] :
     ///     ヘッダー`Content-Type`の値をUTF8の文字列として解釈できなかった
-    /// - [`ParseError::ContentTypeNotFound`] :
+    /// - [`ErrorKind::ContentTypeNotFound`] :
     ///     ヘッダー`Content-Type`が見つからなかった
-    /// - [`ParseError::ContentTypeMismatch`] :
+    /// - [`ErrorKind::ContentTypeMismatch`] :
     ///     ヘッダー`Content-Type`の値が`application/json`で始まらない
-    /// - [`ParseError::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
+    /// - [`ErrorKind::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
-    /// - [`ParseError::BotTokenNotFound`] :
+    /// - [`ErrorKind::BotTokenNotFound`] :
     ///     ヘッダー`X-TRAQ-BOT-TOKEN`が見つからなかった
-    /// - [`ParseError::BotTokenMismatch`] :
+    /// - [`ErrorKind::BotTokenMismatch`] :
     ///     ヘッダー`X-TRAQ-BOT-TOKEN`の値が[`new`]で与えられたVerification Tokenと合わない
-    /// - [`ParseError::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
+    /// - [`ErrorKind::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
-    /// - [`ParseError::BotEventNotFound`] :
+    /// - [`ErrorKind::BotEventNotFound`] :
     ///     ヘッダー`X-TRAQ-BOT-EVENT`が見つからなかった
-    /// - [`ParseError::BotEventMismatch`] :
+    /// - [`ErrorKind::BotEventMismatch`] :
     ///     ヘッダー`X-TRAQ-BOT-EVENT`の値が[`EventKind`]の[`std::str::FromStr`]でパースできなかった
     ///
+    /// [`Error::kind`]: crate::Error::kind
     /// [RFC9110 5.5]: https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
     /// [`new`]: RequestParser::new
-    pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind, ParseError>
+    pub fn parse_headers<'a, H, K, V>(&self, headers: H) -> Result<EventKind>
     where
         H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
@@ -103,43 +106,43 @@ impl RequestParser {
             let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {
                 "content-type" => {
-                    let v = v.map_err(|_| ParseError::ReadContentTypeFailed)?;
+                    let v = v.map_err(Error::read_content_type_failed)?;
                     content_type = Some(v);
                 }
                 "x-traq-bot-token" => {
-                    let v = v.map_err(|_| ParseError::ReadBotTokenFailed)?;
+                    let v = v.map_err(Error::read_bot_token_failed)?;
                     token = Some(v);
                 }
                 "x-traq-bot-event" => {
-                    let v = v.map_err(|_| ParseError::ReadBotEventFailed)?;
+                    let v = v.map_err(Error::read_bot_event_failed)?;
                     kind = Some(v);
                 }
                 _ => continue,
             }
         }
         content_type
-            .ok_or(ParseError::ContentTypeNotFound)
+            .ok_or(ErrorKind::ContentTypeNotFound)
             .map(|ct| ct.starts_with("application/json"))?
             .then_some(())
-            .ok_or(ParseError::ContentTypeMismatch)?;
+            .ok_or(ErrorKind::ContentTypeMismatch)?;
         token
-            .ok_or(ParseError::BotTokenNotFound)
+            .ok_or(ErrorKind::BotTokenNotFound)
             .and_then(|t| {
                 valid_header_value(t)
                     .then_some(t)
-                    .ok_or(ParseError::ReadBotTokenFailed)
+                    .ok_or(ErrorKind::ReadBotTokenFailed)
             })
             .map(|t| t == self.verification_token)?
             .then_some(())
-            .ok_or(ParseError::BotTokenMismatch)?;
-        kind.ok_or(ParseError::BotEventNotFound)
+            .ok_or(ErrorKind::BotTokenMismatch)?;
+        kind.ok_or(ErrorKind::BotEventNotFound)
             .and_then(|k| {
                 valid_header_value(k)
                     .then_some(k)
-                    .ok_or(ParseError::ReadBotEventFailed)
+                    .ok_or(ErrorKind::ReadBotEventFailed)
             })?
             .parse()
-            .map_err(|_| ParseError::BotEventMismatch)
+            .map_err(Error::bot_event_mismatch)
     }
 
     /// HTTP POSTリクエストをパースします。
@@ -164,24 +167,25 @@ impl RequestParser {
     /// ```
     ///
     /// ## Errors
-    /// [`ParseError`]のうち、以下のものを返す可能性があります。
+    /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
     ///
     /// - [`parse_headers`]で返されるもの
-    /// - [`ParseError::ReadBodyFailed`] :
+    /// - [`ErrorKind::ReadBodyFailed`] :
     ///     `body`をUTF8の文字列として解釈できなかった
-    /// - [`ParseError::ParseBodyFailed`] :
+    /// - [`ErrorKind::ParseBodyFailed`] :
     ///     `body`を[`parse_headers`]で返される[`EventKind`]に対応する
     ///     [`Event`]のペイロードJSONとしてデシリアライズできなかった。
     ///
+    /// [`Error::kind`]: crate::Error::kind
     /// [`parse_headers`]: RequestParser::parse_headers
-    pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event, ParseError>
+    pub fn parse<'a, H, K, V>(&self, headers: H, body: &[u8]) -> Result<Event>
     where
         H: IntoIterator<Item = (&'a K, &'a V)>,
         K: AsRef<[u8]> + ?Sized + 'static,
         V: AsRef<[u8]> + ?Sized + 'static,
     {
         let kind = self.parse_headers(headers)?;
-        let body = from_utf8(body).map_err(|_| ParseError::ReadBodyFailed)?;
+        let body = from_utf8(body).map_err(Error::read_body_failed)?;
 
         macro_rules! match_kind_parse_body {
             ($( $k:ident ),*) => {
@@ -196,72 +200,6 @@ impl RequestParser {
         all_events!(match_kind_parse_body)
     }
 }
-
-/// `RequestParser::parse`時のエラー型
-///
-/// ## Variants
-/// * `ContentTypeNotFound` - Content-Typeがヘッダーに含まれていない
-/// * `ReadContentTypeFailed` - Content-Typeの値を読み取れなかった
-/// * `ContentTypeMismatch` - Content-Typeの値がapplication/jsonで始まっていない
-/// * `BotTokenNotFound` - X-TRAQ-BOT-TOKENがヘッダーに含まれていない
-/// * `ReadBotTokenFailed` - X-TRAQ-BOT-TOKENの値を読み取れなかった3
-/// * `BotTokenMismatch` - X-TRAQ-BOT-TOKENの値がverification_tokenと等しくない
-/// * `BotEventNotFound` - X-TRAQ-BOT-EVENTがヘッダーに含まれていない
-/// * `ReadBotEventFailed` - X-TRAQ-BOT-EVENTの値を読み取れなかった
-/// * `BotEventMismatch` - X-TRAQ-BOT-EVENTの値がイベント名のいずれでもない
-/// * `ReadBodyFailed` - リクエストボディの値を読み取れなかった
-/// * `ParseBodyFailed` - リクエストボディの値をパースできなかった
-///
-/// ## Example
-/// ```
-/// use traq_bot_http::RequestParser;
-/// use traq_bot_http::ParseError;
-/// use http::HeaderMap;
-///
-/// let verification_token = "verification_token";
-/// let parser = RequestParser::new(verification_token);
-/// let headers = HeaderMap::new();
-/// let body = b"";
-/// assert_eq!(parser.parse(&headers, body), Err(ParseError::ContentTypeNotFound));
-/// ```
-#[must_use]
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ParseError {
-    ContentTypeNotFound,
-    ReadContentTypeFailed,
-    ContentTypeMismatch,
-    BotTokenNotFound,
-    ReadBotTokenFailed,
-    BotTokenMismatch,
-    BotEventNotFound,
-    ReadBotEventFailed,
-    BotEventMismatch,
-    ReadBodyFailed,
-    ParseBodyFailed,
-}
-
-impl fmt::Display for ParseError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let message = match self {
-            ParseError::ContentTypeNotFound => "Content-Type is not set",
-            ParseError::ReadContentTypeFailed => "Failed to read Content-Type value",
-            ParseError::ContentTypeMismatch => {
-                "Content-Type value is wrong; it must be application/json"
-            }
-            ParseError::BotTokenNotFound => "X-TRAQ-BOT-TOKEN is not set",
-            ParseError::ReadBotTokenFailed => "Failed to read X-TRAQ-BOT-TOKEN value",
-            ParseError::BotTokenMismatch => "X-TRAQ-BOT-TOKEN value is wrong",
-            ParseError::BotEventNotFound => "X-TRAQ-BOT-EVENT is not set",
-            ParseError::ReadBotEventFailed => "Failed to read X-TRAQ-BOT-EVENT value",
-            ParseError::BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
-            ParseError::ReadBodyFailed => "Failed to read request body",
-            ParseError::ParseBodyFailed => "Failed to parse request body",
-        };
-        write!(f, "{message}")
-    }
-}
-
-impl Error for ParseError {}
 
 #[cfg(test)]
 mod tests {
@@ -279,109 +217,63 @@ mod tests {
     }
 
     #[test]
-    fn parse_error_derives() {
-        use crate::test_utils::PARSE_ERROR_VARIANTS;
-        for variant in PARSE_ERROR_VARIANTS {
-            let error = variant.clone();
-            assert_eq!(&variant, &error);
-            assert_eq!(format!("{variant:?}"), format!("{error:?}"));
-        }
-    }
-
-    #[test]
     fn parse_failure() {
         use crate::test_utils::make_parser;
         let parser = make_parser();
         let mut headers = HeaderMap::new();
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ContentTypeNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ContentTypeNotFound)
         );
         headers.insert(CONTENT_TYPE, "text/plain".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ContentTypeMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ContentTypeMismatch)
         );
         headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotTokenNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotTokenNotFound)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid　token".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ReadBotTokenFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBotTokenFailed)
         );
         headers.insert("X-TRAQ-BOT-TOKEN", "invalid_token".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotTokenMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotTokenMismatch)
         );
         headers.insert(
             "X-TRAQ-BOT-TOKEN",
             "traqbotverificationtoken".parse().unwrap(),
         );
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotEventNotFound)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotEventNotFound)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid　event".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ReadBotEventFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBotEventFailed)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "invalid_event".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::BotEventMismatch)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::BotEventMismatch)
         );
         headers.insert("X-TRAQ-BOT-EVENT", "PING".parse().unwrap());
         assert_eq!(
-            parser.parse(&headers, &[0, 159, 146, 150]),
-            Err(ParseError::ReadBodyFailed)
+            parser
+                .parse(&headers, &[0, 159, 146, 150])
+                .map_err(|e| e.kind()),
+            Err(ErrorKind::ReadBodyFailed)
         );
         assert_eq!(
-            parser.parse(&headers, b""),
-            Err(ParseError::ParseBodyFailed)
+            parser.parse(&headers, b"").map_err(|e| e.kind()),
+            Err(ErrorKind::ParseBodyFailed)
         );
-    }
-
-    #[test]
-    fn err_display() {
-        let pairs = [
-            (ParseError::ContentTypeNotFound, "Content-Type is not set"),
-            (
-                ParseError::ReadContentTypeFailed,
-                "Failed to read Content-Type value",
-            ),
-            (
-                ParseError::ContentTypeMismatch,
-                "Content-Type value is wrong; it must be application/json",
-            ),
-            (ParseError::BotTokenNotFound, "X-TRAQ-BOT-TOKEN is not set"),
-            (
-                ParseError::ReadBotTokenFailed,
-                "Failed to read X-TRAQ-BOT-TOKEN value",
-            ),
-            (
-                ParseError::BotTokenMismatch,
-                "X-TRAQ-BOT-TOKEN value is wrong",
-            ),
-            (ParseError::BotEventNotFound, "X-TRAQ-BOT-EVENT is not set"),
-            (
-                ParseError::ReadBotEventFailed,
-                "Failed to read X-TRAQ-BOT-EVENT value",
-            ),
-            (
-                ParseError::BotEventMismatch,
-                "X-TRAQ-BOT-EVENT value is wrong",
-            ),
-            (ParseError::ReadBodyFailed, "Failed to read request body"),
-            (ParseError::ParseBodyFailed, "Failed to parse request body"),
-        ];
-        for (err, msg) in pairs {
-            assert_eq!(err.to_string(), *msg);
-        }
     }
 
     test_parse_payload! {"system", Ping}
