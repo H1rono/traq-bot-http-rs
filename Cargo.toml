@@ -38,8 +38,24 @@ version = "0.4"
 optional = true
 features = ["serde"]
 
+[dependencies.http]
+version = "1"
+features = []
+optional = true
+
+[dependencies.http-body]
+version = "1"
+features = []
+optional = true
+
+[dependencies.http-body-util]
+version = "0.1"
+features = []
+optional = true
+
 [dev-dependencies]
-http = "1.1"
+http = "1"
+futures = { version = "0.3", features = ["executor"] }
 
 [features]
 uuid = ["dep:uuid"]
