@@ -61,3 +61,4 @@ futures = { version = "0.3", features = ["executor"] }
 uuid = ["dep:uuid"]
 time = ["dep:time"]
 chrono = ["dep:chrono"]
+http = ["dep:http", "dep:http-body", "dep:http-body-util"]
