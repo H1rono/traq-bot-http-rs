@@ -28,7 +28,12 @@ jobs:
   update-lockfile:
     runs-on: ubuntu-latest
     needs: check-update
-    if: needs.check-update.outputs.has_diff == 'true'
+    # いつforkされてもいいように
+    if: >-
+      needs.check-update.outputs.has_diff == 'true' && (
+        github.repository_owner == 'H1rono' ||
+        github.repository_owner == 'h1rono'
+      )
     permissions:
       contents: write
       pull-requests: write
