@@ -205,6 +205,8 @@ impl RequestParser {
 impl RequestParser {
     /// [`http::Request`]をパースします。
     ///
+    /// **Note**: この関数は`http`featureが有効になっている時のみ有効です。
+    ///
     /// ## Arguments
     /// * `request`: リクエスト全体
     ///
