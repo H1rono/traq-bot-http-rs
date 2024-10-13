@@ -1,0 +1,54 @@
+name: Update cargo lockfile
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    outputs:
+      has_diff: ${{ steps.check-diff.outputs.has_diff }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update
+        run: cargo update --workspace
+      - name: Check diff
+        id: check-diff
+        run: |
+          if git diff --exit-code Cargo.lock > /dev/null; then
+            echo "has_diff=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_diff=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  update-lockfile:
+    runs-on: ubuntu-latest
+    needs: check-update
+    if: needs.check-update.outputs.has_diff == 'true'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update
+        run: cargo update --workspace
+      - name: git commit and push
+        run: |
+          git config user.name "H1rono"
+          git config user.email "54711422+H1rono@users.noreply.github.com"
+          BRANCH_NAME="update-$(date +'%Y%m%d%H%M%S')"
+          git switch -c "$BRANCH_NAME"
+          git add Cargo.lock
+          git commit -m ":arrow_up: CI: update lockfile"
+          git push origin "$BRANCH_NAME"
+      - name: Create pull request
+        run: |
+          gh pr create --title ":arrow_up: CI: update lockfile" --body "" --base main --assignee H1rono
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
