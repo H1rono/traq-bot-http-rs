@@ -23,7 +23,7 @@ traQ BOTのPOSTリクエストをパースするライブラリです。
 http = "1.0"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
-traq-bot-http = "0.9"
+traq-bot-http = { version = "HEAD", features = ["http"] }
 ```
 
 `main.rs`
@@ -31,8 +31,9 @@ traq-bot-http = "0.9"
 ```rust
 use std::{env, net::SocketAddr};
 
-use axum::{body::Bytes, extract::State, routing::post, Router};
-use http::{HeaderMap, StatusCode};
+use axum::extract::{Request, State};
+use axum::{routing::post, Router};
+use http::StatusCode;
 use tokio::net::TcpListener;
 
 use traq_bot_http::{Event, RequestParser};
@@ -47,12 +48,8 @@ async fn main() {
     axum::serve(server, app).await.unwrap();
 }
 
-async fn handler(
-    State(parser): State<RequestParser>,
-    headers: HeaderMap,
-    body: Bytes,
-) -> StatusCode {
-    match parser.parse(&headers, &body) {
+async fn handler(State(parser): State<RequestParser>, request: Request) -> StatusCode {
+    match parser.parse_request(request).await {
         Ok(Event::MessageCreated(payload)) => {
             print!(
                 "{}さんがメッセージを投稿しました。\n内容: {}\n",
@@ -76,6 +73,7 @@ feature | 機能 | バージョン
 `uuid` | ペイロードのUUID値が[`uuid::Uuid`](https://docs.rs/uuid/latest/uuid/struct.Uuid.html)型に | [v0.4.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.4.0)から
 `time` | ペイロードのタイムスタンプ値([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))が[`time::OffsetDateTime`](https://docs.rs/time/latest/time/struct.OffsetDateTime.html)型に | [v0.5.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.5.0)から
 `chrono` | ペイロードのタイムスタンプ値が[`chrono::DateTime<chrono::Utc>`](https://docs.rs/chrono/latest/chrono/struct.DateTime.html)型に | [v0.6.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.6.0)から
+`http` | [`http::Request`](https://docs.rs/http/latest/http/request/struct.Request.html)型のサポート | HEAD
 
 ※`time`よりも`chrono`の方が優先されます
 

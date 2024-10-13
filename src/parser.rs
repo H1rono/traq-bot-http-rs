@@ -201,6 +201,62 @@ impl RequestParser {
     }
 }
 
+#[cfg(feature = "http")]
+impl RequestParser {
+    /// [`http::Request`]をパースします。
+    ///
+    /// ## Arguments
+    /// * `request`: リクエスト全体
+    ///
+    /// ## Example
+    /// ```
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let res: Result<(), Box<dyn std::error::Error>> = futures::executor::block_on(async {
+    /// use traq_bot_http::{EventKind, RequestParser};
+    ///
+    /// let verification_token = "verification_token";
+    /// let body = r#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#.to_string();
+    /// let request = http::Request::builder()
+    ///     .method(http::Method::POST)
+    ///     .header(http::header::CONTENT_TYPE, "application/json")
+    ///     .header("X-TRAQ-BOT-TOKEN", verification_token)
+    ///     .header("X-TRAQ-BOT-EVENT", "PING")
+    ///     .body(body)?;
+    /// let parser = RequestParser::new(verification_token);
+    /// let event = parser.parse_request(request).await?;
+    /// assert_eq!(event.kind(), EventKind::Ping);
+    /// # Ok(())
+    /// # });
+    /// # res
+    /// # }
+    /// ```
+    ///
+    /// ## Errors
+    /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
+    ///
+    /// - [`parse`]で返されるもの
+    /// - [`ErrorKind::ReadBodyFailed`] :
+    ///     リクエストボディの読み込みに失敗した
+    ///
+    /// [`Error::kind`]: crate::Error::kind
+    /// [`parse`]: RequestParser::parse
+    pub async fn parse_request<B>(&self, request: http::Request<B>) -> Result<Event>
+    where
+        B: http_body::Body,
+        B::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    {
+        use http_body_util::BodyExt;
+
+        let (parts, body) = request.into_parts();
+        let body = body
+            .collect()
+            .await
+            .map_err(Error::read_body_failed)?
+            .to_bytes();
+        self.parse(&parts.headers, &body)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
