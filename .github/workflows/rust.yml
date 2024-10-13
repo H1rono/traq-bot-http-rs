@@ -14,21 +14,31 @@ env:
   GRCOV_VERSION: "0.8.19"
 
 jobs:
-  nix-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install nix
-        uses: cachix/install-nix-action@v29
-        with:
-          nix_path: "nixpkgs=channel:release-23.05"
-      - name: Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Checks
-        run: nix flake check
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
       - name: Build
-        run: nix build
+        run: |
+          cargo build --workspace
+          cargo build --package traq-bot-http --no-default-features
+          cargo build --package traq-bot-http --features time
+          cargo build --package traq-bot-http --features 'uuid chrono'
+          cargo build --package traq-bot-http --features http
+          cargo build --package traq-bot-http --all-features
+      - name: Lint
+        run: |
+          cargo clippy --workspace -- -D warnings
+          cargo clippy --package traq-bot-http --no-default-features -- -D warnings
+          cargo clippy --package traq-bot-http --features 'uuid time' -- -D warnings
+          cargo clippy --package traq-bot-http --features 'chrono http' -- -D warnings
+          cargo clippy --package traq-bot-http --all-features -- -D warnings
+      - name: Format
+        run: |
+          cargo fmt --all --check
 
   coverage:
     runs-on: ubuntu-latest
