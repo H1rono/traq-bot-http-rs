@@ -5,24 +5,6 @@
 
 version: 2
 updates:
-  - package-ecosystem: "cargo" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "H1rono"
-  - package-ecosystem: "cargo"
-    directory: "/examples/basic-with-axum"
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "H1rono"
-  - package-ecosystem: "cargo"
-    directory: "/examples/basic-with-rocket"
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "H1rono"
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
