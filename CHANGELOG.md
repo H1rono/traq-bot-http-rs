@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.10.0] - 2024-10-13
+
+### Added
+
+- `http`featureを追加
+- `RequestParser::parse_request`を追加
+    - `http`featureを有効にすると使用可能になります
+- エラー型の変更に伴って`Error`型, `ErrorKind`型, `Result`型エイリアスを追加
+
+### Changed
+
+- `RequestParser::parse`などで返されるエラー型を変更
+    - `ParseError`型から`Error`型へ
+- axumを使用したexampleコードを, `http`featureを利用したものに変更
+
+### Removed
+
+- エラー型の変更に伴って`ParseError`型を削除
+
+### For Developers
+
+- GitHub ActionsからNixへの依存を削除
+- dev-dependenciesに`futures`crateを追加
+- GitHub Actions, Nix Flakesの依存関係を更新
+
 ## [v0.9.1] - 2024-09-14
 
 ### Added
@@ -37,6 +62,7 @@ and this project adheres to [Semantic Versioning].
 
 ### For Developers
 
+- Cargoの依存関係をDependabotの管理対象から削除
 - GitHub Actions, Nix Flakesの依存関係を更新
 
 ## [v0.8.3] - 2024-04-13
@@ -288,6 +314,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.10.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.1..v0.10.0
 [v0.9.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.0..v0.9.1
 [v0.9.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.3..v0.9.0
 [v0.8.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.2..v0.8.3
