@@ -43,9 +43,9 @@ where
 
 #[must_use]
 #[derive(Debug, Clone, Copy, Default, Hash)]
-pub struct HandlerSink;
+pub struct Sink;
 
-impl<T> Service<T> for HandlerSink {
+impl<T> Service<T> for Sink {
     type Response = ();
     type Error = Infallible;
     type Future = ReadyFuture<Result<(), Infallible>>;
@@ -76,9 +76,9 @@ macro_rules! all_event_service {
 all_events! {all_event_service}
 
 impl RequestParser {
-    pub fn into_handler(self) -> Handler<HandlerSink> {
+    pub fn into_handler(self) -> Handler<Sink> {
         Handler {
-            service: HandlerSink,
+            service: Sink,
             parser: self,
         }
     }
@@ -122,12 +122,11 @@ where
         std::mem::swap(self, &mut s);
         Box::pin(async move {
             let event = s.parser.parse_request(req).await?;
-            let _ = s.service.call(event).await.map_err(Error::handler)?;
-            let res = Response::builder()
+            s.service.call(event).await.map_err(Error::handler)?;
+            Response::builder()
                 .status(StatusCode::NO_CONTENT)
                 .body(String::new())
-                .map_err(Error::handler)?;
-            Ok(res)
+                .map_err(Error::handler)
         })
     }
 }

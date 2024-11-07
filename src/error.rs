@@ -102,7 +102,8 @@ impl Error {
     error_with_source! {pub(crate) BotEventMismatch}
     error_with_source! {pub(crate) ReadBodyFailed}
     error_with_source! {pub(crate) ParseBodyFailed}
-    error_with_source! {pub(crate) Handler}
+    // cfg(not(feature = "tower")) でdead_codeになる
+    error_with_source! {#[allow(dead_code)] pub(crate) Handler}
 }
 
 impl From<ErrorKind> for Error {
