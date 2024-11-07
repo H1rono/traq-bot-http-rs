@@ -374,11 +374,120 @@ macro_rules! error_with_source {
     };
 }
 
+#[cfg(feature = "tower")]
+macro_rules! event_service {
+    (
+        $( #[$m:meta] )*
+        $v:vis $e:ident
+    ) => { ::paste::paste! {
+        $( #[$m] )*
+        $v struct
+        [< $e:camel Service >] <Service, Fallback>
+        {
+            inner: Service,
+            fallback: Fallback,
+        }
+
+        impl<Event, Service, Fallback> ::tower::Service<Event>
+        for [< $e:camel Service >] <Service, Fallback>
+        where
+            Event: ::std::convert::Into<$crate::Event>,
+            Service: ::tower::Service<
+            $crate::payloads::[< $e:camel Payload >],
+                Response = (),
+            >,
+            Service::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+            Fallback: ::tower::Service<$crate::Event, Response = ()>,
+            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+        {
+            type Response = ();
+            type Error = $crate::Error;
+            type Future = ::futures::future::Either<
+                $crate::handler::WrapErrorFuture<Service::Future, Service::Error>,
+                $crate::handler::WrapErrorFuture<Fallback::Future, Fallback::Error>,
+            >;
+
+            fn poll_ready(&mut self, cx: &mut ::std::task::Context<'_>)
+            -> ::std::task::Poll<::std::result::Result<(), Self::Error>>
+            {
+                if let ::std::result::Result::Err(e)
+                    = ::futures::ready!(self.inner.poll_ready(cx))
+                {
+                    return ::std::task::Poll::Ready(::std::result::Result::Err(
+                        $crate::Error::handler(e)
+                    ));
+                }
+                if let ::std::result::Result::Err(e)
+                    = ::futures::ready!(self.fallback.poll_ready(cx))
+                {
+                    return ::std::task::Poll::Ready(::std::result::Result::Err(
+                        $crate::Error::handler(e)
+                    ));
+                }
+                ::std::task::Poll::Ready(::std::result::Result::Ok(()))
+            }
+
+            fn call(&mut self, req: Event) -> Self::Future {
+                match req.into() {
+                    $crate::Event::[< $e:camel >] (e) => {
+                        ::futures::future::Either::Left($crate::handler::WrapErrorFuture {
+                            _error: ::std::marker::PhantomData,
+                            inner: self.inner.call(e),
+                        })
+                    },
+                    event => {
+                        ::futures::future::Either::Right($crate::handler::WrapErrorFuture {
+                            _error: ::std::marker::PhantomData,
+                            inner: self.fallback.call(event)
+                        })
+                    }
+                }
+            }
+        }
+    }};
+}
+
+#[cfg(feature = "tower")]
+macro_rules! handler_on_events {
+    ($(
+        $( #[$m:meta] )*
+        $v:vis $e:ident;
+    )+) => { ::paste::paste! {
+        impl<Service1> $crate::Handler<Service1> {
+            $(
+                $( #[$m] )*
+                $v fn [< on_ $e:snake:lower >] <Service2> (self, service: Service2)
+                -> $crate::Handler<$crate::handler::[< $e:camel Service >] <Service2, Service1>>
+                {
+                    let Self {
+                        service: fallback,
+                        parser,
+                    } = self;
+                    $crate::Handler {
+                        service: $crate::handler::[< $e:camel Service >] {
+                            inner: service,
+                            fallback,
+                        },
+                        parser,
+                    }
+                }
+            )+
+        }
+    }};
+}
+
 pub(crate) use {
     all_events, error_with_source, event_convert, event_converts, impl_display, impl_from_str,
     match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
     payloads_impl_for_kinds,
 };
+
+#[cfg(feature = "tower")]
+pub(crate) use {event_service, handler_on_events};
 
 #[cfg(test)]
 /// ペイロード型に対して`into Event`のテスト

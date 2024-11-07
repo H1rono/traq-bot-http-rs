@@ -15,6 +15,9 @@ pub(crate) mod macros;
 mod parser;
 pub mod payloads;
 
+#[cfg(feature = "tower")]
+pub mod handler;
+
 pub use error::{Error, ErrorKind, Result};
 pub use events::{Event, EventKind};
 
@@ -23,6 +26,14 @@ pub use events::{Event, EventKind};
 #[derive(Debug, Clone)]
 pub struct RequestParser {
     verification_token: String,
+}
+
+#[cfg(feature = "tower")]
+#[must_use]
+#[derive(Debug, Clone)]
+pub struct Handler<Service> {
+    service: Service,
+    parser: RequestParser,
 }
 
 #[cfg(test)]
