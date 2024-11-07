@@ -45,6 +45,56 @@ where
 #[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct Sink;
 
+#[must_use]
+#[derive(Debug, Clone)]
+pub struct EventWithState<State> {
+    state: State,
+    event: Event,
+}
+
+impl<State> From<EventWithState<State>> for (State, Event) {
+    fn from(value: EventWithState<State>) -> Self {
+        let EventWithState { state, event } = value;
+        (state, event)
+    }
+}
+
+impl<State> From<EventWithState<State>> for Event {
+    fn from(value: EventWithState<State>) -> Self {
+        let EventWithState { event, .. } = value;
+        event
+    }
+}
+
+#[must_use]
+#[derive(Debug, Clone)]
+pub struct WithState<State, Service> {
+    state: State,
+    service: Service,
+}
+
+impl<State, Service> tower::Service<Event> for WithState<State, Service>
+where
+    State: Clone,
+    Service: tower::Service<EventWithState<State>>,
+{
+    type Response = Service::Response;
+    type Error = Service::Error;
+    type Future = Service::Future;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
+    }
+
+    fn call(&mut self, req: Event) -> Self::Future {
+        let req = EventWithState {
+            state: self.state.clone(),
+            event: req,
+        };
+        self.service.call(req)
+    }
+}
+
 impl<T> Service<T> for Sink {
     type Response = ();
     type Error = Infallible;
