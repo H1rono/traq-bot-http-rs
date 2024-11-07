@@ -522,7 +522,8 @@ macro_rules! all_error_kinds {
             ReadBotEventFailed,
             BotEventMismatch,
             ReadBodyFailed,
-            ParseBodyFailed
+            ParseBodyFailed,
+            Handler
         }
     };
 }
