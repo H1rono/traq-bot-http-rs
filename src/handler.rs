@@ -75,12 +75,15 @@ macro_rules! all_event_service {
 
 all_events! {all_event_service}
 
+impl<Service> Handler<Service> {
+    pub fn new(parser: crate::RequestParser, service: Service) -> Self {
+        Self { service, parser }
+    }
+}
+
 impl RequestParser {
     pub fn into_handler(self) -> Handler<Sink> {
-        Handler {
-            service: Sink,
-            parser: self,
-        }
+        Handler::new(self, Sink)
     }
 }
 
