@@ -55,11 +55,31 @@ where
 #[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct Sink;
 
+impl<State, Event, Request> Handle<State, Event, Request> for Sink {
+    type Response = ();
+    type Error = Infallible;
+    type Future = ReadyFuture<Result<(), Infallible>>;
+
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, _request: Request) -> Self::Future {
+        futures::future::ready(Ok(()))
+    }
+}
+
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct EventWithState<State> {
     state: State,
     event: Event,
+}
+
+impl<State> From<(State, Event)> for EventWithState<State> {
+    fn from((state, event): (State, Event)) -> Self {
+        Self { state, event }
+    }
 }
 
 impl<State> From<EventWithState<State>> for (State, Event) {
@@ -78,44 +98,30 @@ impl<State> From<EventWithState<State>> for Event {
 
 #[must_use]
 #[derive(Debug, Clone)]
-pub struct WithState<State, Service> {
+pub struct WithState<State, H> {
     state: State,
-    service: Service,
+    handle: H,
 }
 
-impl<State, Service> tower::Service<Event> for WithState<State, Service>
+impl<State, H> Handle<State, Event, EventWithState<()>> for WithState<State, H>
 where
+    H: Handle<State, Event, EventWithState<State>>,
     State: Clone,
-    Service: tower::Service<EventWithState<State>>,
 {
-    type Response = Service::Response;
-    type Error = Service::Error;
-    type Future = Service::Future;
-
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx)
-    }
-
-    fn call(&mut self, req: Event) -> Self::Future {
-        let req = EventWithState {
-            state: self.state.clone(),
-            event: req,
-        };
-        self.service.call(req)
-    }
-}
-
-impl<T> Service<T> for Sink {
-    type Response = ();
-    type Error = Infallible;
-    type Future = ReadyFuture<Result<(), Infallible>>;
+    type Response = H::Response;
+    type Error = H::Error;
+    type Future = H::Future;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, _req: T) -> Self::Future {
-        futures::future::ready(Ok(()))
+    fn call(&mut self, request: EventWithState<()>) -> Self::Future {
+        let request = EventWithState {
+            state: self.state.clone(),
+            event: request.event,
+        };
+        self.handle.call(request)
     }
 }
 
@@ -135,9 +141,17 @@ macro_rules! all_event_service {
 
 all_events! {all_event_service}
 
-impl<Service> Handler<Service> {
-    pub fn new(parser: crate::RequestParser, service: Service) -> Self {
-        Self { service, parser }
+impl<Handle> Handler<Handle> {
+    pub fn new(parser: crate::RequestParser, handle: Handle) -> Self {
+        Self { handle, parser }
+    }
+
+    pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Handle>> {
+        let Self { handle, parser } = self;
+        Handler {
+            handle: WithState { state, handle },
+            parser,
+        }
     }
 }
 
@@ -159,12 +173,12 @@ macro_rules! all_handler_on_events {
 
 all_events! {all_handler_on_events}
 
-impl<S, B> Service<Request<B>> for Handler<S>
+impl<H, B> Service<Request<B>> for Handler<H>
 where
-    S: Service<Event, Response = ()> + Send + 'static,
-    S: Clone,
-    S::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
-    S::Future: Send,
+    H: Handle<(), Event, EventWithState<()>, Response = ()> + Send + 'static,
+    H: Clone,
+    H::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
+    H::Future: Send,
     B: Body + Send + 'static,
     B::Data: Send,
     B::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
@@ -174,7 +188,7 @@ where
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(cx).map_err(Error::handler)
+        self.handle.poll_ready(cx).map_err(Error::handler)
     }
 
     fn call(&mut self, req: Request<B>) -> Self::Future {
@@ -185,7 +199,8 @@ where
         std::mem::swap(self, &mut s);
         Box::pin(async move {
             let event = s.parser.parse_request(req).await?;
-            s.service.call(event).await.map_err(Error::handler)?;
+            let request = EventWithState { state: (), event };
+            s.handle.call(request).await.map_err(Error::handler)?;
             Response::builder()
                 .status(StatusCode::NO_CONTENT)
                 .body(String::new())
