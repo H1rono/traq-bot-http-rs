@@ -1,7 +1,6 @@
 //! TODO
 
 use std::convert::Infallible;
-use std::error::Error as StdError;
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -9,7 +8,6 @@ use std::task::{Context, Poll};
 use futures::future::{BoxFuture, Ready as ReadyFuture};
 use futures::ready;
 use http::{Request, Response, StatusCode};
-use http_body::Body;
 use tower::Service;
 
 use super::Handler;
@@ -30,7 +28,7 @@ pin_project_lite::pin_project! {
 impl<F, E> std::future::Future for WrapErrorFuture<F, E>
 where
     F: std::future::Future<Output = Result<(), E>>,
-    E: Into<Box<dyn StdError + Send + Sync + 'static>>,
+    E: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
     type Output = crate::error::Result<()>;
 
@@ -45,7 +43,7 @@ where
 #[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct Sink;
 
-impl<State> Service<EventWithState<State>> for Sink {
+impl<T> Service<T> for Sink {
     type Response = ();
     type Error = Infallible;
     type Future = ReadyFuture<Result<(), Infallible>>;
@@ -54,7 +52,7 @@ impl<State> Service<EventWithState<State>> for Sink {
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, _request: EventWithState<State>) -> Self::Future {
+    fn call(&mut self, _request: T) -> Self::Future {
         futures::future::ready(Ok(()))
     }
 }
@@ -84,6 +82,28 @@ impl<State> From<EventWithState<State>> for (State, Event) {
 pub struct WithState<State, Service> {
     state: State,
     service: Service,
+}
+
+impl<State, Srv> Service<Event> for WithState<State, Srv>
+where
+    Srv: Service<EventWithState<State>>,
+    State: Clone,
+{
+    type Response = Srv::Response;
+    type Error = Srv::Error;
+    type Future = Srv::Future;
+
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, request: Event) -> Self::Future {
+        let request = EventWithState {
+            state: self.state.clone(),
+            event: request,
+        };
+        self.service.call(request)
+    }
 }
 
 impl<OState, State, Srv> Service<EventWithState<OState>> for WithState<State, Srv>
@@ -156,15 +176,15 @@ macro_rules! all_handler_on_events {
 
 all_events! {all_handler_on_events}
 
-impl<S, B> Service<Request<B>> for Handler<S>
+impl<Srv, Body> Service<Request<Body>> for Handler<Srv>
 where
-    S: Service<EventWithState<()>, Response = ()> + Send + 'static,
-    S: Clone,
-    S::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
-    S::Future: Send,
-    B: Body + Send + 'static,
-    B::Data: Send,
-    B::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
+    Srv: Service<Event, Response = ()> + Send + 'static,
+    Srv: Clone,
+    Srv::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    Srv::Future: Send,
+    Body: http_body::Body + Send + 'static,
+    Body::Data: Send,
+    Body::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
     type Response = Response<String>;
     type Error = Error;
@@ -174,7 +194,7 @@ where
         self.service.poll_ready(cx).map_err(Error::handler)
     }
 
-    fn call(&mut self, req: Request<B>) -> Self::Future {
+    fn call(&mut self, req: Request<Body>) -> Self::Future {
         // FIXME: このclone消せる
         // req.parts.headersからEventKindはasyncなしに判定できるので
         let mut s = self.clone();
@@ -182,8 +202,7 @@ where
         std::mem::swap(self, &mut s);
         Box::pin(async move {
             let event = s.parser.parse_request(req).await?;
-            let request = EventWithState { state: (), event };
-            s.service.call(request).await.map_err(Error::handler)?;
+            s.service.call(event).await.map_err(Error::handler)?;
             Response::builder()
                 .status(StatusCode::NO_CONTENT)
                 .body(String::new())
