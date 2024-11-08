@@ -79,13 +79,6 @@ impl<State> From<EventWithState<State>> for (State, Event) {
     }
 }
 
-impl<State> From<EventWithState<State>> for Event {
-    fn from(value: EventWithState<State>) -> Self {
-        let EventWithState { event, .. } = value;
-        event
-    }
-}
-
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct WithState<State, Service> {
@@ -93,7 +86,7 @@ pub struct WithState<State, Service> {
     service: Service,
 }
 
-impl<State, Srv> Service<EventWithState<()>> for WithState<State, Srv>
+impl<OState, State, Srv> Service<EventWithState<OState>> for WithState<State, Srv>
 where
     Srv: Service<EventWithState<State>>,
     State: Clone,
@@ -106,7 +99,7 @@ where
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, request: EventWithState<()>) -> Self::Future {
+    fn call(&mut self, request: EventWithState<OState>) -> Self::Future {
         let request = EventWithState {
             state: self.state.clone(),
             event: request.event,

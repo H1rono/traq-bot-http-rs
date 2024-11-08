@@ -382,7 +382,7 @@ macro_rules! event_service {
     ) => { ::paste::paste! {
         $( #[$m] )*
         $v struct
-        [< $e:camel Service >] <Service, Fallback, Req = $crate::payloads::[< $e:camel Payload >]>
+        [< $e:camel Service >] <Service, Fallback, Req>
         {
             _req: ::std::marker::PhantomData<Req>,
             inner: Service,
