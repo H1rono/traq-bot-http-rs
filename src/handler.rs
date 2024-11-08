@@ -16,6 +16,16 @@ use super::Handler;
 use crate::macros::all_events;
 use crate::{Error, Event, RequestParser};
 
+pub trait Handle<State, Event, Request> {
+    type Response;
+    type Error;
+    type Future: std::future::Future<Output = Result<Self::Response, Self::Error>>;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>>;
+
+    fn call(&mut self, request: Request) -> Self::Future;
+}
+
 pin_project_lite::pin_project! {
     #[must_use]
     #[project = WrapErrorFutureProject]
