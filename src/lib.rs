@@ -31,8 +31,8 @@ pub struct RequestParser {
 #[cfg(feature = "tower")]
 #[must_use]
 #[derive(Debug, Clone)]
-pub struct Handler<Handle> {
-    handle: Handle,
+pub struct Handler<Service> {
+    service: Service,
     parser: RequestParser,
 }
 

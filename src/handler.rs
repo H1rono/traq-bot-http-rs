@@ -16,16 +16,6 @@ use super::Handler;
 use crate::macros::all_events;
 use crate::{Error, Event, RequestParser};
 
-pub trait Handle<State, Event, Request> {
-    type Response;
-    type Error;
-    type Future: std::future::Future<Output = Result<Self::Response, Self::Error>>;
-
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>>;
-
-    fn call(&mut self, request: Request) -> Self::Future;
-}
-
 pin_project_lite::pin_project! {
     #[must_use]
     #[project = WrapErrorFutureProject]
@@ -55,7 +45,7 @@ where
 #[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct Sink;
 
-impl<State, Event, Request> Handle<State, Event, Request> for Sink {
+impl<State> Service<EventWithState<State>> for Sink {
     type Response = ();
     type Error = Infallible;
     type Future = ReadyFuture<Result<(), Infallible>>;
@@ -64,7 +54,7 @@ impl<State, Event, Request> Handle<State, Event, Request> for Sink {
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, _request: Request) -> Self::Future {
+    fn call(&mut self, _request: EventWithState<State>) -> Self::Future {
         futures::future::ready(Ok(()))
     }
 }
@@ -98,19 +88,19 @@ impl<State> From<EventWithState<State>> for Event {
 
 #[must_use]
 #[derive(Debug, Clone)]
-pub struct WithState<State, H> {
+pub struct WithState<State, Service> {
     state: State,
-    handle: H,
+    service: Service,
 }
 
-impl<State, H> Handle<State, Event, EventWithState<()>> for WithState<State, H>
+impl<State, Srv> Service<EventWithState<()>> for WithState<State, Srv>
 where
-    H: Handle<State, Event, EventWithState<State>>,
+    Srv: Service<EventWithState<State>>,
     State: Clone,
 {
-    type Response = H::Response;
-    type Error = H::Error;
-    type Future = H::Future;
+    type Response = Srv::Response;
+    type Error = Srv::Error;
+    type Future = Srv::Future;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -121,7 +111,7 @@ where
             state: self.state.clone(),
             event: request.event,
         };
-        self.handle.call(request)
+        self.service.call(request)
     }
 }
 
@@ -141,15 +131,15 @@ macro_rules! all_event_service {
 
 all_events! {all_event_service}
 
-impl<Handle> Handler<Handle> {
-    pub fn new(parser: crate::RequestParser, handle: Handle) -> Self {
-        Self { handle, parser }
+impl<Service> Handler<Service> {
+    pub fn new(parser: crate::RequestParser, service: Service) -> Self {
+        Self { service, parser }
     }
 
-    pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Handle>> {
-        let Self { handle, parser } = self;
+    pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Service>> {
+        let Self { service, parser } = self;
         Handler {
-            handle: WithState { state, handle },
+            service: WithState { state, service },
             parser,
         }
     }
@@ -173,12 +163,12 @@ macro_rules! all_handler_on_events {
 
 all_events! {all_handler_on_events}
 
-impl<H, B> Service<Request<B>> for Handler<H>
+impl<S, B> Service<Request<B>> for Handler<S>
 where
-    H: Handle<(), Event, EventWithState<()>, Response = ()> + Send + 'static,
-    H: Clone,
-    H::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
-    H::Future: Send,
+    S: Service<EventWithState<()>, Response = ()> + Send + 'static,
+    S: Clone,
+    S::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
+    S::Future: Send,
     B: Body + Send + 'static,
     B::Data: Send,
     B::Error: Into<Box<dyn StdError + Send + Sync + 'static>>,
@@ -188,7 +178,7 @@ where
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        self.handle.poll_ready(cx).map_err(Error::handler)
+        self.service.poll_ready(cx).map_err(Error::handler)
     }
 
     fn call(&mut self, req: Request<B>) -> Self::Future {
@@ -200,7 +190,7 @@ where
         Box::pin(async move {
             let event = s.parser.parse_request(req).await?;
             let request = EventWithState { state: (), event };
-            s.handle.call(request).await.map_err(Error::handler)?;
+            s.service.call(request).await.map_err(Error::handler)?;
             Response::builder()
                 .status(StatusCode::NO_CONTENT)
                 .body(String::new())
