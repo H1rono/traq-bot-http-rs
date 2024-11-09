@@ -1,4 +1,9 @@
-//! TODO
+//! [`Handler`]の実装で使われるヘルパー群です。
+//!
+//! # Note
+//! このモジュール内のアイテムは全て**unstable**です。
+//!
+//! [`Handler`]: crate::Handler
 
 use std::convert::Infallible;
 use std::marker::PhantomData;
@@ -41,7 +46,15 @@ where
 
 #[must_use]
 #[derive(Debug, Clone, Copy, Default, Hash)]
-pub struct Sink;
+pub struct Sink {
+    _priv: PhantomData<()>,
+}
+
+impl Sink {
+    fn new() -> Self {
+        Self { _priv: PhantomData }
+    }
+}
 
 impl<T> Service<T> for Sink {
     type Response = ();
@@ -160,7 +173,7 @@ impl<Service> Handler<Service> {
 
 impl RequestParser {
     pub fn into_handler(self) -> Handler<Sink> {
-        Handler::new(self, Sink)
+        Handler::new(self, Sink::new())
     }
 }
 
