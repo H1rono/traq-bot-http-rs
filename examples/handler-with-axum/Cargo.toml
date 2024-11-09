@@ -1,0 +1,15 @@
+[package]
+name = "handler-with-axum"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+http = "1"
+tower = "0.4"
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+traq-bot-http.path = "../.."
+traq-bot-http.features = ["tower"]

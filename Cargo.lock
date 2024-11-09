@@ -492,6 +492,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
+name = "handler-with-axum"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "http 1.1.0",
+ "tokio",
+ "tower",
+ "traq-bot-http",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
