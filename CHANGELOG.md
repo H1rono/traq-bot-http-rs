@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.10.1] - 2024-11-09
+
+### Added
+
+- `Handler` APIを追加
+- `Handler` を使用したexample `handler-with-axum` を追加
+
+### For Developers
+
+- GitHub Actionsの依存関係を更新
+
 ## [v0.10.0] - 2024-10-13
 
 ### Added
@@ -314,6 +325,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.10.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.0..v0.10.1
 [v0.10.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.1..v0.10.0
 [v0.9.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.0..v0.9.1
 [v0.9.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.8.3..v0.9.0
