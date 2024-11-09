@@ -92,3 +92,9 @@ time = ["dep:time"]
 chrono = ["dep:chrono"]
 http = ["dep:bytes", "dep:http", "dep:http-body", "dep:http-body-util", "dep:pin-project-lite", "dep:futures"]
 tower = ["http", "dep:tower", "dep:tower-http"]
+
+[lints.clippy]
+pedantic.level = "deny"
+pedantic.priority = 0
+cargo.level = "deny"
+cargo.priority = 1
