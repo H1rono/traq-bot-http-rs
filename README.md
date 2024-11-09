@@ -78,6 +78,12 @@ feature | 機能 | バージョン
 
 ※`time`よりも`chrono`の方が優先されます
 
+## Supported Rust Version
+
+現行の MSRV(Minimum Supported Rust Version) は **1.76.0** です。
+
+将来的にMSRVは変更される可能性がありますが、minorバージョンの更新で導入されます。
+
 ## Contributing
 
 Issue, Pull Requestは大歓迎です。
