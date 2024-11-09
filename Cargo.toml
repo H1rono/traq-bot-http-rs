@@ -56,6 +56,27 @@ version = "0.1"
 features = []
 optional = true
 
+[dependencies.tower]
+version = "0.4"
+default-features = false
+features = ["util"]
+optional = true
+
+[dependencies.tower-http]
+version = "0.6"
+default-features = false
+optional = true
+
+[dependencies.futures]
+version = "0.3"
+features = []
+optional = true
+
+[dependencies.pin-project-lite]
+version = "0.2"
+features = []
+optional = true
+
 [dev-dependencies]
 http = "1"
 futures = { version = "0.3", features = ["executor"] }
@@ -65,3 +86,4 @@ uuid = ["dep:uuid"]
 time = ["dep:time"]
 chrono = ["dep:chrono"]
 http = ["dep:http", "dep:http-body", "dep:http-body-util"]
+tower = ["http", "dep:tower", "dep:tower-http", "dep:futures", "dep:pin-project-lite"]

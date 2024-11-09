@@ -374,10 +374,213 @@ macro_rules! error_with_source {
     };
 }
 
+#[cfg(feature = "tower")]
+macro_rules! event_service_types {
+    () => {
+        type Response = ();
+        type Error = $crate::Error;
+        type Future = ::futures::future::Either<
+            $crate::handler::WrapErrorFuture<Service::Future, Service::Error>,
+            $crate::handler::WrapErrorFuture<Fallback::Future, Fallback::Error>,
+        >;
+    };
+}
+
+#[cfg(feature = "tower")]
+macro_rules! event_service_poll_ready {
+    () => {
+        fn poll_ready(
+            &mut self,
+            cx: &mut ::std::task::Context<'_>,
+        ) -> ::std::task::Poll<::std::result::Result<(), Self::Error>> {
+            if let ::std::result::Result::Err(e) = ::futures::ready!(self.inner.poll_ready(cx)) {
+                return ::std::task::Poll::Ready(::std::result::Result::Err(
+                    $crate::Error::handler(e),
+                ));
+            }
+            if let ::std::result::Result::Err(e) = ::futures::ready!(self.fallback.poll_ready(cx)) {
+                return ::std::task::Poll::Ready(::std::result::Result::Err(
+                    $crate::Error::handler(e),
+                ));
+            }
+            ::std::task::Poll::Ready(::std::result::Result::Ok(()))
+        }
+    };
+}
+
+#[cfg(feature = "tower")]
+macro_rules! event_service_call {
+    ( $v:ident ( $i:ident ) ) => {
+        fn call(&mut self, req: $crate::Event) -> Self::Future {
+            match req {
+                $crate::Event::$v($i) => {
+                    ::futures::future::Either::Left($crate::handler::WrapErrorFuture {
+                        _error: ::std::marker::PhantomData,
+                        inner: self.inner.call($i),
+                    })
+                }
+                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture {
+                    _error: ::std::marker::PhantomData,
+                    inner: self.fallback.call(event),
+                }),
+            }
+        }
+    };
+    (
+        $s:ident;
+        $v:ident ( $i:ident ) => $e:expr
+    ) => {
+        fn call(&mut self, req: $crate::handler::EventWithState<State>) -> Self::Future {
+            let ($s, event) = req.into();
+            match event {
+                $crate::Event::$v($i) => {
+                    ::futures::future::Either::Left($crate::handler::WrapErrorFuture {
+                        _error: ::std::marker::PhantomData,
+                        inner: self.inner.call($e),
+                    })
+                }
+                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture {
+                    _error: ::std::marker::PhantomData,
+                    inner: self.fallback.call(($s, event).into()),
+                }),
+            }
+        }
+    };
+}
+
+#[cfg(feature = "tower")]
+macro_rules! event_service {
+    (
+        $( #[$m:meta] )*
+        $v:vis $e:ident
+    ) => { ::paste::paste! {
+        $( #[$m] )*
+        $v struct
+        [< $e:camel Service >] <Service, Fallback, Req>
+        {
+            _req: ::std::marker::PhantomData<Req>,
+            inner: Service,
+            fallback: Fallback,
+        }
+
+        impl<Service, Fallback> ::tower::Service<$crate::Event>
+        for [< $e:camel Service >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
+        where
+            Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
+            Service::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+            Fallback: ::tower::Service<$crate::Event, Response = ()>,
+            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+        {
+            $crate::macros::event_service_types! {}
+            $crate::macros::event_service_poll_ready! {}
+            $crate::macros::event_service_call! { [< $e:camel >] (e) }
+        }
+
+        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        for [< $e:camel Service >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
+        where
+            Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
+            Service::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+        {
+            $crate::macros::event_service_types! {}
+            $crate::macros::event_service_poll_ready! {}
+            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => e }
+        }
+
+        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        for [< $e:camel Service >] <Service, Fallback, ($crate::payloads::[< $e:camel Payload >],) >
+        where
+            Service: ::tower::Service<
+                ($crate::payloads::[< $e:camel Payload >],),
+                Response = (),
+            >,
+            Service::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+        {
+            $crate::macros::event_service_types! {}
+            $crate::macros::event_service_poll_ready! {}
+            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => (e,) }
+        }
+
+        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        for [< $e:camel Service >] <Service, Fallback, (State, $crate::payloads::[< $e:camel Payload >] )>
+        where
+            Service: ::tower::Service<
+                (State, $crate::payloads::[< $e:camel Payload >]),
+                Response = (),
+            >,
+            Service::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
+                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
+            >>,
+        {
+            $crate::macros::event_service_types! {}
+            $crate::macros::event_service_poll_ready! {}
+            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => (state, e) }
+        }
+    }};
+}
+
+#[cfg(feature = "tower")]
+macro_rules! handler_on_events {
+    ($(
+        $( #[$m:meta] )*
+        $v:vis $e:ident;
+    )+) => { ::paste::paste! {
+        impl<Service1> $crate::Handler<Service1> {
+            $(
+                $( #[$m] )*
+                $v fn [< on_ $e:snake:lower >] <Service2, Req> (self, service: Service2)
+                -> $crate::Handler<$crate::handler::[< $e:camel Service >] <Service2, Service1, Req>>
+                where
+                    Service2: ::tower::Service<Req>,
+                {
+                    let Self {
+                        service: fallback,
+                        parser,
+                    } = self;
+                    $crate::Handler {
+                        service: $crate::handler::[< $e:camel Service >] {
+                            _req: ::std::marker::PhantomData,
+                            inner: service,
+                            fallback,
+                        },
+                        parser,
+                    }
+                }
+            )+
+        }
+    }};
+}
+
 pub(crate) use {
     all_events, error_with_source, event_convert, event_converts, impl_display, impl_from_str,
     match_event_kinds_to_str, match_event_to_kind, match_str_to_event_kinds, payload_impl,
     payloads_impl_for_kinds,
+};
+
+#[cfg(feature = "tower")]
+pub(crate) use {
+    event_service, event_service_call, event_service_poll_ready, event_service_types,
+    handler_on_events,
 };
 
 #[cfg(test)]
@@ -522,7 +725,8 @@ macro_rules! all_error_kinds {
             ReadBotEventFailed,
             BotEventMismatch,
             ReadBodyFailed,
-            ParseBodyFailed
+            ParseBodyFailed,
+            Handler
         }
     };
 }

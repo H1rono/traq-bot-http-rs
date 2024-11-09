@@ -57,6 +57,8 @@ pub enum ErrorKind {
     ReadBodyFailed,
     /// リクエストボディの値をパースできなかった
     ParseBodyFailed,
+    /// イベントハンドラ実行中のエラー
+    Handler,
 }
 
 /// type alias
@@ -100,6 +102,8 @@ impl Error {
     error_with_source! {pub(crate) BotEventMismatch}
     error_with_source! {pub(crate) ReadBodyFailed}
     error_with_source! {pub(crate) ParseBodyFailed}
+    // cfg(not(feature = "tower")) でdead_codeになる
+    error_with_source! {#[allow(dead_code)] pub(crate) Handler}
 }
 
 impl From<ErrorKind> for Error {
@@ -135,6 +139,7 @@ impl ErrorKind {
             Self::BotEventMismatch => "X-TRAQ-BOT-EVENT value is wrong",
             Self::ReadBodyFailed => "Failed to read request body",
             Self::ParseBodyFailed => "Failed to parse request body",
+            Self::Handler => "Event handler raised an error",
         }
     }
 }

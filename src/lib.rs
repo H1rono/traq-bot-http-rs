@@ -15,6 +15,9 @@ pub(crate) mod macros;
 mod parser;
 pub mod payloads;
 
+#[cfg(feature = "tower")]
+pub mod handler;
+
 pub use error::{Error, ErrorKind, Result};
 pub use events::{Event, EventKind};
 
@@ -23,6 +26,40 @@ pub use events::{Event, EventKind};
 #[derive(Debug, Clone)]
 pub struct RequestParser {
     verification_token: String,
+}
+
+#[cfg(feature = "tower")]
+/// axumライクなhandler APIを提供します。[`handler`]モジュールのドキュメントも併せて読んでください。
+///
+/// # Example
+///
+/// ```
+/// use tower::service_fn;
+/// use traq_bot_http::{payloads, RequestParser};
+///
+/// async fn on_ping((state, payload): (i32, payloads::PingPayload)) -> Result<(), std::convert::Infallible> {
+///     println!("state: {state:?}, ping: {payload:?}");
+///     // assert_eq!(state, 0);
+///     Ok::<(), std::convert::Infallible>(())
+/// }
+///
+/// let parser = RequestParser::new("traqbotverificationtoken");
+/// let handler = parser
+///     .into_handler()
+///     .on_ping(service_fn(on_ping))
+///     .with_state(0i32);
+/// # let _ = handler;
+/// ```
+///
+/// # Note
+/// この構造体の型パラメータは**unstable**です。`Handler<T>`における`T`は予告なく変化する可能性があります。
+///
+/// [`handler`]: crate::handler
+#[must_use]
+#[derive(Debug, Clone)]
+pub struct Handler<Service> {
+    service: Service,
+    parser: RequestParser,
 }
 
 #[cfg(test)]
