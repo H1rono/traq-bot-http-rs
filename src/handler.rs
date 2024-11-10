@@ -13,6 +13,7 @@ use std::task::{Context, Poll};
 use futures::future::{BoxFuture, Ready as ReadyFuture};
 use futures::ready;
 use http::{Request, Response, StatusCode};
+use paste::paste;
 use tower::Service;
 
 use super::Handler;
@@ -20,6 +21,21 @@ use crate::macros::all_events;
 use crate::{Error, Event, RequestParser};
 
 pin_project_lite::pin_project! {
+    /// <code>impl Future<Output = Result<(), [Error]>></code>
+    ///
+    /// `F: Future<Output = Result<(), E>>`を受け取り、エラー型`E`を[`Error`]に変換した[`Future`]を返します。
+    /// 以下のコードと同様です。
+    ///
+    /// ```ignore
+    /// use futures::{TryFutureExt};
+    ///
+    /// async fn f() -> Result<(), E> { ... }
+    ///
+    /// let wrap_error = f().map_err(|e| -> traq_bot_http::Error { ... });
+    /// ```
+    ///
+    /// [`Future`]: std::future::Future
+    /// [`Error`]: crate::Error
     #[must_use]
     #[project = WrapErrorFutureProject]
     #[derive(Debug)]
@@ -44,9 +60,14 @@ where
     }
 }
 
+/// handleされなかった[`Event`]の受け皿となる[`Service`]です。
+///
+/// [`Event`]: crate::Event
+/// [`Service`]: tower::Service
 #[must_use]
 #[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct Sink {
+    // ユーザーが直接構築できないように
     _priv: PhantomData<()>,
 }
 
@@ -70,6 +91,9 @@ impl<T> Service<T> for Sink {
     }
 }
 
+/// [`Event`]と`State`の直積です。
+///
+/// [`Event`]: crate::Event
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct EventWithState<State> {
@@ -90,6 +114,12 @@ impl<State> From<EventWithState<State>> for (State, Event) {
     }
 }
 
+/// 内部の`Service`に`State`を渡す[`Service`]です。
+///
+/// `WithState::call`の度に`State`がcloneされるため、`State`は[`Clone`]を実装する必要があります。
+///
+/// [`Service`]: tower::Service
+/// [`Clone`]: std::clone::Clone
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct WithState<State, Service> {
@@ -145,13 +175,17 @@ macro_rules! all_event_service {
     (
         $( $e:ident ),*
     ) => {
-        $(
-            $crate::macros::event_service! {
-                #[must_use]
-                #[derive(Debug, Clone)]
-                pub $e
-            }
-        )*
+        $( $crate::macros::event_service! {
+            #[doc = paste! { concat!(
+                "[`", stringify!([< $e:camel Payload >]), "`]をhandleする[`Service`]です。\n\n",
+                "[`Service`]: tower::Service\n",
+                "[`", stringify!([< $e:camel Payload >]), "`]: ",
+                "crate::payloads::", stringify!([< $e:camel Payload >]),
+            )}]
+            #[must_use]
+            #[derive(Debug, Clone)]
+            pub $e
+        } )*
     };
 }
 
@@ -172,6 +206,7 @@ impl<Service> Handler<Service> {
 }
 
 impl RequestParser {
+    /// **Note**: この関数は`tower`featureが有効になっている時のみ提供されます。
     pub fn into_handler(self) -> Handler<Sink> {
         Handler::new(self, Sink::new())
     }
@@ -181,9 +216,15 @@ macro_rules! all_handler_on_events {
     (
         $( $e:ident ),*
     ) => {
-        $crate::macros::handler_on_events! {
-            $( pub $e; )*
-        }
+        $crate::macros::handler_on_events! { $(
+            #[doc = paste! { concat!(
+                "[`", stringify!([< $e:camel Payload >]), "`]をhandleする[`Service`]を登録します。\n\n",
+                "[`Service`]: tower::Service\n",
+                "[`", stringify!([< $e:camel Payload >]), "`]: ",
+                "crate::payloads::", stringify!([< $e:camel Payload >]), "\n\n",
+            )}]
+            pub $e;
+        )* }
     };
 }
 
