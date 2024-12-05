@@ -192,10 +192,34 @@ macro_rules! all_event_service {
 all_events! {all_event_service}
 
 impl<Service> Handler<Service> {
+    /// 新しくイベントハンドラを作成します。`service`は以下の条件を満たす必要があります。
+    ///
+    /// - <code>[Service]<[Event]></code>, [`Clone`]を実装している
+    /// - [`'static`]
+    /// - `Service::Response`が`()`と等しい
+    /// - `Service::Error`が<code>Into<Box<dyn [Error] + [Send] + [Sync] + &#39;static>></code>を実装している
+    /// - `Service::Future`が[`Send`]を実装している
+    ///
+    /// [Service]: tower::Service
+    /// [Event]: crate::Event
+    /// [`Clone`]: std::clone::Clone
+    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
+    /// [Error]: std::error::Error
+    /// [Send]: std::marker::Send
+    /// [Sync]: std::marker::Sync
+    /// [`Send`]: std::marker::Send
     pub fn new(parser: crate::RequestParser, service: Service) -> Self {
         Self { service, parser }
     }
 
+    /// イベントハンドラに`State`を追加します。`State`は以下の条件を満たす必要があります。
+    ///
+    /// - [`Clone`], [`Send`]を実装している
+    /// - [`'static`]
+    ///
+    /// [`Clone`]: std::clone::Clone
+    /// [`Send`]: std::marker::Send
+    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
     pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Service>> {
         let Self { service, parser } = self;
         Handler {
