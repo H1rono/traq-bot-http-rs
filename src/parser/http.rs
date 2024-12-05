@@ -180,3 +180,32 @@ impl RequestParser {
         ParseRequest::new(kind, body)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use futures::executor::block_on;
+    use http_body_util::BodyExt;
+
+    use super::{CollectBody, ParseRequest};
+    use crate::{Event, EventKind};
+
+    #[test]
+    fn collect_body() {
+        let body_content = "some content";
+        let fut = CollectBody {
+            collect: body_content.to_string().collect(),
+        };
+        let collected = block_on(fut).unwrap();
+        assert_eq!(collected, body_content.as_bytes());
+    }
+
+    #[test]
+    fn parse_request_future() {
+        let kind = EventKind::Ping;
+        let payload = r#"{"eventTime": "2019-05-07T04:50:48.582586882Z"}"#;
+        let body = payload.to_string();
+        let fut = ParseRequest::new(Ok(kind), body);
+        let event = block_on(fut).unwrap();
+        assert!(matches!(event, Event::Ping(_)));
+    }
+}
