@@ -5,6 +5,7 @@ TRAQ
 chrono
 eprintln
 serde
+combinators
 
 HTAB
 VCHAR
