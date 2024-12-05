@@ -2,21 +2,25 @@
 
 use std::str::from_utf8;
 
-use serde::Deserialize;
-
 use crate::error::{Error, ErrorKind, Result};
 use crate::macros::all_events;
 use crate::{Event, EventKind, RequestParser};
 
 /// ボディをDeserializeして`Event`に渡す
-fn parse_body<'a, T, F>(f: F, body: &'a str) -> Result<Event>
-where
-    T: Deserialize<'a>,
-    F: Fn(T) -> Event,
-{
-    serde_json::from_str(body)
-        .map(f)
-        .map_err(Error::parse_body_failed)
+pub(crate) fn parse_body(kind: EventKind, body: &str) -> Result<Event> {
+    macro_rules! match_kind_parse_body {
+        ($( $k:ident ),*) => {
+            match kind {
+                $(
+                    EventKind::$k => {
+                        ::serde_json::from_str(body).map(Event::$k)
+                    },
+                )*
+            }
+        };
+    }
+
+    all_events!(match_kind_parse_body).map_err(Error::parse_body_failed)
 }
 
 // https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
@@ -186,18 +190,7 @@ impl RequestParser {
     {
         let kind = self.parse_headers(headers)?;
         let body = from_utf8(body).map_err(Error::read_body_failed)?;
-
-        macro_rules! match_kind_parse_body {
-            ($( $k:ident ),*) => {
-                match kind {
-                    $(
-                        EventKind::$k => parse_body(Event::$k, body),
-                    )*
-                }
-            };
-        }
-
-        all_events!(match_kind_parse_body)
+        parse_body(kind, body)
     }
 }
 
