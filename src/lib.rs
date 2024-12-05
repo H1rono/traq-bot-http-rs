@@ -29,21 +29,23 @@ pub struct RequestParser {
 }
 
 #[cfg(feature = "tower")]
-/// axumライクなhandler APIを提供します。[`handler`]モジュールのドキュメントも併せて読んでください。
+/// イベントハンドラです。
 ///
 /// # Example
 ///
 /// ```
+/// use std::convert::Infallible;
+///
 /// use tower::service_fn;
 /// use traq_bot_http::{payloads, RequestParser};
 ///
-/// async fn on_ping((state, payload): (i32, payloads::PingPayload)) -> Result<(), std::convert::Infallible> {
+/// async fn on_ping((state, payload): (i32, payloads::PingPayload)) -> Result<(), Infallible> {
 ///     println!("state: {state:?}, ping: {payload:?}");
 ///     // assert_eq!(state, 0);
-///     Ok::<(), std::convert::Infallible>(())
+///     Ok(())
 /// }
 ///
-/// let parser = RequestParser::new("traqbotverificationtoken");
+/// let parser = RequestParser::new("verification_token");
 /// let handler = parser
 ///     .into_handler()
 ///     .on_ping(service_fn(on_ping))
@@ -51,10 +53,28 @@ pub struct RequestParser {
 /// # let _ = handler;
 /// ```
 ///
+/// # Composing Handler
+///
+/// [`Handler`] はメソッドチェーンにより構成されます。使用可能なメソッドは以下の通りです。
+///
+/// - [`.on_*<S>(S)`]
+///     - `*`には [`EventKind`] の variant が `snake_case` で入ります。
+///     - 例: [`Handler::on_message_created`]
+/// - [`.with_state<S>(S)`]
+///
+/// 適切に構成された [`Handler`] は [`Service`] trait を実装します。各メソッドのドキュメントを参照してください。
+///
+/// **[`Handler`] の構成時にはコンパイルエラーが出ない可能性があります** 。
+/// [`Service`] trait を使用するライブラリ (axum 等) の条件も確認してください。
+///
 /// # Note
-/// この構造体の型パラメータは**unstable**です。`Handler<T>`における`T`は予告なく変化する可能性があります。
+///
+/// この構造体の型パラメータは **unstable** です。`Handler<T>`における`T`は予告なく変化する可能性があります。
 ///
 /// [`handler`]: crate::handler
+/// [`Service`]: tower::Service
+/// [`.on_*<S>(S)`]: crate::Handler::on_ping
+/// [`.with_state<S>(S)`]: crate::Handler::with_state
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct Handler<Service> {
