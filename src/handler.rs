@@ -217,6 +217,29 @@ impl<Service> Handler<Service> {
     /// - [`Clone`], [`Send`]を実装している
     /// - [`'static`]
     ///
+    /// # Example
+    ///
+    /// ```
+    /// use std::convert::Infallible;
+    ///
+    /// use tower::service_fn;
+    /// use traq_bot_http::{payloads, RequestParser};
+    ///
+    /// async fn on_ping(state: i32, payload: payloads::PingPayload) -> Result<(), Infallible> {
+    ///     println!("state: {state}, payload: {payload:?}");
+    ///     Ok(())
+    /// }
+    ///
+    /// let parser = RequestParser::new("verification_token");
+    /// let handler = parser
+    ///     .into_handler()
+    ///     // これはinvalidです; with_stateはstateを使用するハンドラより後に置く必要があります
+    ///     // .with_state(0)
+    ///     .on_ping(service_fn(|(state, payload)| on_ping(state, payload)))
+    ///     .with_state(0);
+    /// # let _ = handler;
+    /// ```
+    ///
     /// [`Clone`]: std::clone::Clone
     /// [`Send`]: std::marker::Send
     /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
