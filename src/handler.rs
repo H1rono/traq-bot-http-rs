@@ -206,6 +206,8 @@ impl<Service> Handler<Service> {
 }
 
 impl RequestParser {
+    /// [イベントハンドラ](crate::Handler)に変換します。
+    ///
     /// **Note**: この関数は`tower`featureが有効になっている時のみ提供されます。
     pub fn into_handler(self) -> Handler<Sink> {
         Handler::new(self, Sink::new())
