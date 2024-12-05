@@ -12,7 +12,7 @@
 mod error;
 mod events;
 pub(crate) mod macros;
-mod parser;
+pub mod parser;
 pub mod payloads;
 
 #[cfg(feature = "tower")]
