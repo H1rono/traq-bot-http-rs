@@ -19,7 +19,7 @@ include = ["/src", "/examples", "/README.md", "/LICENSE"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package.metadata.docs.rs]
-features = ["http"]
+features = ["tower"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

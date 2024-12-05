@@ -73,7 +73,8 @@ feature | 機能 | バージョン
 `uuid` | ペイロードのUUID値が[`uuid::Uuid`](https://docs.rs/uuid/latest/uuid/struct.Uuid.html)型に | [v0.4.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.4.0)から
 `time` | ペイロードのタイムスタンプ値([RFC3339 format](https://tools.ietf.org/html/rfc3339#section-5.6))が[`time::OffsetDateTime`](https://docs.rs/time/latest/time/struct.OffsetDateTime.html)型に | [v0.5.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.5.0)から
 `chrono` | ペイロードのタイムスタンプ値が[`chrono::DateTime<chrono::Utc>`](https://docs.rs/chrono/latest/chrono/struct.DateTime.html)型に | [v0.6.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.6.0)から
-`http` | [`http::Request`](https://docs.rs/http/latest/http/request/struct.Request.html)型のサポート | [v0.10.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.10.0)
+`http` | [`http::Request`](https://docs.rs/http/latest/http/request/struct.Request.html)型のサポート | [v0.10.0](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.10.0)から
+`tower` | [`Handler`](https://docs.rs/traq-bot-http/latest/traq_bot_http/struct.Handler.html)構造体 | [v0.10.1](https://github.com/H1rono/traq-bot-http-rs/releases/tag/v0.10.1)から
 
 ※`time`よりも`chrono`の方が優先されます
 
