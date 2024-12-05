@@ -221,9 +221,25 @@ macro_rules! all_handler_on_events {
         $crate::macros::handler_on_events! { $(
             #[doc = paste! { concat!(
                 "[`", stringify!([< $e:camel Payload >]), "`]をhandleする[`Service`]を登録します。\n\n",
+                "引数の型`Service2`は`Service<Req>` traitを実装し、さらに以下の条件を満たす必要があります。\n\n",
+                "- [`Clone`], [`Send`]を実装している\n",
+                "- [`'static`]\n",
+                "- `Req`が次のうちいずれかと等しい\n",
+                "  - [`", stringify!([< $e:camel Payload >]), "`]\n",
+                "  - `(", stringify!([< $e:camel Payload >]), ",)`\n",
+                "  - `(State, ", stringify!([< $e:camel Payload >]), ")` ",
+                "(`State`に関しては[`Handler::with_state`]を参照してください)\n",
+                "- `Service2::Response`が`()`と等しい\n",
+                "- `Service2::Error`が<code>Into<Box<dyn [Error] + Send + Sync + &#39;static>></code>を実装している\n",
+                "- `Service2::Future`が[`Send`]を実装している\n\n",
                 "[`Service`]: tower::Service\n",
                 "[`", stringify!([< $e:camel Payload >]), "`]: ",
-                "crate::payloads::", stringify!([< $e:camel Payload >]), "\n\n",
+                "crate::payloads::", stringify!([< $e:camel Payload >]), "\n",
+                "[`Clone`]: std::clone::Clone\n",
+                "[`Send`]: std::marker::Send\n",
+                "[`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound\n",
+                "[`Handler::with_state`]: crate::Handler::with_state\n",
+                "[Error]: std::error::Error\n",
             )}]
             pub $e;
         )* }
