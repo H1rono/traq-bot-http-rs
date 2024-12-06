@@ -413,16 +413,12 @@ macro_rules! event_service_call {
     ( $v:ident ( $i:ident ) ) => {
         fn call(&mut self, req: $crate::Event) -> Self::Future {
             match req {
-                $crate::Event::$v($i) => {
-                    ::futures::future::Either::Left($crate::handler::WrapErrorFuture {
-                        _error: ::std::marker::PhantomData,
-                        inner: self.inner.call($i),
-                    })
-                }
-                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture {
-                    _error: ::std::marker::PhantomData,
-                    inner: self.fallback.call(event),
-                }),
+                $crate::Event::$v($i) => ::futures::future::Either::Left(
+                    $crate::handler::WrapErrorFuture::new(self.inner.call($i)),
+                ),
+                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture::new(
+                    self.fallback.call(event),
+                )),
             }
         }
     };
@@ -433,16 +429,12 @@ macro_rules! event_service_call {
         fn call(&mut self, req: $crate::handler::EventWithState<State>) -> Self::Future {
             let ($s, event) = req.into();
             match event {
-                $crate::Event::$v($i) => {
-                    ::futures::future::Either::Left($crate::handler::WrapErrorFuture {
-                        _error: ::std::marker::PhantomData,
-                        inner: self.inner.call($e),
-                    })
-                }
-                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture {
-                    _error: ::std::marker::PhantomData,
-                    inner: self.fallback.call(($s, event).into()),
-                }),
+                $crate::Event::$v($i) => ::futures::future::Either::Left(
+                    $crate::handler::WrapErrorFuture::new(self.inner.call($e)),
+                ),
+                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture::new(
+                    self.fallback.call(($s, event).into()),
+                )),
             }
         }
     };

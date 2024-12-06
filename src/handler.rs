@@ -7,12 +7,10 @@
 
 use std::convert::Infallible;
 use std::marker::PhantomData;
-use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::future::{BoxFuture, Ready as ReadyFuture};
-use futures::ready;
-use http::{Request, Response, StatusCode};
+use futures::future::Ready as ReadyFuture;
+use http::{Request, Response};
 use paste::paste;
 use tower::Service;
 
@@ -20,45 +18,10 @@ use super::Handler;
 use crate::macros::all_events;
 use crate::{Error, Event, RequestParser};
 
-pin_project_lite::pin_project! {
-    /// <code>impl Future<Output = Result<(), [Error]>></code>
-    ///
-    /// `F: Future<Output = Result<(), E>>`を受け取り、エラー型`E`を[`Error`]に変換した[`Future`]を返します。
-    /// 以下のコードと同様です。
-    ///
-    /// ```ignore
-    /// use futures::{TryFutureExt};
-    ///
-    /// async fn f() -> Result<(), E> { ... }
-    ///
-    /// let wrap_error = f().map_err(|e| -> traq_bot_http::Error { ... });
-    /// ```
-    ///
-    /// [`Future`]: std::future::Future
-    /// [`Error`]: crate::Error
-    #[must_use]
-    #[project = WrapErrorFutureProject]
-    #[derive(Debug)]
-    pub struct WrapErrorFuture<F, E> {
-        _error: PhantomData<E>,
-        #[pin]
-        inner: F,
-    }
-}
+mod future;
 
-impl<F, E> std::future::Future for WrapErrorFuture<F, E>
-where
-    F: std::future::Future<Output = Result<(), E>>,
-    E: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-{
-    type Output = crate::error::Result<()>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let s = self.project();
-        let res = ready!(s.inner.poll(cx));
-        Poll::Ready(res.map_err(Error::handler))
-    }
-}
+#[allow(clippy::module_name_repetitions)]
+pub use future::{HandlerCall, WrapErrorFuture};
 
 /// handleされなかった[`Event`]の受け皿となる[`Service`]です。
 ///
@@ -195,27 +158,22 @@ impl<Service> Handler<Service> {
     /// 新しくイベントハンドラを作成します。`service`は以下の条件を満たす必要があります。
     ///
     /// - <code>[Service]<[Event]></code>, [`Clone`]を実装している
-    /// - [`'static`]
     /// - `Service::Response`が`()`と等しい
     /// - `Service::Error`が<code>Into<Box<dyn [Error] + [Send] + [Sync] + &#39;static>></code>を実装している
-    /// - `Service::Future`が[`Send`]を実装している
     ///
     /// [Service]: tower::Service
     /// [Event]: crate::Event
     /// [`Clone`]: std::clone::Clone
-    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
     /// [Error]: std::error::Error
     /// [Send]: std::marker::Send
     /// [Sync]: std::marker::Sync
-    /// [`Send`]: std::marker::Send
     pub fn new(parser: crate::RequestParser, service: Service) -> Self {
         Self { service, parser }
     }
 
     /// イベントハンドラに`State`を追加します。`State`は以下の条件を満たす必要があります。
     ///
-    /// - [`Clone`], [`Send`]を実装している
-    /// - [`'static`]
+    /// - [`Clone`]を実装している
     ///
     /// # Example
     ///
@@ -241,8 +199,6 @@ impl<Service> Handler<Service> {
     /// ```
     ///
     /// [`Clone`]: std::clone::Clone
-    /// [`Send`]: std::marker::Send
-    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
     pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Service>> {
         let Self { service, parser } = self;
         Handler {
@@ -269,24 +225,22 @@ macro_rules! all_handler_on_events {
             #[doc = paste! { concat!(
                 "[`", stringify!([< $e:camel Payload >]), "`]をhandleする[`Service`]を登録します。\n\n",
                 "引数の型`Service2`は`Service<Req>` traitを実装し、さらに以下の条件を満たす必要があります。\n\n",
-                "- [`Clone`], [`Send`]を実装している\n",
-                "- [`'static`]\n",
+                "- [`Clone`]を実装している\n",
                 "- `Req`が次のうちいずれかと等しい\n",
                 "  - [`", stringify!([< $e:camel Payload >]), "`]\n",
                 "  - `(", stringify!([< $e:camel Payload >]), ",)`\n",
                 "  - `(State, ", stringify!([< $e:camel Payload >]), ")` ",
                 "(`State`に関しては[`Handler::with_state`]を参照してください)\n",
                 "- `Service2::Response`が`()`と等しい\n",
-                "- `Service2::Error`が<code>Into<Box<dyn [Error] + Send + Sync + &#39;static>></code>を実装している\n",
-                "- `Service2::Future`が[`Send`]を実装している\n\n",
+                "- `Service2::Error`が<code>Into<Box<dyn [Error] + [Send] + [Sync] + &#39;static>></code>を実装している\n\n",
                 "[`Service`]: tower::Service\n",
                 "[`", stringify!([< $e:camel Payload >]), "`]: ",
                 "crate::payloads::", stringify!([< $e:camel Payload >]), "\n",
                 "[`Clone`]: std::clone::Clone\n",
-                "[`Send`]: std::marker::Send\n",
-                "[`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound\n",
                 "[`Handler::with_state`]: crate::Handler::with_state\n",
                 "[Error]: std::error::Error\n",
+                "[Send]: std::marker::Send\n",
+                "[Sync]: std::marker::Sync\n",
             )}]
             pub $e;
         )* }
@@ -297,35 +251,25 @@ all_events! {all_handler_on_events}
 
 impl<Srv, Body> Service<Request<Body>> for Handler<Srv>
 where
-    Srv: Service<Event, Response = ()> + Send + 'static,
+    Srv: Service<Event, Response = ()>,
     Srv: Clone,
     Srv::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-    Srv::Future: Send,
-    Body: http_body::Body + Send + 'static,
-    Body::Data: Send,
+    Body: http_body::Body,
     Body::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
     type Response = Response<String>;
     type Error = Error;
-    type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
+    type Future = HandlerCall<Body, Srv>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(cx).map_err(Error::handler)
     }
 
     fn call(&mut self, req: Request<Body>) -> Self::Future {
-        // FIXME: このclone消せる
-        // req.parts.headersからEventKindはasyncなしに判定できるので
-        let mut s = self.clone();
+        let parse_request = self.parser.parse_request(req);
+        let mut s = self.service.clone();
         // https://docs.rs/tower/latest/tower/trait.Service.html#be-careful-when-cloning-inner-services
-        std::mem::swap(self, &mut s);
-        Box::pin(async move {
-            let event = s.parser.parse_request(req).await?;
-            s.service.call(event).await.map_err(Error::handler)?;
-            Response::builder()
-                .status(StatusCode::NO_CONTENT)
-                .body(String::new())
-                .map_err(Error::handler)
-        })
+        std::mem::swap(&mut self.service, &mut s);
+        HandlerCall::new(parse_request, s)
     }
 }
