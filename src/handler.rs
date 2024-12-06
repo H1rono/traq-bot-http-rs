@@ -260,12 +260,10 @@ all_events! {all_handler_on_events}
 
 impl<Srv, Body> Service<Request<Body>> for Handler<Srv>
 where
-    Srv: Service<Event, Response = ()> + Send + 'static,
+    Srv: Service<Event, Response = ()>,
     Srv: Clone,
     Srv::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-    Srv::Future: Send,
-    Body: http_body::Body + Send + 'static,
-    Body::Data: Send,
+    Body: http_body::Body,
     Body::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
     type Response = Response<String>;
