@@ -9,8 +9,8 @@ use std::convert::Infallible;
 use std::marker::PhantomData;
 use std::task::{Context, Poll};
 
-use futures::future::{BoxFuture, Ready as ReadyFuture};
-use http::{Request, Response, StatusCode};
+use futures::future::Ready as ReadyFuture;
+use http::{Request, Response};
 use paste::paste;
 use tower::Service;
 
@@ -270,7 +270,7 @@ where
 {
     type Response = Response<String>;
     type Error = Error;
-    type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
+    type Future = HandlerCall<Body, Srv>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.poll_ready(cx).map_err(Error::handler)
@@ -281,13 +281,6 @@ where
         let mut s = self.service.clone();
         // https://docs.rs/tower/latest/tower/trait.Service.html#be-careful-when-cloning-inner-services
         std::mem::swap(&mut self.service, &mut s);
-        Box::pin(async move {
-            let event = parse_request.await?;
-            s.call(event).await.map_err(Error::handler)?;
-            Response::builder()
-                .status(StatusCode::NO_CONTENT)
-                .body(String::new())
-                .map_err(Error::handler)
-        })
+        HandlerCall::new(parse_request, s)
     }
 }
