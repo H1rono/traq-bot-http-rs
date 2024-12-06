@@ -7,11 +7,9 @@
 
 use std::convert::Infallible;
 use std::marker::PhantomData;
-use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use futures::future::{BoxFuture, Ready as ReadyFuture};
-use futures::ready;
 use http::{Request, Response, StatusCode};
 use paste::paste;
 use tower::Service;
@@ -20,45 +18,9 @@ use super::Handler;
 use crate::macros::all_events;
 use crate::{Error, Event, RequestParser};
 
-pin_project_lite::pin_project! {
-    /// <code>impl Future<Output = Result<(), [Error]>></code>
-    ///
-    /// `F: Future<Output = Result<(), E>>`を受け取り、エラー型`E`を[`Error`]に変換した[`Future`]を返します。
-    /// 以下のコードと同様です。
-    ///
-    /// ```ignore
-    /// use futures::{TryFutureExt};
-    ///
-    /// async fn f() -> Result<(), E> { ... }
-    ///
-    /// let wrap_error = f().map_err(|e| -> traq_bot_http::Error { ... });
-    /// ```
-    ///
-    /// [`Future`]: std::future::Future
-    /// [`Error`]: crate::Error
-    #[must_use]
-    #[project = WrapErrorFutureProject]
-    #[derive(Debug)]
-    pub struct WrapErrorFuture<F, E> {
-        _error: PhantomData<E>,
-        #[pin]
-        inner: F,
-    }
-}
+mod future;
 
-impl<F, E> std::future::Future for WrapErrorFuture<F, E>
-where
-    F: std::future::Future<Output = Result<(), E>>,
-    E: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-{
-    type Output = crate::error::Result<()>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let s = self.project();
-        let res = ready!(s.inner.poll(cx));
-        Poll::Ready(res.map_err(Error::handler))
-    }
-}
+pub use future::WrapErrorFuture;
 
 /// handleされなかった[`Event`]の受け皿となる[`Service`]です。
 ///
