@@ -276,14 +276,13 @@ where
     }
 
     fn call(&mut self, req: Request<Body>) -> Self::Future {
-        // FIXME: このclone消せる
-        // req.parts.headersからEventKindはasyncなしに判定できるので
-        let mut s = self.clone();
+        let parse_request = self.parser.parse_request(req);
+        let mut s = self.service.clone();
         // https://docs.rs/tower/latest/tower/trait.Service.html#be-careful-when-cloning-inner-services
-        std::mem::swap(self, &mut s);
+        std::mem::swap(&mut self.service, &mut s);
         Box::pin(async move {
-            let event = s.parser.parse_request(req).await?;
-            s.service.call(event).await.map_err(Error::handler)?;
+            let event = parse_request.await?;
+            s.call(event).await.map_err(Error::handler)?;
             Response::builder()
                 .status(StatusCode::NO_CONTENT)
                 .body(String::new())
