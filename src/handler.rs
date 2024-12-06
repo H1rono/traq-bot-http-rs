@@ -158,27 +158,22 @@ impl<Service> Handler<Service> {
     /// 新しくイベントハンドラを作成します。`service`は以下の条件を満たす必要があります。
     ///
     /// - <code>[Service]<[Event]></code>, [`Clone`]を実装している
-    /// - [`'static`]
     /// - `Service::Response`が`()`と等しい
     /// - `Service::Error`が<code>Into<Box<dyn [Error] + [Send] + [Sync] + &#39;static>></code>を実装している
-    /// - `Service::Future`が[`Send`]を実装している
     ///
     /// [Service]: tower::Service
     /// [Event]: crate::Event
     /// [`Clone`]: std::clone::Clone
-    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
     /// [Error]: std::error::Error
     /// [Send]: std::marker::Send
     /// [Sync]: std::marker::Sync
-    /// [`Send`]: std::marker::Send
     pub fn new(parser: crate::RequestParser, service: Service) -> Self {
         Self { service, parser }
     }
 
     /// イベントハンドラに`State`を追加します。`State`は以下の条件を満たす必要があります。
     ///
-    /// - [`Clone`], [`Send`]を実装している
-    /// - [`'static`]
+    /// - [`Clone`]を実装している
     ///
     /// # Example
     ///
@@ -204,8 +199,6 @@ impl<Service> Handler<Service> {
     /// ```
     ///
     /// [`Clone`]: std::clone::Clone
-    /// [`Send`]: std::marker::Send
-    /// [`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound
     pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Service>> {
         let Self { service, parser } = self;
         Handler {
@@ -232,24 +225,22 @@ macro_rules! all_handler_on_events {
             #[doc = paste! { concat!(
                 "[`", stringify!([< $e:camel Payload >]), "`]をhandleする[`Service`]を登録します。\n\n",
                 "引数の型`Service2`は`Service<Req>` traitを実装し、さらに以下の条件を満たす必要があります。\n\n",
-                "- [`Clone`], [`Send`]を実装している\n",
-                "- [`'static`]\n",
+                "- [`Clone`]を実装している\n",
                 "- `Req`が次のうちいずれかと等しい\n",
                 "  - [`", stringify!([< $e:camel Payload >]), "`]\n",
                 "  - `(", stringify!([< $e:camel Payload >]), ",)`\n",
                 "  - `(State, ", stringify!([< $e:camel Payload >]), ")` ",
                 "(`State`に関しては[`Handler::with_state`]を参照してください)\n",
                 "- `Service2::Response`が`()`と等しい\n",
-                "- `Service2::Error`が<code>Into<Box<dyn [Error] + Send + Sync + &#39;static>></code>を実装している\n",
-                "- `Service2::Future`が[`Send`]を実装している\n\n",
+                "- `Service2::Error`が<code>Into<Box<dyn [Error] + [Send] + [Sync] + &#39;static>></code>を実装している\n\n",
                 "[`Service`]: tower::Service\n",
                 "[`", stringify!([< $e:camel Payload >]), "`]: ",
                 "crate::payloads::", stringify!([< $e:camel Payload >]), "\n",
                 "[`Clone`]: std::clone::Clone\n",
-                "[`Send`]: std::marker::Send\n",
-                "[`'static`]: https://doc.rust-lang.org/rust-by-example/scope/lifetime/static_lifetime.html#trait-bound\n",
                 "[`Handler::with_state`]: crate::Handler::with_state\n",
                 "[Error]: std::error::Error\n",
+                "[Send]: std::marker::Send\n",
+                "[Sync]: std::marker::Sync\n",
             )}]
             pub $e;
         )* }
