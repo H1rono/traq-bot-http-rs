@@ -41,6 +41,11 @@ version = "0.4"
 optional = true
 features = ["serde"]
 
+[dependencies.bytes]
+version = "1"
+features = []
+optional = true
+
 [dependencies.http]
 version = "1"
 features = []
@@ -85,5 +90,5 @@ futures = { version = "0.3", features = ["executor"] }
 uuid = ["dep:uuid"]
 time = ["dep:time"]
 chrono = ["dep:chrono"]
-http = ["dep:http", "dep:http-body", "dep:http-body-util"]
-tower = ["http", "dep:tower", "dep:tower-http", "dep:futures", "dep:pin-project-lite"]
+http = ["dep:bytes", "dep:http", "dep:http-body", "dep:http-body-util", "dep:pin-project-lite", "dep:futures"]
+tower = ["http", "dep:tower", "dep:tower-http"]

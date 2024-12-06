@@ -1637,6 +1637,7 @@ dependencies = [
 name = "traq-bot-http"
 version = "0.10.1"
 dependencies = [
+ "bytes",
  "chrono",
  "futures",
  "http 1.1.0",
