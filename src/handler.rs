@@ -20,7 +20,8 @@ use crate::{Error, Event, RequestParser};
 
 mod future;
 
-pub use future::WrapErrorFuture;
+#[allow(clippy::module_name_repetitions)]
+pub use future::{HandlerCall, WrapErrorFuture};
 
 /// handleされなかった[`Event`]の受け皿となる[`Service`]です。
 ///
