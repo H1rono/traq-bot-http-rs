@@ -99,8 +99,8 @@ where
     type Error = Srv::Error;
     type Future = Srv::Future;
 
-    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
     }
 
     fn call(&mut self, request: Event) -> Self::Future {
@@ -121,8 +121,8 @@ where
     type Error = Srv::Error;
     type Future = Srv::Future;
 
-    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
     }
 
     fn call(&mut self, request: EventWithState<OState>) -> Self::Future {
