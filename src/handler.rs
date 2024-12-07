@@ -54,29 +54,6 @@ impl<T> Service<T> for Sink {
     }
 }
 
-/// [`Event`]と`State`の直積です。
-///
-/// [`Event`]: crate::Event
-#[must_use]
-#[derive(Debug, Clone)]
-pub struct EventWithState<State> {
-    state: State,
-    event: Event,
-}
-
-impl<State> From<(State, Event)> for EventWithState<State> {
-    fn from((state, event): (State, Event)) -> Self {
-        Self { state, event }
-    }
-}
-
-impl<State> From<EventWithState<State>> for (State, Event) {
-    fn from(value: EventWithState<State>) -> Self {
-        let EventWithState { state, event } = value;
-        (state, event)
-    }
-}
-
 /// 内部の`Service`に`State`を渡す[`Service`]です。
 ///
 /// `WithState::call`の度に`State`がcloneされるため、`State`は[`Clone`]を実装する必要があります。
@@ -92,7 +69,7 @@ pub struct WithState<State, Service> {
 
 impl<State, Srv> Service<Event> for WithState<State, Srv>
 where
-    Srv: Service<EventWithState<State>>,
+    Srv: Service<(State, Event)>,
     State: Clone,
 {
     type Response = Srv::Response;
@@ -104,17 +81,14 @@ where
     }
 
     fn call(&mut self, request: Event) -> Self::Future {
-        let request = EventWithState {
-            state: self.state.clone(),
-            event: request,
-        };
+        let request = (self.state.clone(), request);
         self.service.call(request)
     }
 }
 
-impl<OState, State, Srv> Service<EventWithState<OState>> for WithState<State, Srv>
+impl<OState, State, Srv> Service<(OState, Event)> for WithState<State, Srv>
 where
-    Srv: Service<EventWithState<State>>,
+    Srv: Service<(State, Event)>,
     State: Clone,
 {
     type Response = Srv::Response;
@@ -125,11 +99,8 @@ where
         self.service.poll_ready(cx)
     }
 
-    fn call(&mut self, request: EventWithState<OState>) -> Self::Future {
-        let request = EventWithState {
-            state: self.state.clone(),
-            event: request.event,
-        };
+    fn call(&mut self, (_, request): (OState, Event)) -> Self::Future {
+        let request = (self.state.clone(), request);
         self.service.call(request)
     }
 }

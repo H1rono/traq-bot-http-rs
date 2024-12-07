@@ -426,8 +426,8 @@ macro_rules! event_service_call {
         $s:ident;
         $v:ident ( $i:ident ) => $e:expr
     ) => {
-        fn call(&mut self, req: $crate::handler::EventWithState<State>) -> Self::Future {
-            let ($s, event) = req.into();
+        fn call(&mut self, req: (State, $crate::handler::Event)) -> Self::Future {
+            let ($s, event) = req;
             match event {
                 $crate::Event::$v($i) => ::futures::future::Either::Left(
                     $crate::handler::WrapErrorFuture::new(self.inner.call($e)),
@@ -472,14 +472,14 @@ macro_rules! event_service {
             $crate::macros::event_service_call! { [< $e:camel >] (e) }
         }
 
-        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
         for [< $e:camel Service >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
         where
             Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
             Fallback::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
@@ -489,7 +489,7 @@ macro_rules! event_service {
             $crate::macros::event_service_call! { state; [< $e:camel >] (e) => e }
         }
 
-        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
         for [< $e:camel Service >] <Service, Fallback, ($crate::payloads::[< $e:camel Payload >],) >
         where
             Service: ::tower::Service<
@@ -499,7 +499,7 @@ macro_rules! event_service {
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
             Fallback::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
@@ -509,7 +509,7 @@ macro_rules! event_service {
             $crate::macros::event_service_call! { state; [< $e:camel >] (e) => (e,) }
         }
 
-        impl<State, Service, Fallback> ::tower::Service<$crate::handler::EventWithState<State>>
+        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
         for [< $e:camel Service >] <Service, Fallback, (State, $crate::payloads::[< $e:camel Payload >] )>
         where
             Service: ::tower::Service<
@@ -519,7 +519,7 @@ macro_rules! event_service {
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<$crate::handler::EventWithState<State>, Response = ()>,
+            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
             Fallback::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
