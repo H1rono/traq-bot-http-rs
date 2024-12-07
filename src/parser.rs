@@ -111,7 +111,7 @@ impl RequestParser {
         let mut kind = None;
         for (k, v) in headers {
             let Ok(k) = from_utf8(k.as_ref()) else {
-                continue
+                continue;
             };
             let v = from_utf8(v.as_ref());
             match k.to_lowercase().as_str() {

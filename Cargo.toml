@@ -7,7 +7,7 @@ version = "0.10.2"
 authors = ["H1rono <hronok66@gmail.com>"]
 edition = "2021"
 description = "Library to parse POST requests of traQ BOT event"
-rust-version = "1.67.1"
+rust-version = "1.76.0"
 homepage = "https://github.com/H1rono/traq-bot-http-rs"
 keywords = ["http", "web", "framework"]
 categories = ["web-programming::http-server"]
@@ -92,3 +92,9 @@ time = ["dep:time"]
 chrono = ["dep:chrono"]
 http = ["dep:bytes", "dep:http", "dep:http-body", "dep:http-body-util", "dep:pin-project-lite", "dep:futures"]
 tower = ["http", "dep:tower", "dep:tower-http"]
+
+[lints.clippy]
+pedantic.level = "deny"
+pedantic.priority = 0
+cargo.level = "deny"
+cargo.priority = 1
