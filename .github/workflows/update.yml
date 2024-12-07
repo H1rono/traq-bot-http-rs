@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Update
-        run: cargo update --workspace
+        run: cargo update
       - name: Check diff
         id: check-diff
         run: |
@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Update
-        run: cargo update --workspace
+        run: cargo update
       - name: git commit and push
         run: |
           git config user.name "H1rono"
