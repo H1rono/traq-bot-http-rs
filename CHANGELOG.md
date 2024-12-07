@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.10.2] - 2024-12-08
+
+### Added
+
+- READMEに`tower`featureに関する記述を追加
+- `Handler`まわりのドキュメントを追加
+
+### Changed
+
+- `Future`型を具体的なものに変更
+    - `RequestParser::parse_request`, `<Handler as Service>::Future`のシグネチャが変わりました
+- `impl Service for Handler`を満たす条件が緩くなりました
+
+### For Developers
+
+- Cargo.tomlの`docs.rs`用設定を修正
+- GitHub Actionsの依存関係を更新
+
 ## [v0.10.1] - 2024-11-09
 
 ### Added
@@ -325,6 +343,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.10.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.1..v0.10.2
 [v0.10.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.0..v0.10.1
 [v0.10.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.1..v0.10.0
 [v0.9.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.0..v0.9.1
