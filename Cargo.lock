@@ -1635,7 +1635,7 @@ dependencies = [
 
 [[package]]
 name = "traq-bot-http"
-version = "0.10.1"
+version = "0.10.2"
 dependencies = [
  "bytes",
  "chrono",
