@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.11.0] - 2024-12-09
+
+### Added
+
+- MSRVに関するドキュメントを追加
+
+### Changed
+
+- `Handler::on_{event_kind}`のシグネチャを修正
+- MSRVを1.76.0に更新
+- 依存ライブラリを更新
+- `docs.rs`用の設定を修正
+- `tower::Service` traitの実装条件を修正
+
+### Removed
+
+- `Handler::new`を削除
+- `handler::EventWithState`を削除
+
+### Fixed
+
+- `<handler::WithState as tower::Service>::poll_ready`の実装を修正
+
+### For Developers
+
+- `#![deny(clippy::pedantic)]`の設定を`Cargo.toml`に移動
+- CIの設定を一部修正
+
 ## [v0.10.2] - 2024-12-08
 
 ### Added
@@ -343,6 +371,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.11.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.2..v0.11.0
 [v0.10.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.1..v0.10.2
 [v0.10.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.0..v0.10.1
 [v0.10.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.9.1..v0.10.0
