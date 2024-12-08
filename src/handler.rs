@@ -126,6 +126,7 @@ macro_rules! all_event_service {
 all_events! {all_event_service}
 
 impl<Service> Handler<Service> {
+    // TODO: これpubにしたい
     /// 新しくイベントハンドラを作成します。`service`は以下の条件を満たす必要があります。
     ///
     /// - <code>[Service]<[Event]></code>, [`Clone`]を実装している
@@ -138,7 +139,7 @@ impl<Service> Handler<Service> {
     /// [Error]: std::error::Error
     /// [Send]: std::marker::Send
     /// [Sync]: std::marker::Sync
-    pub fn new(parser: crate::RequestParser, service: Service) -> Self {
+    fn new(parser: crate::RequestParser, service: Service) -> Self {
         Self { service, parser }
     }
 
