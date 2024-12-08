@@ -381,7 +381,7 @@ macro_rules! event_service_types {
         type Error = $crate::Error;
         type Future = ::futures::future::Either<
             $crate::handler::WrapErrorFuture<Service::Future, Service::Error>,
-            $crate::handler::WrapErrorFuture<Fallback::Future, Fallback::Error>,
+            Fallback::Future,
         >;
     };
 }
@@ -399,9 +399,7 @@ macro_rules! event_service_poll_ready {
                 ));
             }
             if let ::std::result::Result::Err(e) = ::futures::ready!(self.fallback.poll_ready(cx)) {
-                return ::std::task::Poll::Ready(::std::result::Result::Err(
-                    $crate::Error::handler(e),
-                ));
+                return ::std::task::Poll::Ready(::std::result::Result::Err(e));
             }
             ::std::task::Poll::Ready(::std::result::Result::Ok(()))
         }
@@ -416,9 +414,7 @@ macro_rules! event_service_call {
                 $crate::Event::$v($i) => ::futures::future::Either::Left(
                     $crate::handler::WrapErrorFuture::new(self.inner.call($i)),
                 ),
-                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture::new(
-                    self.fallback.call(event),
-                )),
+                event => ::futures::future::Either::Right(self.fallback.call(event)),
             }
         }
     };
@@ -432,9 +428,7 @@ macro_rules! event_service_call {
                 $crate::Event::$v($i) => ::futures::future::Either::Left(
                     $crate::handler::WrapErrorFuture::new(self.inner.call($e)),
                 ),
-                event => ::futures::future::Either::Right($crate::handler::WrapErrorFuture::new(
-                    self.fallback.call(($s, event).into()),
-                )),
+                event => ::futures::future::Either::Right(self.fallback.call(($s, event))),
             }
         }
     };
