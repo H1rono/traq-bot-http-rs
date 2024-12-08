@@ -221,9 +221,8 @@ all_events! {all_handler_on_events}
 
 impl<Srv, Body> Service<Request<Body>> for Handler<Srv>
 where
-    Srv: Service<Event, Response = ()>,
+    Srv: Service<Event, Response = (), Error = Error>,
     Srv: Clone,
-    Srv::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
     Body: http_body::Body,
     Body::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
