@@ -6,6 +6,7 @@ chrono
 eprintln
 serde
 combinators
+docsrs
 
 HTAB
 VCHAR

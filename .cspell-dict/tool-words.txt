@@ -1,6 +1,7 @@
 rustup
 rustc
 rustfmt
+rustdoc
 clippy
 MSRV
 RUSTFLAGS
