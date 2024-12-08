@@ -105,17 +105,16 @@ pin_project! {
     }
 }
 
-impl<F, E> Future for HandlerCallServiceCall<F>
+impl<F> Future for HandlerCallServiceCall<F>
 where
-    F: Future<Output = Result<(), E>>,
-    E: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    F: Future<Output = Result<(), Error>>,
 {
     type Output = Result<Response<String>>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let s = self.project();
         if let Err(e) = ready!(s.inner.poll(cx)) {
-            return Poll::Ready(Err(Error::handler(e)));
+            return Poll::Ready(Err(e));
         }
         let res = Response::builder()
             .status(StatusCode::NO_CONTENT)
@@ -149,8 +148,7 @@ impl<B, S> Future for HandlerCallInner<B, S>
 where
     B: Body,
     B::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-    S: Service<Event, Response = ()>,
-    S::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    S: Service<Event, Response = (), Error = Error>,
 {
     type Output = Result<Response<String>>;
 
@@ -214,8 +212,7 @@ impl<B, S> Future for HandlerCall<B, S>
 where
     B: Body,
     B::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
-    S: Service<Event, Response = ()>,
-    S::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    S: Service<Event, Response = (), Error = Error>,
 {
     type Output = Result<Response<String>>;
 

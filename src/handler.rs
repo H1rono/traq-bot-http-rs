@@ -5,7 +5,6 @@
 //!
 //! [`Handler`]: crate::Handler
 
-use std::convert::Infallible;
 use std::marker::PhantomData;
 use std::task::{Context, Poll};
 
@@ -42,8 +41,8 @@ impl Sink {
 
 impl<T> Service<T> for Sink {
     type Response = ();
-    type Error = Infallible;
-    type Future = ReadyFuture<Result<(), Infallible>>;
+    type Error = Error;
+    type Future = ReadyFuture<Result<(), Error>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -223,9 +222,8 @@ all_events! {all_handler_on_events}
 
 impl<Srv, Body> Service<Request<Body>> for Handler<Srv>
 where
-    Srv: Service<Event, Response = ()>,
+    Srv: Service<Event, Response = (), Error = Error>,
     Srv: Clone,
-    Srv::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
     Body: http_body::Body,
     Body::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
