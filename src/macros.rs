@@ -448,7 +448,7 @@ macro_rules! event_service {
     ) => { ::paste::paste! {
         $( #[$m] )*
         $v struct
-        [< $e:camel Service >] <Service, Fallback, Req>
+        [< On $e:camel >] <Service, Fallback, Req>
         {
             _req: ::std::marker::PhantomData<Req>,
             inner: Service,
@@ -456,7 +456,7 @@ macro_rules! event_service {
         }
 
         impl<Service, Fallback> ::tower::Service<$crate::Event>
-        for [< $e:camel Service >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
+        for [< On $e:camel >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
         where
             Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
@@ -473,7 +473,7 @@ macro_rules! event_service {
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
-        for [< $e:camel Service >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
+        for [< On $e:camel >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
         where
             Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
@@ -490,7 +490,7 @@ macro_rules! event_service {
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
-        for [< $e:camel Service >] <Service, Fallback, ($crate::payloads::[< $e:camel Payload >],) >
+        for [< On $e:camel >] <Service, Fallback, ($crate::payloads::[< $e:camel Payload >],) >
         where
             Service: ::tower::Service<
                 ($crate::payloads::[< $e:camel Payload >],),
@@ -510,7 +510,7 @@ macro_rules! event_service {
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
-        for [< $e:camel Service >] <Service, Fallback, (State, $crate::payloads::[< $e:camel Payload >] )>
+        for [< On $e:camel >] <Service, Fallback, (State, $crate::payloads::[< $e:camel Payload >] )>
         where
             Service: ::tower::Service<
                 (State, $crate::payloads::[< $e:camel Payload >]),
@@ -541,7 +541,7 @@ macro_rules! handler_on_events {
             $(
                 $( #[$m] )*
                 $v fn [< on_ $e:snake:lower >] <Service2, Req> (self, service: Service2)
-                -> $crate::Handler<$crate::handler::[< $e:camel Service >] <Service2, Service1, Req>>
+                -> $crate::Handler<$crate::handler::[< On $e:camel >] <Service2, Service1, Req>>
                 where
                     Service2: ::tower::Service<Req>,
                 {
@@ -550,7 +550,7 @@ macro_rules! handler_on_events {
                         parser,
                     } = self;
                     $crate::Handler {
-                        service: $crate::handler::[< $e:camel Service >] {
+                        service: $crate::handler::[< On $e:camel >] {
                             _req: ::std::marker::PhantomData,
                             inner: service,
                             fallback,
