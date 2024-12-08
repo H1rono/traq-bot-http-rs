@@ -462,10 +462,7 @@ macro_rules! event_service {
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<$crate::Event, Response = ()>,
-            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
-                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
-            >>,
+            Fallback: ::tower::Service<$crate::Event, Response = (), Error = $crate::Error>,
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
@@ -479,34 +476,15 @@ macro_rules! event_service {
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
-            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
-                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
-            >>,
+            Fallback: ::tower::Service<
+                (State, $crate::handler::Event),
+                Response = (),
+                Error = $crate::Error,
+            >,
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
             $crate::macros::event_service_call! { state; [< $e:camel >] (e) => e }
-        }
-
-        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
-        for [< On $e:camel >] <Service, Fallback, ($crate::payloads::[< $e:camel Payload >],) >
-        where
-            Service: ::tower::Service<
-                ($crate::payloads::[< $e:camel Payload >],),
-                Response = (),
-            >,
-            Service::Error: ::std::convert::Into<::std::boxed::Box<
-                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
-            >>,
-            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
-            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
-                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
-            >>,
-        {
-            $crate::macros::event_service_types! {}
-            $crate::macros::event_service_poll_ready! {}
-            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => (e,) }
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
@@ -519,10 +497,11 @@ macro_rules! event_service {
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<(State, $crate::handler::Event), Response = ()>,
-            Fallback::Error: ::std::convert::Into<::std::boxed::Box<
-                dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
-            >>,
+            Fallback: ::tower::Service<
+                (State, $crate::handler::Event),
+                Response = (),
+                Error = $crate::Error
+            >,
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
