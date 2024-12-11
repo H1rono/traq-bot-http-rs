@@ -9,12 +9,13 @@ use futures::future::Ready;
 use futures::ready;
 use http_body::Body;
 use http_body_util::{combinators::Collect, Collected};
+use pin_project_lite::pin_project;
 
 use crate::error::{Error, Result};
 use crate::events::{Event, EventKind};
 use crate::parser::RequestParser;
 
-pin_project_lite::pin_project! {
+pin_project! {
     #[must_use]
     #[project = CollectBodyProject]
     struct CollectBody<B>
@@ -44,7 +45,7 @@ where
     }
 }
 
-pin_project_lite::pin_project! {
+pin_project! {
     #[must_use]
     #[project = ParseRequestInnerProject]
     struct ParseRequestInner<K, B> {
@@ -78,7 +79,7 @@ where
     }
 }
 
-pin_project_lite::pin_project! {
+pin_project! {
     /// <code>impl [Future]<Output = Result<[Event], [Error]>></code>
     ///
     /// [Future]: std::future::Future
