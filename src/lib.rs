@@ -18,6 +18,8 @@ pub mod payloads;
 #[cfg(feature = "tower")]
 pub mod handler;
 
+use std::sync::Arc;
+
 pub use error::{Error, ErrorKind, Result};
 pub use events::{Event, EventKind};
 
@@ -25,7 +27,7 @@ pub use events::{Event, EventKind};
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct RequestParser {
-    verification_token: String,
+    inner: Arc<parser::Inner>,
 }
 
 #[cfg(feature = "tower")]
