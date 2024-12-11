@@ -1,6 +1,7 @@
 //! `struct RequestParser`の定義
 
 use std::str::from_utf8;
+use std::sync::Arc;
 
 use crate::error::{Error, ErrorKind, Result};
 use crate::macros::all_events;
@@ -37,6 +38,19 @@ fn valid_header_value(value: &str) -> bool {
         .all(|c| (0x20..=0x7E).contains(c) || *c == 0x09)
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub(crate) struct Inner {
+    verification_token: String,
+}
+
+impl Inner {
+    pub(crate) fn new(verification_token: &str) -> Self {
+        Self {
+            verification_token: verification_token.to_string(),
+        }
+    }
+}
+
 impl RequestParser {
     /// 新しい`RequestParser`を作成します。
     ///
@@ -50,7 +64,7 @@ impl RequestParser {
     /// ```
     pub fn new(verification_token: &str) -> Self {
         Self {
-            verification_token: verification_token.to_string(),
+            inner: Arc::new(Inner::new(verification_token)),
         }
     }
 
@@ -142,7 +156,7 @@ impl RequestParser {
                     .then_some(t)
                     .ok_or(ErrorKind::ReadBotTokenFailed)
             })
-            .map(|t| t == self.verification_token)?
+            .map(|t| t == self.inner.verification_token)?
             .then_some(())
             .ok_or(ErrorKind::BotTokenMismatch)?;
         kind.ok_or(ErrorKind::BotEventNotFound)
