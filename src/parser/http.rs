@@ -138,8 +138,17 @@ where
 {
     type Output = Result<Event>;
 
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        todo!()
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        use ParseRequestInnerProject::{ParseBody, ParseEventKind, ParseEventKindFailed};
+        let s = self.as_mut().project();
+        let next = match s {
+            ParseEventKind { inner } => ready!(inner.poll(cx)),
+            ParseEventKindFailed { inner } => return inner.poll(cx),
+            ParseBody { inner } => return inner.poll(cx),
+        };
+        self.project_replace(next);
+        cx.waker().wake_by_ref();
+        Poll::Pending
     }
 }
 
