@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.11.1] - 2024-12-12
+
+### Added
+
+- 一部関数に`#[inline]`のヒントを追加
+
+### Changed
+
+- `RequestParser`の内部構造を修正
+- cargoの依存関係を更新
+
+### Fixed
+
+- `ParseRequest`の内部実装を修正
+
 ## [v0.11.0] - 2024-12-09
 
 ### Added
@@ -371,6 +386,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.11.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.0..v0.11.1
 [v0.11.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.2..v0.11.0
 [v0.10.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.1..v0.10.2
 [v0.10.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.0..v0.10.1
