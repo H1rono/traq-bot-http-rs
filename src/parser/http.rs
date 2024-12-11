@@ -47,6 +47,30 @@ where
 
 pin_project! {
     #[must_use]
+    #[project = ParseEventKindProject]
+    struct ParseEventKind<K, B> {
+        #[pin]
+        inner: K,
+        body: B
+    }
+}
+
+impl<K, B> Future for ParseEventKind<K, B>
+where
+    K: Future<Output = Result<EventKind>>,
+    B: Body,
+{
+    type Output = ParseRequestInner<K, B>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        let s = self.project();
+        let res = ready!(s.inner.poll(cx));
+        todo!()
+    }
+}
+
+pin_project! {
+    #[must_use]
     #[project = ParseRequestInnerProject]
     struct ParseRequestInner<K, B> {
         #[pin]
