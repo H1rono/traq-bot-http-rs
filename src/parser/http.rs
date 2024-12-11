@@ -51,21 +51,31 @@ pin_project! {
     struct ParseEventKind<K, B> {
         #[pin]
         inner: K,
-        body: B
+        body: Option<B>
     }
 }
 
 impl<K, B> Future for ParseEventKind<K, B>
 where
     K: Future<Output = Result<EventKind>>,
-    B: Body,
 {
     type Output = ParseRequestInner<K, B>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let s = self.project();
         let res = ready!(s.inner.poll(cx));
-        todo!()
+        let next = match res {
+            Ok(kind) => {
+                let body = s.body.take().expect("polled after ready");
+                ParseRequestInner::ParseBody {
+                    inner: ParseBody { kind, inner: body },
+                }
+            }
+            Err(e) => ParseRequestInner::ParseEventKindFailed {
+                inner: futures::future::ready(Err(e)),
+            },
+        };
+        Poll::Ready(next)
     }
 }
 
