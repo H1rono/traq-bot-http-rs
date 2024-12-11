@@ -408,7 +408,11 @@ macro_rules! event_service_poll_ready {
 
 #[cfg(feature = "tower")]
 macro_rules! event_service_call {
-    ( $v:ident ( $i:ident ) ) => {
+    (
+        $( #[$m:meta] )*
+        $v:ident ( $i:ident )
+    ) => {
+        $( #[$m] )*
         fn call(&mut self, req: $crate::Event) -> Self::Future {
             match req {
                 $crate::Event::$v($i) => ::futures::future::Either::Left(
@@ -419,9 +423,11 @@ macro_rules! event_service_call {
         }
     };
     (
+        $( #[$m:meta] )*
         $s:ident;
         $v:ident ( $i:ident ) => $e:expr
     ) => {
+        $( #[$m] )*
         fn call(&mut self, req: (State, $crate::handler::Event)) -> Self::Future {
             let ($s, event) = req;
             match event {
@@ -460,7 +466,10 @@ macro_rules! event_service {
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
-            $crate::macros::event_service_call! { [< $e:camel >] (e) }
+            $crate::macros::event_service_call! {
+                #[inline]
+                [< $e:camel >] (e)
+            }
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
@@ -478,7 +487,11 @@ macro_rules! event_service {
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
-            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => e }
+            $crate::macros::event_service_call! {
+                #[inline]
+                state;
+                [< $e:camel >] (e) => e
+            }
         }
 
         impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
@@ -499,7 +512,11 @@ macro_rules! event_service {
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
-            $crate::macros::event_service_call! { state; [< $e:camel >] (e) => (state, e) }
+            $crate::macros::event_service_call! {
+                #[inline]
+                state;
+                [< $e:camel >] (e) => (state, e)
+            }
         }
     }};
 }
