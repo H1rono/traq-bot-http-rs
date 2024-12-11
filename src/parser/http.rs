@@ -136,7 +136,10 @@ where
 {
     fn new(kind: K, body: B) -> Self {
         Self::ParseEventKind {
-            inner: ParseEventKind { inner: kind, body },
+            inner: ParseEventKind {
+                inner: kind,
+                body: Some(body),
+            },
         }
     }
 }
@@ -182,17 +185,16 @@ pin_project! {
 impl<B> ParseRequest<B>
 where
     B: Body,
+    B::Error: Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
 {
     fn new(kind: Result<EventKind>, body: B) -> Self {
         use http_body_util::BodyExt;
 
         let kind = futures::future::ready(kind);
-        let inner = ParseRequestInner {
-            kind,
-            body: CollectBody {
-                collect: body.collect(),
-            },
+        let body = CollectBody {
+            collect: body.collect(),
         };
+        let inner = ParseRequestInner::new(kind, body);
         Self { inner }
     }
 }
