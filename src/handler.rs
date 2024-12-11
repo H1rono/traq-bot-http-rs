@@ -48,6 +48,7 @@ impl<T> Service<T> for Sink {
         Poll::Ready(Ok(()))
     }
 
+    #[inline]
     fn call(&mut self, _request: T) -> Self::Future {
         futures::future::ready(Ok(()))
     }
@@ -79,9 +80,9 @@ where
         self.service.poll_ready(cx)
     }
 
+    #[inline]
     fn call(&mut self, request: Event) -> Self::Future {
-        let request = (self.state.clone(), request);
-        self.service.call(request)
+        self.service.call((self.state.clone(), request))
     }
 }
 
@@ -98,9 +99,9 @@ where
         self.service.poll_ready(cx)
     }
 
+    #[inline]
     fn call(&mut self, (_, request): (OState, Event)) -> Self::Future {
-        let request = (self.state.clone(), request);
-        self.service.call(request)
+        self.service.call((self.state.clone(), request))
     }
 }
 
