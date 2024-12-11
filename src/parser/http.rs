@@ -273,7 +273,7 @@ mod tests {
     use http_body_util::BodyExt;
 
     use super::{CollectBody, ParseRequest};
-    use crate::{Event, EventKind};
+    use crate::{Error, ErrorKind, Event, EventKind};
 
     #[test]
     fn collect_body() {
@@ -293,5 +293,14 @@ mod tests {
         let fut = ParseRequest::new(Ok(kind), body);
         let event = block_on(fut).unwrap();
         assert!(matches!(event, Event::Ping(_)));
+    }
+
+    #[test]
+    fn parse_event_failed() {
+        let err: Error = ErrorKind::BotTokenMismatch.into();
+        let body = String::new();
+        let fut = ParseRequest::new(Err(err), body);
+        let err = block_on(fut).unwrap_err();
+        assert_eq!(err.kind(), ErrorKind::BotTokenMismatch);
     }
 }
