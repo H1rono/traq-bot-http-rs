@@ -102,11 +102,32 @@ where
 pin_project! {
     #[must_use]
     #[project = ParseRequestInnerProject]
-    struct ParseRequestInner<K, B> {
-        #[pin]
-        kind: K,
-        #[pin]
-        body: B,
+    #[project_replace = ParseRequestInnerProjectReplace]
+    enum ParseRequestInner<K, B> {
+        ParseEventKind {
+            #[pin]
+            inner: ParseEventKind<K, B>,
+        },
+        ParseEventKindFailed {
+            #[pin]
+            inner: ParseEventKindFailed,
+        },
+        ParseBody {
+            #[pin]
+            inner: ParseBody<B>,
+        }
+    }
+}
+
+impl<K, B> ParseRequestInner<K, B>
+where
+    K: Future<Output = Result<EventKind>>,
+    B: Future<Output = Result<Bytes>>,
+{
+    fn new(kind: K, body: B) -> Self {
+        Self::ParseEventKind {
+            inner: ParseEventKind { inner: kind, body },
+        }
     }
 }
 
@@ -118,18 +139,7 @@ where
     type Output = Result<Event>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let s = self.project();
-        let kind = match ready!(s.kind.poll(cx)) {
-            Ok(k) => k,
-            Err(e) => return Poll::Ready(Err(e)),
-        };
-        let body = ready!(s.body.poll(cx));
-        let res: Result<Event> = {
-            let body = body?;
-            let body = std::str::from_utf8(&body).map_err(Error::read_body_failed)?;
-            super::parse_body(kind, body)
-        };
-        Poll::Ready(res)
+        todo!()
     }
 }
 
