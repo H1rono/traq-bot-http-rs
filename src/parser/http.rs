@@ -69,6 +69,8 @@ where
     }
 }
 
+type ParseEventKindFailed = Ready<Result<Event>>;
+
 pin_project! {
     #[must_use]
     #[project = ParseRequestInnerProject]
