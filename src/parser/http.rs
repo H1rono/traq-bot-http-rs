@@ -73,6 +73,34 @@ type ParseEventKindFailed = Ready<Result<Event>>;
 
 pin_project! {
     #[must_use]
+    #[project = ParseBodyProject]
+    struct ParseBody<B> {
+        kind: EventKind,
+        #[pin]
+        inner: B,
+    }
+}
+
+impl<B> Future for ParseBody<B>
+where
+    B: Future<Output = Result<Bytes>>,
+{
+    type Output = Result<Event>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        let s = self.project();
+        let body = ready!(s.inner.poll(cx));
+        let res: Result<Event> = {
+            let body = body?;
+            let body = std::str::from_utf8(&body).map_err(Error::read_body_failed)?;
+            super::parse_body(*s.kind, body)
+        };
+        Poll::Ready(res)
+    }
+}
+
+pin_project! {
+    #[must_use]
     #[project = ParseRequestInnerProject]
     struct ParseRequestInner<K, B> {
         #[pin]
