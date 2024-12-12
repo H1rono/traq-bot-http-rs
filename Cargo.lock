@@ -1635,7 +1635,7 @@ dependencies = [
  "serde",
  "serde_json",
  "time",
- "tower",
+ "tower-service",
  "uuid",
 ]
 
