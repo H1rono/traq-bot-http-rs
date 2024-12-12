@@ -62,8 +62,14 @@ version = "0.1"
 features = []
 optional = true
 
-[dependencies.futures]
+[dependencies.futures-core]
 version = "0.3"
+features = []
+optional = true
+
+[dependencies.futures-util]
+version = "0.3"
+default-features = false
 features = []
 optional = true
 
@@ -92,7 +98,8 @@ http = [
     "dep:http-body",
     "dep:http-body-util",
     "dep:pin-project-lite",
-    "dep:futures",
+    "dep:futures-core",
+    "dep:futures-util",
 ]
 tower = ["http", "dep:tower-service"]
 
