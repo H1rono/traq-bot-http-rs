@@ -6,6 +6,7 @@
 //! [`Handler`]: crate::Handler
 
 use std::marker::PhantomData;
+use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::future::Ready as ReadyFuture;
@@ -63,8 +64,22 @@ impl<T> Service<T> for Sink {
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct WithState<State, Service> {
-    state: State,
+    state: Arc<State>,
     service: Service,
+}
+
+impl<State, Srv> WithState<State, Srv> {
+    fn new(state: State, service: Srv) -> Self {
+        let state = Arc::new(state);
+        Self { state, service }
+    }
+
+    fn clone_state(&self) -> State
+    where
+        State: Clone,
+    {
+        Arc::unwrap_or_clone(Arc::clone(&self.state))
+    }
 }
 
 impl<State, Srv> Service<Event> for WithState<State, Srv>
@@ -82,7 +97,7 @@ where
 
     #[inline]
     fn call(&mut self, request: Event) -> Self::Future {
-        self.service.call((self.state.clone(), request))
+        self.service.call((self.clone_state(), request))
     }
 }
 
@@ -101,7 +116,7 @@ where
 
     #[inline]
     fn call(&mut self, (_, request): (OState, Event)) -> Self::Future {
-        self.service.call((self.state.clone(), request))
+        self.service.call((self.clone_state(), request))
     }
 }
 
@@ -171,10 +186,11 @@ impl<Service> Handler<Service> {
     /// ```
     ///
     /// [`Clone`]: std::clone::Clone
+    // TODO: State: Clone
     pub fn with_state<State>(self, state: State) -> Handler<WithState<State, Service>> {
         let Self { service, parser } = self;
         Handler {
-            service: WithState { state, service },
+            service: WithState::new(state, service),
             parser,
         }
     }
