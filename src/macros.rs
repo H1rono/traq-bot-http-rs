@@ -379,7 +379,7 @@ macro_rules! event_service_types {
     () => {
         type Response = ();
         type Error = $crate::Error;
-        type Future = ::futures::future::Either<
+        type Future = ::futures_util::future::Either<
             $crate::handler::WrapErrorFuture<Service::Future, Service::Error>,
             Fallback::Future,
         >;
@@ -393,12 +393,15 @@ macro_rules! event_service_poll_ready {
             &mut self,
             cx: &mut ::std::task::Context<'_>,
         ) -> ::std::task::Poll<::std::result::Result<(), Self::Error>> {
-            if let ::std::result::Result::Err(e) = ::futures::ready!(self.inner.poll_ready(cx)) {
+            if let ::std::result::Result::Err(e) = ::futures_core::ready!(self.inner.poll_ready(cx))
+            {
                 return ::std::task::Poll::Ready(::std::result::Result::Err(
                     $crate::Error::handler(e),
                 ));
             }
-            if let ::std::result::Result::Err(e) = ::futures::ready!(self.fallback.poll_ready(cx)) {
+            if let ::std::result::Result::Err(e) =
+                ::futures_core::ready!(self.fallback.poll_ready(cx))
+            {
                 return ::std::task::Poll::Ready(::std::result::Result::Err(e));
             }
             ::std::task::Poll::Ready(::std::result::Result::Ok(()))
@@ -415,10 +418,10 @@ macro_rules! event_service_call {
         $( #[$m] )*
         fn call(&mut self, req: $crate::Event) -> Self::Future {
             match req {
-                $crate::Event::$v($i) => ::futures::future::Either::Left(
+                $crate::Event::$v($i) => ::futures_util::future::Either::Left(
                     $crate::handler::WrapErrorFuture::new(self.inner.call($i)),
                 ),
-                event => ::futures::future::Either::Right(self.fallback.call(event)),
+                event => ::futures_util::future::Either::Right(self.fallback.call(event)),
             }
         }
     };
@@ -431,10 +434,10 @@ macro_rules! event_service_call {
         fn call(&mut self, req: (State, $crate::handler::Event)) -> Self::Future {
             let ($s, event) = req;
             match event {
-                $crate::Event::$v($i) => ::futures::future::Either::Left(
+                $crate::Event::$v($i) => ::futures_util::future::Either::Left(
                     $crate::handler::WrapErrorFuture::new(self.inner.call($e)),
                 ),
-                event => ::futures::future::Either::Right(self.fallback.call(($s, event))),
+                event => ::futures_util::future::Either::Right(self.fallback.call(($s, event))),
             }
         }
     };
@@ -455,14 +458,14 @@ macro_rules! event_service {
             fallback: Fallback,
         }
 
-        impl<Service, Fallback> ::tower::Service<$crate::Event>
+        impl<Service, Fallback> ::tower_service::Service<$crate::Event>
         for [< On $e:camel >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
         where
-            Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
+            Service: ::tower_service::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<$crate::Event, Response = (), Error = $crate::Error>,
+            Fallback: ::tower_service::Service<$crate::Event, Response = (), Error = $crate::Error>,
         {
             $crate::macros::event_service_types! {}
             $crate::macros::event_service_poll_ready! {}
@@ -472,14 +475,14 @@ macro_rules! event_service {
             }
         }
 
-        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
+        impl<State, Service, Fallback> ::tower_service::Service<(State, $crate::handler::Event)>
         for [< On $e:camel >] <Service, Fallback, $crate::payloads::[< $e:camel Payload >] >
         where
-            Service: ::tower::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
+            Service: ::tower_service::Service<$crate::payloads::[< $e:camel Payload >], Response = ()>,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<
+            Fallback: ::tower_service::Service<
                 (State, $crate::handler::Event),
                 Response = (),
                 Error = $crate::Error,
@@ -494,17 +497,17 @@ macro_rules! event_service {
             }
         }
 
-        impl<State, Service, Fallback> ::tower::Service<(State, $crate::handler::Event)>
+        impl<State, Service, Fallback> ::tower_service::Service<(State, $crate::handler::Event)>
         for [< On $e:camel >] <Service, Fallback, (State, $crate::payloads::[< $e:camel Payload >] )>
         where
-            Service: ::tower::Service<
+            Service: ::tower_service::Service<
                 (State, $crate::payloads::[< $e:camel Payload >]),
                 Response = (),
             >,
             Service::Error: ::std::convert::Into<::std::boxed::Box<
                 dyn ::std::error::Error + ::std::marker::Send + ::std::marker::Sync + 'static,
             >>,
-            Fallback: ::tower::Service<
+            Fallback: ::tower_service::Service<
                 (State, $crate::handler::Event),
                 Response = (),
                 Error = $crate::Error
@@ -533,7 +536,7 @@ macro_rules! handler_on_events {
                 $v fn [< on_ $e:snake:lower >] <Service2, Req> (self, service: Service2)
                 -> $crate::Handler<$crate::handler::[< On $e:camel >] <Service2, Service1, Req>>
                 where
-                    Service2: ::tower::Service<Req>,
+                    Service2: ::tower_service::Service<Req>,
                 {
                     let Self {
                         service: fallback,

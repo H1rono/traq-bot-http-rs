@@ -5,8 +5,8 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use bytes::Bytes;
-use futures::future::Ready;
-use futures::ready;
+use futures_core::ready;
+use futures_util::future::Ready;
 use http_body::Body;
 use http_body_util::{combinators::Collect, Collected};
 use pin_project_lite::pin_project;
@@ -72,7 +72,7 @@ where
                 }
             }
             Err(e) => ParseRequestInner::ParseEventKindFailed {
-                inner: futures::future::ready(Err(e)),
+                inner: futures_util::future::ready(Err(e)),
             },
         };
         Poll::Ready(next)
@@ -190,7 +190,7 @@ where
     fn new(kind: Result<EventKind>, body: B) -> Self {
         use http_body_util::BodyExt;
 
-        let kind = futures::future::ready(kind);
+        let kind = futures_util::future::ready(kind);
         let body = CollectBody {
             collect: body.collect(),
         };

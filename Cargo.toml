@@ -39,8 +39,8 @@ optional = true
 
 [dependencies.chrono]
 version = "0.4"
-optional = true
 features = ["serde"]
+optional = true
 
 [dependencies.bytes]
 version = "1"
@@ -62,19 +62,14 @@ version = "0.1"
 features = []
 optional = true
 
-[dependencies.tower]
-version = "0.5"
-default-features = false
-features = ["util"]
-optional = true
-
-[dependencies.tower-http]
-version = "0.6"
-default-features = false
-optional = true
-
-[dependencies.futures]
+[dependencies.futures-core]
 version = "0.3"
+features = []
+optional = true
+
+[dependencies.futures-util]
+version = "0.3"
+default-features = false
 features = []
 optional = true
 
@@ -83,16 +78,30 @@ version = "0.2"
 features = []
 optional = true
 
+[dependencies.tower-service]
+version = "0.3"
+features = []
+optional = true
+
 [dev-dependencies]
 http = "1"
 futures = { version = "0.3", features = ["executor"] }
+tower = { version = "0.5", features = ["util"] }
 
 [features]
 uuid = ["dep:uuid"]
 time = ["dep:time"]
 chrono = ["dep:chrono"]
-http = ["dep:bytes", "dep:http", "dep:http-body", "dep:http-body-util", "dep:pin-project-lite", "dep:futures"]
-tower = ["http", "dep:tower", "dep:tower-http"]
+http = [
+    "dep:bytes",
+    "dep:http",
+    "dep:http-body",
+    "dep:http-body-util",
+    "dep:pin-project-lite",
+    "dep:futures-core",
+    "dep:futures-util",
+]
+tower = ["http", "dep:tower-service"]
 
 [lints.clippy]
 pedantic.level = "deny"

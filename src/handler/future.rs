@@ -3,11 +3,11 @@ use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::ready;
+use futures_core::ready;
 use http::{Response, StatusCode};
 use http_body::Body;
 use pin_project_lite::pin_project;
-use tower::Service;
+use tower_service::Service;
 
 use crate::error::{Error, Result};
 use crate::events::Event;

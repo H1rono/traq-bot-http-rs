@@ -9,10 +9,9 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use futures::future::Ready as ReadyFuture;
 use http::{Request, Response};
 use paste::paste;
-use tower::Service;
+use tower_service::Service;
 
 use super::Handler;
 use crate::macros::all_events;
@@ -43,7 +42,7 @@ impl Sink {
 impl<T> Service<T> for Sink {
     type Response = ();
     type Error = Error;
-    type Future = ReadyFuture<Result<(), Error>>;
+    type Future = futures_util::future::Ready<Result<(), Error>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
@@ -51,7 +50,7 @@ impl<T> Service<T> for Sink {
 
     #[inline]
     fn call(&mut self, _request: T) -> Self::Future {
-        futures::future::ready(Ok(()))
+        futures_util::future::ready(Ok(()))
     }
 }
 
