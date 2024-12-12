@@ -11,7 +11,7 @@ use std::task::{Context, Poll};
 use futures::future::Ready as ReadyFuture;
 use http::{Request, Response};
 use paste::paste;
-use tower::Service;
+use tower_service::Service;
 
 use super::Handler;
 use crate::macros::all_events;
