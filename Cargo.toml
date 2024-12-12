@@ -80,6 +80,7 @@ optional = true
 
 [dev-dependencies]
 http = "1"
+tower = { version = "0.5", features = ["util"] }
 futures = { version = "0.3", features = ["executor"] }
 
 [features]
