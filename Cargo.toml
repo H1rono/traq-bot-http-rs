@@ -68,11 +68,6 @@ default-features = false
 features = ["util"]
 optional = true
 
-[dependencies.tower-http]
-version = "0.6"
-default-features = false
-optional = true
-
 [dependencies.futures]
 version = "0.3"
 features = []
@@ -92,7 +87,7 @@ uuid = ["dep:uuid"]
 time = ["dep:time"]
 chrono = ["dep:chrono"]
 http = ["dep:bytes", "dep:http", "dep:http-body", "dep:http-body-util", "dep:pin-project-lite", "dep:futures"]
-tower = ["http", "dep:tower", "dep:tower-http"]
+tower = ["http", "dep:tower"]
 
 [lints.clippy]
 pedantic.level = "deny"
