@@ -77,7 +77,7 @@ impl<State, Srv> WithState<State, Srv> {
     where
         State: Clone,
     {
-        Arc::unwrap_or_clone(Arc::clone(&self.state))
+        State::clone(&*self.state)
     }
 }
 
