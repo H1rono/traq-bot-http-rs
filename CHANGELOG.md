@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.11.2] - 2024-12-24
+
+### Added
+
+- Release assetsに[`cargo package`](https://doc.rust-lang.org/cargo/commands/cargo-package.html)の出力を追加
+
+### Changed
+
+- Cargoの不要な依存関係を削除
+- `handler::WithState`の内部構造を修正
+
 ## [v0.11.1] - 2024-12-12
 
 ### Added
@@ -386,6 +397,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.11.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.1..v0.11.2
 [v0.11.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.0..v0.11.1
 [v0.11.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.2..v0.11.0
 [v0.10.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.1..v0.10.2
