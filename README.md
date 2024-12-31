@@ -24,7 +24,7 @@ http = "1"
 tower = "0.4"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
-traq-bot-http = { version = "0.11.2", features = ["tower"] }
+traq-bot-http = { version = "0.11", features = ["tower"] }
 ```
 
 `main.rs`
@@ -87,3 +87,8 @@ feature | 機能 | バージョン
 ## Contributing
 
 Issue, Pull Requestは大歓迎です。
+
+## Blogs about this repository
+
+- [Rustでライブラリを作った | 東京科学大学デジタル創作同好会traP](https://trap.jp/post/1819/)
+- [Rustでライブラリを作った 続編 | 東京科学大学デジタル創作同好会traP](https://trap.jp/post/2438/)
