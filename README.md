@@ -24,7 +24,7 @@ http = "1"
 tower = "0.4"
 axum = "0.7"
 tokio = { version = "1", features = ["full"] }
-traq-bot-http = { version = "0.11.2", features = ["tower"] }
+traq-bot-http = { version = "0.11", features = ["tower"] }
 ```
 
 `main.rs`
