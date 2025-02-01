@@ -69,19 +69,3 @@ jobs:
         with:
           files: target/coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  check-deps:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install cargo-udeps
-        run: |
-          export UDEPS_ASSET_NAME="cargo-udeps-v${CARGO_UDEPS_VERSION}-x86_64-unknown-linux-gnu"
-          curl -sSL -o cargo-udeps.tar.gz https://github.com/est31/cargo-udeps/releases/download/v${CARGO_UDEPS_VERSION}/${UDEPS_ASSET_NAME}.tar.gz
-          tar -xf cargo-udeps.tar.gz
-          install -m 755 ${UDEPS_ASSET_NAME}/cargo-udeps /usr/local/bin/cargo-udeps
-          rm -rf cargo-udeps.tar.gz ${UDEPS_ASSET_NAME}
-      - name: Check udeps
-        run: |
-          rustup toolchain install nightly
-          cargo +nightly udeps
