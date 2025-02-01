@@ -12,6 +12,10 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    env:
+      # to satisfy cargo-audit's MSRV,
+      # overriding rust-toolchain.toml
+      RUSTUP_TOOLCHAIN: stable
     steps:
       - uses: actions/checkout@v4
       - uses: rustsec/audit-check@v2.0.0
