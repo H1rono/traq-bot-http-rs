@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [v0.11.3] - 2025-02-02
+
+### Changed
+
+- exampleで使用する[axum](https://crates.io/crates/axum)のバージョンを更新
+- ドキュメント更新
+
+### Removed
+
+- `handler::Sink`から一部[`derive`](https://doc.rust-lang.org/rust-by-example/trait/derive.html)を削除
+
+### For Developers
+
+- GitHub Actionsの依存関係を一部修正
+
 ## [v0.11.2] - 2024-12-24
 
 ### Added
@@ -397,6 +412,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
+[v0.11.3]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.2..v0.11.3
 [v0.11.2]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.1..v0.11.2
 [v0.11.1]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.11.0..v0.11.1
 [v0.11.0]: https://github.com/H1rono/traq-bot-http-rs/compare/v0.10.2..v0.11.0
