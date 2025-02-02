@@ -215,7 +215,6 @@ macro_rules! all_handler_on_events {
                 "- [`Clone`]を実装している\n",
                 "- `Req`が次のうちいずれかと等しい\n",
                 "  - [`", stringify!([< $e:camel Payload >]), "`]\n",
-                "  - `(", stringify!([< $e:camel Payload >]), ",)`\n",
                 "  - `(State, ", stringify!([< $e:camel Payload >]), ")` ",
                 "(`State`に関しては[`Handler::with_state`]を参照してください)\n",
                 "- `Service2::Response`が`()`と等しい\n",
@@ -228,7 +227,7 @@ macro_rules! all_handler_on_events {
                 "[Error]: std::error::Error\n",
                 "[Send]: std::marker::Send\n",
                 "[Sync]: std::marker::Sync\n",
-            )}]
+            ) } ]
             pub $e;
         )* }
     };
