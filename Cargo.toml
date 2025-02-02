@@ -3,7 +3,7 @@ members = ["./.", "examples/*"]
 
 [package]
 name = "traq-bot-http"
-version = "0.11.2"
+version = "0.11.3"
 authors = ["H1rono <hronok66@gmail.com>"]
 edition = "2021"
 description = "Library to parse POST requests of traQ BOT event"
