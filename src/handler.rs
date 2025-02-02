@@ -27,7 +27,7 @@ pub use future::{HandlerCall, WrapErrorFuture};
 /// [`Event`]: crate::Event
 /// [`Service`]: tower::Service
 #[must_use]
-#[derive(Debug, Clone, Copy, Default, Hash)]
+#[derive(Debug, Clone, Copy)]
 pub struct Sink {
     // ユーザーが直接構築できないように
     _priv: PhantomData<()>,
