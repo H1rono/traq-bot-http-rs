@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.12.2
+        uses: cargo-bins/cargo-binstall@v1.12.3
       - name: Install action-validator
         run: cargo +stable binstall --no-confirm action-validator
       - name: Lint Actions
