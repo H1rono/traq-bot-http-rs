@@ -11,7 +11,7 @@ jobs:
     outputs:
       contains: ${{ steps.check.outputs.contains }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 0
@@ -28,7 +28,7 @@ jobs:
   prepare-assets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: cargo package -l
       - run: |
           cargo package --no-verify -p traq-bot-http
@@ -44,7 +44,7 @@ jobs:
       - check-main-branch
     if: needs.check-main-branch.outputs.contains == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
         with:
           name: package
