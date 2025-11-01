@@ -33,7 +33,7 @@ jobs:
       - run: |
           cargo package --no-verify -p traq-bot-http
           mv target/package/*.crate traq-bot-http.crate
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: package
           path: traq-bot-http.crate
