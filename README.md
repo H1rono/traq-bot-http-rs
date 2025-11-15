@@ -80,7 +80,7 @@ feature | 機能 | バージョン
 
 ## Supported Rust Version
 
-現行の MSRV(Minimum Supported Rust Version) は **1.76.0** です。
+現行の MSRV(Minimum Supported Rust Version) は **1.86.0** です。
 
 将来的にMSRVは変更される可能性がありますが、minorバージョンの更新で導入されます。
 
