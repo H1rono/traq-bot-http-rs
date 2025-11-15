@@ -141,7 +141,7 @@ impl RequestParser {
                     let v = v.map_err(Error::read_bot_event_failed)?;
                     kind = Some(v);
                 }
-                _ => continue,
+                _ => {}
             }
         }
         content_type
