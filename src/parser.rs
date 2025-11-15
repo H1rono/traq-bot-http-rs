@@ -88,25 +88,25 @@ impl RequestParser {
     /// [`Error`]のうち、[`Error::kind`]が以下のものを返す可能性があります。
     ///
     /// - [`ErrorKind::ReadContentTypeFailed`] :
-    ///     ヘッダー`Content-Type`の値をUTF8の文字列として解釈できなかった
+    ///   ヘッダー`Content-Type`の値をUTF8の文字列として解釈できなかった
     /// - [`ErrorKind::ContentTypeNotFound`] :
-    ///     ヘッダー`Content-Type`が見つからなかった
+    ///   ヘッダー`Content-Type`が見つからなかった
     /// - [`ErrorKind::ContentTypeMismatch`] :
-    ///     ヘッダー`Content-Type`の値が`application/json`で始まらない
+    ///   ヘッダー`Content-Type`の値が`application/json`で始まらない
     /// - [`ErrorKind::ReadBotTokenFailed`] : ヘッダー`X-TRAQ-BOT-TOKEN`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
     /// - [`ErrorKind::BotTokenNotFound`] :
-    ///     ヘッダー`X-TRAQ-BOT-TOKEN`が見つからなかった
+    ///   ヘッダー`X-TRAQ-BOT-TOKEN`が見つからなかった
     /// - [`ErrorKind::BotTokenMismatch`] :
-    ///     ヘッダー`X-TRAQ-BOT-TOKEN`の値が[`new`]で与えられたVerification Tokenと合わない
+    ///   ヘッダー`X-TRAQ-BOT-TOKEN`の値が[`new`]で与えられたVerification Tokenと合わない
     /// - [`ErrorKind::ReadBotEventFailed`] : ヘッダー`X-TRAQ-BOT-EVENT`の値に関して、以下のいずれかの場合
     ///     - 値をUTF8の文字列として解釈できなかった
     ///     - 値が`visible US-ASCII octets (VCHAR)`, `SP`, `HTAB`以外の文字を含む ([RFC9110 5.5])
     /// - [`ErrorKind::BotEventNotFound`] :
-    ///     ヘッダー`X-TRAQ-BOT-EVENT`が見つからなかった
+    ///   ヘッダー`X-TRAQ-BOT-EVENT`が見つからなかった
     /// - [`ErrorKind::BotEventMismatch`] :
-    ///     ヘッダー`X-TRAQ-BOT-EVENT`の値が[`EventKind`]の[`std::str::FromStr`]でパースできなかった
+    ///   ヘッダー`X-TRAQ-BOT-EVENT`の値が[`EventKind`]の[`std::str::FromStr`]でパースできなかった
     ///
     /// [`Error::kind`]: crate::Error::kind
     /// [RFC9110 5.5]: https://datatracker.ietf.org/doc/html/rfc9110#section-5.5
@@ -141,7 +141,7 @@ impl RequestParser {
                     let v = v.map_err(Error::read_bot_event_failed)?;
                     kind = Some(v);
                 }
-                _ => continue,
+                _ => {}
             }
         }
         content_type
@@ -195,10 +195,10 @@ impl RequestParser {
     ///
     /// - [`parse_headers`]で返されるもの
     /// - [`ErrorKind::ReadBodyFailed`] :
-    ///     `body`をUTF8の文字列として解釈できなかった
+    ///   `body`をUTF8の文字列として解釈できなかった
     /// - [`ErrorKind::ParseBodyFailed`] :
-    ///     `body`を[`parse_headers`]で返される[`EventKind`]に対応する
-    ///     [`Event`]のペイロードJSONとしてデシリアライズできなかった。
+    ///   `body`を[`parse_headers`]で返される[`EventKind`]に対応する
+    ///   [`Event`]のペイロードJSONとしてデシリアライズできなかった。
     ///
     /// [`Error::kind`]: crate::Error::kind
     /// [`parse_headers`]: RequestParser::parse_headers

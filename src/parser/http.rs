@@ -251,7 +251,7 @@ impl RequestParser {
     ///
     /// - [`parse`]で返されるもの
     /// - [`ErrorKind::ReadBodyFailed`] :
-    ///     リクエストボディの読み込みに失敗した
+    ///   リクエストボディの読み込みに失敗した
     ///
     /// [`Error::kind`]: crate::Error::kind
     /// [`parse`]: crate::RequestParser::parse
