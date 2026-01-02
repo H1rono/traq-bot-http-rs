@@ -45,7 +45,7 @@ jobs:
     if: needs.check-main-branch.outputs.contains == 'true'
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: package
       - uses: actions/setup-python@v6
